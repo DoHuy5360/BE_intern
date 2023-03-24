@@ -17,7 +17,7 @@ import lombok.Data;
 public class Account {
     @Id
     @Column(length = 50, nullable = false, updatable = false)
-    private String accountId = "AC-" + UUID.randomUUID().toString();
+    private String accountId = "TK-" + UUID.randomUUID().toString();
 
     @Column(length = 50, nullable = true, updatable = false)
     private String accountEmail;
