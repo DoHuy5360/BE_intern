@@ -26,8 +26,8 @@ public class Headquarter {
     private String headquarterAddress;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getCurrentDate();
+    private String createAt = Time.getDeadCurrentDate();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getCurrentDate();
+    private String updateAt = Time.getDeadCurrentDate();
 }

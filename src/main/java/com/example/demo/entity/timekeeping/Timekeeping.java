@@ -29,15 +29,15 @@ public class Timekeeping {
     private String timekeepingType;
 
     @Column(length = 100, nullable = false)
-    private String timekeepingIn = Time.getCurrentDate();
+    private String timekeepingIn = Time.getDeadCurrentDate();
 
     @Column(length = 100, nullable = true)
     private String timekeepingOut;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getCurrentDate();
+    private String createAt = Time.getDeadCurrentDate();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getCurrentDate();
+    private String updateAt = Time.getDeadCurrentDate();
 
 }
