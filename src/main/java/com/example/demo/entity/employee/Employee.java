@@ -38,7 +38,7 @@ public class Employee {
     private String employeeGender;
 
     @Column(length = 50, nullable = false)
-    private String employeeRole;
+    private String employeePosition;
 
     @Column(length = 50, nullable = false)
     private int employeeSalary;
