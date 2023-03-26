@@ -18,7 +18,10 @@ public class TimekeepingService {
     public List<Timekeeping> getRecordTimekeeping() {
         return (List<Timekeeping>) timekeepingRepository.findAll();
     }
-
+     public Timekeeping getOneRecordTimekeeping(String id) {
+        Optional<Timekeeping> one_timekeeping = timekeepingRepository.findById(id);
+        return one_timekeeping.orElse(null);
+    }
     public void storeTimekeeping(Timekeeping timekeeping) {
         timekeepingRepository.save(timekeeping);
     }

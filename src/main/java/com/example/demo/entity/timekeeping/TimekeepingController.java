@@ -25,6 +25,12 @@ public class TimekeepingController {
         List<Timekeeping> timekeeping_record = timekeepingService.getRecordTimekeeping();
         return new ResponseEntity<>(timekeeping_record, HttpStatus.OK);
     }
+    
+    @GetMapping("/{id}/show")
+    public Timekeeping show(@PathVariable("id") String id) {
+        Timekeeping timekeeping_one = timekeepingService.getOneRecordTimekeeping(id);
+        return timekeeping_one;
+    }
 
     @PostMapping("/store")
     public void store(@RequestBody Timekeeping timekeeping) {
