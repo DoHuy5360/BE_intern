@@ -4,7 +4,7 @@
 >
 > URL (Local) : `http://localhost:8080/api/v1/timekeeping/`
 >
-> Method : <strong style="color: red;">GET</strong>
+> Method : `GET`
 >
 > <br>
 
@@ -28,22 +28,24 @@
 ]
 ```
 
-<div style="width: 100%; height: 10px; background: #185684;"></div>
+---
+
 <br>
 <br>
 
 # Lấy 1 bản ghi trong bảng Chấm công
 
 > <br>
-> URL (Local) : `http://localhost:8080/api/v1/timekeeping/`<strong style="color: yellow;">timekeepnigId</strong>`/show`
 >
-> Method : <strong style="color: red;">GET</strong>
+> URL (Local) : `http://localhost:8080/api/v1/timekeeping/{timekeepnigId}/show`
+>
+> Method : `GET`
 >
 > <br>
 
-| Param                                                 | Value                                     |
-| ----------------------------------------------------- | ----------------------------------------- |
-| <strong style="color: yellow;">timekeepnigId</strong> | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
+| Param           | Value                                     |
+| --------------- | ----------------------------------------- |
+| `timekeepnigId` | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
 
 > Response
 
@@ -61,7 +63,8 @@
 }
 ```
 
-<div style="width: 100%; height: 10px; background: #185684;"></div>
+---
+
 <br>
 <br>
 
@@ -71,7 +74,7 @@
 >
 > URL (Local) : `http://localhost:8080/api/v1/timekeeping/store`
 >
-> Method : <strong style="color: red;">POST</strong>
+> Method : `POST`
 >
 > <br>
 
@@ -89,7 +92,8 @@
 }
 ```
 
-<div style="width: 100%; height: 10px; background: #185684;"></div>
+---
+
 <br>
 <br>
 
@@ -97,17 +101,18 @@
 
 > <br>
 >
-> URL (Local) : `http://localhost:8080/api/v1/timekeeping/`<strong style="color: yellow;">timekeepnigId</strong>`/delete`
+> URL (Local) : `http://localhost:8080/api/v1/timekeeping/{timekeepnigId}/delete`
 >
-> Method : <strong style="color: red;">DELETE</strong>
+> Method : `DELETE`
 >
 > <br>
 
-| Param                                                 | Value                                     |
-| ----------------------------------------------------- | ----------------------------------------- |
-| <strong style="color: yellow;">timekeepnigId</strong> | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
+| Param           | Value                                     |
+| --------------- | ----------------------------------------- |
+| `timekeepnigId` | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
 
-<div style="width: 100%; height: 10px; background: #185684;"></div>
+---
+
 <br>
 <br>
 
@@ -115,15 +120,15 @@
 
 > <br>
 >
-> URL (Local) : `http://localhost:8080/api/v1/timekeeping/`<strong style="color: yellow;">timekeepnigId</strong>`/update`
+> URL (Local) : `http://localhost:8080/api/v1/timekeeping/{timekeepnigId}/update`
 >
-> Method : <strong style="color: red;">PUT</strong>
+> Method : `PUT`
 >
 > <br>
 
-| Param                                                 | Value                                     |
-| ----------------------------------------------------- | ----------------------------------------- |
-| <strong style="color: yellow;">timekeepnigId</strong> | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
+| Param           | Value                                     |
+| --------------- | ----------------------------------------- |
+| `timekeepnigId` | `CC-346c849e-e04b-4cc8-b573-a051f84571c5` |
 
 > Body
 
@@ -138,4 +143,4 @@
 }
 ```
 
-<div style="width: 100%; height: 10px; background: #185684;"></div>
+---
