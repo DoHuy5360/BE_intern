@@ -34,6 +34,9 @@ public class Timekeeping {
     @Column(length = 100, nullable = true)
     private String timekeepingOut;
 
+    @Column(length = 300, nullable = true)
+    private String timekeepingException;
+
     @Column(length = 100, nullable = false)
     private String createAt = Time.getDeadCurrentDate();
 
