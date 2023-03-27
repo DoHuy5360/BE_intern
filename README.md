@@ -1,6 +1,6 @@
-# Lưu ý
+## Lưu ý
 
-### Phân tích: `2023-03-27T13:28:50.278352600+07:00[Asia/Bangkok]`
+#### Phân tích: `2023-03-27T13:28:50.278352600+07:00[Asia/Bangkok]`
 
 > <br>
 >
@@ -16,7 +16,7 @@
 
 <br>
 
-### Phân tích: `CC-346c849e-e04b-4cc8-b573-a051f84571c5`
+#### Phân tích: `CC-346c849e-e04b-4cc8-b573-a051f84571c5`
 
 > <br>
 >
@@ -28,7 +28,9 @@
 
 <br>
 
-# Lấy tất cả bản ghi trong bảng Chấm công
+# Bảng Chấm Công
+
+## Lấy tất cả bản ghi trong bảng Chấm công
 
 > <br>
 >
@@ -63,7 +65,7 @@
 <br>
 <br>
 
-# Lấy 1 bản ghi trong bảng Chấm công
+## Lấy 1 bản ghi trong bảng Chấm công
 
 > <br>
 >
@@ -98,7 +100,7 @@
 <br>
 <br>
 
-# Lưu 1 bản ghi trong bảng Chấm công
+## Lưu 1 bản ghi trong bảng Chấm công
 
 > <br>
 >
@@ -127,7 +129,7 @@
 <br>
 <br>
 
-# Xóa 1 bản ghi trong bảng Chấm công
+## Xóa 1 bản ghi trong bảng Chấm công
 
 > <br>
 >
@@ -146,7 +148,7 @@
 <br>
 <br>
 
-# Cập nhật 1 bản ghi trong bảng Chấm công
+## Cập nhật 1 bản ghi trong bảng Chấm công
 
 > <br>
 >
