@@ -1,3 +1,33 @@
+# Lưu ý
+
+### Phân tích: `2023-03-27T13:28:50.278352600+07:00[Asia/Bangkok]`
+
+> <br>
+>
+> `2023-03-27` : Năm - Tháng - Ngày
+>
+> `T` : Ký tự để phân tách
+>
+> `13:28:50.278352600`: Giờ : Phút : Giây
+>
+> `+07:00[Asia/Bangkok]`: Múi giờ
+>
+> <br>
+
+<br>
+
+### Phân tích: `CC-346c849e-e04b-4cc8-b573-a051f84571c5`
+
+> <br>
+>
+> `CC-` : Viết tắt của `Chấm Công`
+>
+> `346c849e-e04b-4cc8-b573-a051f84571c5` : Mã tự sinh
+>
+> <br>
+
+<br>
+
 # Lấy tất cả bản ghi trong bảng Chấm công
 
 > <br>
