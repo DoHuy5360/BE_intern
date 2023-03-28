@@ -39,3 +39,4 @@ accountRepository.java
 accountService.java
 
 # testController.java
+application.properties
