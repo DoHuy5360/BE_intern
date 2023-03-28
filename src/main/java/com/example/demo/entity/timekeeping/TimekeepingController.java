@@ -25,6 +25,7 @@ public class TimekeepingController {
     @GetMapping("/")
     public ResponseEntity<List<Timekeeping>> index() {
         List<Timekeeping> timekeeping_record = timekeepingService.getRecordTimekeeping();
+        System.out.println(timekeeping_record);
         return new ResponseEntity<>(timekeeping_record, HttpStatus.OK);
     }
 
@@ -36,6 +37,7 @@ public class TimekeepingController {
 
     @PostMapping("/store")
     public void store(@RequestBody Timekeeping timekeeping) {
+        System.out.println(timekeeping);
         timekeepingService.storeTimekeeping(timekeeping);
     }
 
