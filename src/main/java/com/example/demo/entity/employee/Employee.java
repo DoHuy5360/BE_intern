@@ -2,11 +2,18 @@ package com.example.demo.entity.employee;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.example.demo.entity.account.Account;
 import com.example.demo.utilities.Time;
 
 import lombok.Data;
@@ -48,4 +55,9 @@ public class Employee {
 
     @Column(length = 100, nullable = false)
     private String updateAt = Time.getDeadCurrentDate();
+
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "account")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Account account;
 }
