@@ -26,6 +26,12 @@ public class TimekeepingController {
         return new ResponseEntity<>(timekeeping_record, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/show")
+    public Timekeeping show(@PathVariable("id") String id) {
+        Timekeeping timekeeping_one = timekeepingService.getOneRecordTimekeeping(id);
+        return timekeeping_one;
+    }
+
     @PostMapping("/store")
     public void store(@RequestBody Timekeeping timekeeping) {
         timekeepingService.storeTimekeeping(timekeeping);
@@ -40,4 +46,6 @@ public class TimekeepingController {
     public void delete(@PathVariable String id) {
         timekeepingService.deleteTimekeeping(id);
     }
+
+    
 }

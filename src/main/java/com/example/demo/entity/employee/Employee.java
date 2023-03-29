@@ -2,10 +2,13 @@ package com.example.demo.entity.employee;
 
 import java.util.UUID;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 import javax.persistence.Table;
+
 
 import com.example.demo.utilities.Time;
 
@@ -16,14 +19,14 @@ import lombok.Data;
 @Table(name = "employee")
 public class Employee {
     @Id
-    @Column(length = 50, nullable = false, updatable = false)
+    @Column(name = "employee_id",length = 50, nullable = false, updatable = false)
     private String employeeId = "NV-" + UUID.randomUUID().toString();
 
     @Column(length = 50, nullable = false)
-    private String headquarterId;
+    private String headquarterId ;
 
     @Column(length = 50, nullable = false)
-    private String accountId;
+    private String accountId ;
 
     @Column(length = 50, nullable = false)
     private String employeeName;

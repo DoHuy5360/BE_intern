@@ -8,15 +8,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import com.example.demo.utilities.Time;
 
 @Service
 public class TimekeepingService {
+
+    
     @Autowired
     private TimekeepingRepository timekeepingRepository;
 
     public List<Timekeeping> getRecordTimekeeping() {
         return (List<Timekeeping>) timekeepingRepository.findAll();
+    }
+
+    public Timekeeping getOneRecordTimekeeping(String id) {
+        Optional<Timekeeping> one_timekeeping = timekeepingRepository.findById(id);
+        return one_timekeeping.orElse(null);
     }
 
     public void storeTimekeeping(Timekeeping timekeeping) {
@@ -40,5 +48,14 @@ public class TimekeepingService {
     public void deleteTimekeeping(String id) {
         timekeepingRepository.deleteById(id);
     }
+
+    
+   
+
+    
+
+
+
+
 
 }

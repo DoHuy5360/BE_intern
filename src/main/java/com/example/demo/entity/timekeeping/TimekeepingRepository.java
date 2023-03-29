@@ -2,10 +2,13 @@ package com.example.demo.entity.timekeeping;
 
 
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+
+
+import org.springframework.data.repository.CrudRepository;
+
 public interface TimekeepingRepository extends CrudRepository<Timekeeping, String> {
     
+    
 }
+
