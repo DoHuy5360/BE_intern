@@ -22,10 +22,12 @@ public class EmployeeService {
     private EmployeeAccountRepository employeeAccountRepository;
 
     public List<Employee> getAllEmployee() {
+        System.out.println("From getAllEmployee()");
         return (List<Employee>) employeeRepository.findAll();
     }
 
     public Employee getEmployeeById(String EmployeeUserId) {
+        System.out.println("From getEmployeeById()");
         Optional<Employee> one_E = employeeRepository.findById(EmployeeUserId);
         return one_E.orElse(null);
     }
@@ -36,6 +38,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Employee> updateEmployee(String employeeId, Employee employee) {
+        System.out.println("From updateEmployee()");
         Optional<Employee> updatEmployeeExist = employeeRepository.findById(employeeId);
         if (updatEmployeeExist.isPresent()) {
             Employee _Employee = updatEmployeeExist.get();
@@ -53,6 +56,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<String> deleteEmployee(String id) {
+        System.out.println("From deleteEmployee()");
         Optional<Employee> oneEm = employeeRepository.findById(id);
         if (oneEm.isPresent()) {
             Employee _Employee = oneEm.get();
@@ -65,9 +69,7 @@ public class EmployeeService {
     }
 
     public ResponseEntity<EmployeeAccount> getEmployeeInfo(String id) {
-        // return new ResponseEntity<>(employeeRepository.getInformation(id).get(),
-        // HttpStatus.OK);
-        System.out.println(employeeAccountRepository);
+        System.out.println("From getEmployeeInfo()");
         return new ResponseEntity<>(employeeAccountRepository.getInformation(id).get(), HttpStatus.OK);
     }
 }
