@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.employee.employee_account.EmployeeAccount;
 import com.example.demo.entity.employee.employee_account.EmployeeAccountRepository;
 
@@ -15,6 +16,8 @@ import com.example.demo.entity.employee.employee_account.EmployeeAccountReposito
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private EmployeeAccountRepository employeeAccountRepository;
 
@@ -49,9 +52,16 @@ public class EmployeeService {
         }
     }
 
-    public Employee deleteEmployee(String employeeId, Employee employee) {
-        employeeRepository.deleteById(employeeId);
-        return employee;
+    public ResponseEntity<String> deleteEmployee(String id) {
+        Optional<Employee> oneEm = employeeRepository.findById(id);
+        if (oneEm.isPresent()) {
+            Employee _Employee = oneEm.get();
+            employeeRepository.deleteById(id);
+            accountRepository.deleteById(_Employee.getAccountId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ResponseEntity<EmployeeAccount> getEmployeeInfo(String id) {

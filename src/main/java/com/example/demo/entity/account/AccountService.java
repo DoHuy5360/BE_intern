@@ -86,7 +86,7 @@ public class AccountService {
         }
     }
 
-    public ResponseEntity<String> deleteAccount(String id, Account account) {
+    public ResponseEntity<String> deleteAccount(String id) {
         Optional<Account> one_AC = accountRepository.findById(id);
         if (one_AC.isPresent()) {
             accountRepository.deleteById(id);

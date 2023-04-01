@@ -100,10 +100,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable String id,
-            Employee employee) {
-        Employee deleteEmployeeExist = employeeService.deleteEmployee(id, employee);
-        return new ResponseEntity<>(deleteEmployeeExist, HttpStatus.OK);
+    public ResponseEntity<String> deleteEmployee(@PathVariable String id) {
+        return employeeService.deleteEmployee(id);
     }
 
     // @PostMapping("/de")
