@@ -23,7 +23,7 @@ public class Account {
     @Column(length = 50, nullable = false, updatable = false)
     private String accountId = "TK-" + UUID.randomUUID().toString();
 
-    @Column(length = 50, nullable = true, unique = true)
+    @Column(length = 50, nullable = true, unique = false)
     private String accountEmail;
 
     @Column(length = 50, nullable = true)
@@ -41,6 +41,6 @@ public class Account {
     @Column(length = 100, nullable = false)
     private String updateAt = Time.getDeadCurrentDate();
 
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    private Employee employee;
+    // @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    // private Employee employee;
 }

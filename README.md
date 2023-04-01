@@ -28,6 +28,113 @@
 
 <br>
 
+# Nhân viên
+
+## Xem tất cả nhân viên
+
+URL: `http://192.168.1.53:8080/api/v1/employee/`
+
+Method: `GET`
+
+Response:
+
+```json
+[
+	{
+		"employeeId": "NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce",
+		"headquarterId": "TS-f06ec524-84db-4235-a8dd-cbc0f9f3abaa",
+		"accountId": "TK-32a16183-699a-4022-8197-d3db35ddb5b0",
+		"employeeName": null,
+		"employeePhone": null,
+		"employeeAddress": null,
+		"employeeGender": null,
+		"employeePosition": "NV",
+		"employeeSalary": 0,
+		"createAt": "2023-04-01T17:14:40.139462200+07:00[Asia/Bangkok]",
+		"updateAt": "2023-04-01T17:14:40.139462200+07:00[Asia/Bangkok]"
+	}
+]
+```
+
+## Thêm nhân viên
+
+URL: `http://192.168.1.53:8080/api/v1/employee/store`
+
+Body:
+
+```json
+{
+	"accountEmail": "johndoe",
+	"accountPassword": "password123",
+	"accountRole": "johndoe@example.com",
+	"headquarterId": "TS-1kjniu1n-13jn13j-13jnl",
+	"employeePosition": "NV"
+}
+```
+
+## Cập nhật 1 nhân viên
+
+URL: `http://192.168.1.53:8080/api/v1/employee/NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce/update`
+
+Method: `PUT`
+
+Body:
+
+```json
+{
+	"headquarterId": "TS-f06ec524-84db-4235-a8dd-cbc0f9f3abaa",
+	"employeeName": "Huy",
+	"employeePhone": "0963723",
+	"employeeAddress": "TP.HCM",
+	"employeeGender": "1",
+	"employeePosition": "QL",
+	"employeeSalary": 100000
+}
+```
+
+## Xóa 1 nhân viên
+
+URL: `http://192.168.1.53:8080/api/v1/employee/NV-5de53312-94f7-47bf-b82f-9c6b84984e7b/delete`
+
+Method: "DELETE"
+
+# Trụ Sở
+
+## Xem tất cả trụ sở
+
+URL: `http://192.168.1.53:8080/api/v1/headquarter/`
+
+Method: `GET`
+
+Response:
+
+```json
+[
+	{
+		"headquarterId": "TS-f06ec524-84db-4235-a8dd-cbc0f9f3abaa",
+		"headquarterName": "Tru so 1",
+		"headquarterAddress": "TP.HCM",
+		"createAt": "2023-04-01T16:30:50.821520600+07:00[Asia/Bangkok]",
+		"updateAt": "2023-04-01T16:30:50.821520600+07:00[Asia/Bangkok]"
+	}
+]
+```
+
+## Thêm trụ sở
+
+URL: `http://192.168.1.53:8080/api/v1/headquarter/store`
+
+Method: `POST`
+
+Body:
+
+```json
+{
+	"headquarterName": "Tru so 1",
+	"headquarterAddress": "TP.HCM"
+}
+```
+
 # Bảng Chấm Công
 
 ## Lấy tất cả bản ghi trong bảng Chấm công

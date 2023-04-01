@@ -3,60 +3,97 @@ package com.example.demo.entity.account;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 public class AccountService {
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
-    public List<Account> getAllaccount() {
+    public List<Account> getAllAccount() {
         return (List<Account>) accountRepository.findAll();
     }
 
-    public Optional<Account> getAccountById(String AccountUserId) {
-        return accountRepository.findById(AccountUserId);
+    public ResponseEntity<Account> getAccountById(String AccountUserId) {
+        Optional<Account> one_AC = accountRepository.findById(AccountUserId);
+        if (one_AC.isPresent()) {
+            return new ResponseEntity<>(one_AC.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public Optional<Account> getAccountByEmail(String emailAcc) {
-        return accountRepository.findByEmail(emailAcc);
+    public ResponseEntity<Account> getAccountByEmail(String emailAcc) {
+        Optional<Account> one_AC = accountRepository.findByEmail(emailAcc);
+        if (one_AC.isPresent()) {
+            return new ResponseEntity<>(one_AC.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public Account createAccount(Account account) {
+    public ResponseEntity<Account> storeAccount(Account account) {
         accountRepository.save(account);
-        return account;
-    }
-
-    public Account updateAccount(String account_id, Account account) {
-        Account updateAccountexist = getAccountById(account_id).orElse(null);
-        if (updateAccountexist != null) {
-            updateAccountexist.setAccountEmail(account.getAccountEmail());
-            updateAccountexist.setAccountPassword(account.getAccountPassword());
-            accountRepository.save(updateAccountexist);
+        Optional<Account> one_AC = accountRepository.findById(account.getAccountId());
+        if (one_AC.isPresent()) {
+            return new ResponseEntity<>(one_AC.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return updateAccountexist;
     }
 
-    public boolean resetPassword(String email, Account updateAccount) {
-        boolean flag = false;
-        Account updatePassexist = accountRepository.findByEmail(email).orElse(null);
-        if (updatePassexist != null) {
-            updatePassexist.setAccountPassword(updateAccount.getAccountPassword());
-            updatePassexist.setRetypeAccountPassword(updateAccount.getRetypeAccountPassword());
-            if (updatePassexist.getAccountPassword().equals(updatePassexist.getRetypeAccountPassword())) {
-                accountRepository.save(updatePassexist);
-                flag = true;
+    @Transactional
+    public ResponseEntity<Account> updateAccount(String id, Account account) {
+        Optional<Account> one_AC = accountRepository.findById(id);
+        if (one_AC.isPresent()) {
+            Account _Account = one_AC.get();
+            _Account.setAccountEmail(account.getAccountEmail());
+            _Account.setAccountRole(account.getAccountRole());
+            accountRepository.save(_Account);
+            Optional<Account> exist_AC = accountRepository.findById(account.getAccountId());
+            if (exist_AC.isPresent()) {
+                return new ResponseEntity<>(exist_AC.get(), HttpStatus.OK);
             } else {
-                flag = false;
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return flag;
     }
 
-    public Account deleteAccount(String account_id, Account account) {
-        accountRepository.deleteById(account_id);
-        return account;
+    public ResponseEntity<String> resetPassword(Account account) {
+        if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
+            Optional<Account> one_AC = accountRepository.findByEmail(account.getAccountEmail());
+            if (one_AC.isPresent()) {
+                Account _Account = one_AC.get();
+                _Account.setAccountPassword(account.getAccountPassword());
+                _Account.setRetypeAccountPassword(account.getRetypeAccountPassword());
+                accountRepository.save(_Account);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public ResponseEntity<String> deleteAccount(String id) {
+        Optional<Account> one_AC = accountRepository.findById(id);
+        if (one_AC.isPresent()) {
+            accountRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
 }

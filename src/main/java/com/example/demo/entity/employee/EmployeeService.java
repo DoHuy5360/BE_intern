@@ -4,43 +4,70 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.entity.account.AccountRepository;
+import com.example.demo.entity.employee.employee_account.EmployeeAccount;
+import com.example.demo.entity.employee.employee_account.EmployeeAccountRepository;
 
 @Service
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private EmployeeAccountRepository employeeAccountRepository;
 
     public List<Employee> getAllEmployee() {
         return (List<Employee>) employeeRepository.findAll();
     }
 
-    public Optional<Employee> getEmployeeById(String EmployeeUserId) {
-        return employeeRepository.findById(EmployeeUserId);
+    public Employee getEmployeeById(String EmployeeUserId) {
+        Optional<Employee> one_E = employeeRepository.findById(EmployeeUserId);
+        return one_E.orElse(null);
     }
 
-    public Employee createEmployee(Employee employee) {
+    public Employee storeEmployee(Employee employee) {
         employeeRepository.save(employee);
         return employee;
     }
 
-    public Employee updateEmployee(String employeeId, Employee employee) {
-        Employee updatEmployeeExist = getEmployeeById(employeeId).orElse(employee);
-        if (updatEmployeeExist != null) {
-            updatEmployeeExist.setHeadquarterId(employee.getHeadquarterId());
-            updatEmployeeExist.setEmployeeName(employee.getEmployeeName());
-            updatEmployeeExist.setEmployeePhone(employee.getEmployeePhone());
-            updatEmployeeExist.setEmployeeAddress(employee.getEmployeeAddress());
-            updatEmployeeExist.setEmployeeGender(employee.getEmployeeGender());
-            updatEmployeeExist.setEmployeePosition(employee.getEmployeePosition());
-            updatEmployeeExist.setEmployeeSalary(employee.getEmployeeSalary());
-            employeeRepository.save(updatEmployeeExist);
+    public ResponseEntity<Employee> updateEmployee(String employeeId, Employee employee) {
+        Optional<Employee> updatEmployeeExist = employeeRepository.findById(employeeId);
+        if (updatEmployeeExist.isPresent()) {
+            Employee _Employee = updatEmployeeExist.get();
+            _Employee.setHeadquarterId(employee.getHeadquarterId());
+            _Employee.setEmployeeName(employee.getEmployeeName());
+            _Employee.setEmployeePhone(employee.getEmployeePhone());
+            _Employee.setEmployeeAddress(employee.getEmployeeAddress());
+            _Employee.setEmployeeGender(employee.getEmployeeGender());
+            _Employee.setEmployeePosition(employee.getEmployeePosition());
+            _Employee.setEmployeeSalary(employee.getEmployeeSalary());
+            return new ResponseEntity<>(employeeRepository.save(_Employee), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return updatEmployeeExist;
     }
 
-    public Employee deleteEmployee(String employeeId, Employee employee) {
-        employeeRepository.deleteById(employeeId);
-        return employee;
+    public ResponseEntity<String> deleteEmployee(String id) {
+        Optional<Employee> oneEm = employeeRepository.findById(id);
+        if (oneEm.isPresent()) {
+            Employee _Employee = oneEm.get();
+            employeeRepository.deleteById(id);
+            accountRepository.deleteById(_Employee.getAccountId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<EmployeeAccount> getEmployeeInfo(String id) {
+        // return new ResponseEntity<>(employeeRepository.getInformation(id).get(),
+        // HttpStatus.OK);
+        System.out.println(employeeAccountRepository);
+        return new ResponseEntity<>(employeeAccountRepository.getInformation(id).get(), HttpStatus.OK);
     }
 }

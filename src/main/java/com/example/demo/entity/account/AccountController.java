@@ -1,7 +1,6 @@
 package com.example.demo.entity.account;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,49 +15,46 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/v1/account")
+// @RequiredArgsConstructor
 public class AccountController {
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Account>> getAllAccount() {
-        List<Account> accounts = accountService.getAllaccount();
+    public ResponseEntity<List<Account>> index() {
+        // Page
+        List<Account> accounts = accountService.getAllAccount();
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable String id) {
-        Optional<Account> account = accountService.getAccountById(id);
-        return new ResponseEntity<>(account.orElse(null), HttpStatus.OK);
+    public ResponseEntity<Account> show(@PathVariable String id) {
+        return accountService.getAccountById(id);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        Account newAccount = accountService.createAccount(account);
-        return new ResponseEntity<>(newAccount, HttpStatus.OK);
+    @PostMapping("/store")
+    public ResponseEntity<Account> store(@RequestBody Account account) {
+
+        return accountService.storeAccount(account);
     }
 
     @PutMapping("/{id}/update")
     public ResponseEntity<Account> updateAccount(@PathVariable String id, @RequestBody Account account) {
-        Account updateAccountExist = accountService.updateAccount(id, account);
-        return new ResponseEntity<>(updateAccountExist, HttpStatus.OK);
+        return accountService.updateAccount(id, account);
+
     }
 
-    @PutMapping("/reset-password/{email}")
-    public ResponseEntity<Account> resetPassword(@PathVariable String email, @RequestBody Account account) {
-        boolean updatePasswordSuccess = accountService.resetPassword(email, account);
-        if (updatePasswordSuccess) {
-            return new ResponseEntity<Account>(account, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> reset(@RequestBody Account account) {
+        return accountService.resetPassword(account);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Account> deleteAccount(@PathVariable String id, Account account) {
-        Account deleteAccountExsit = accountService.deleteAccount(id, account);
-        return new ResponseEntity<>(deleteAccountExsit, HttpStatus.OK);
+    public ResponseEntity<String> deleteAccount(@PathVariable String id) {
+        return accountService.deleteAccount(id);
     }
 }
