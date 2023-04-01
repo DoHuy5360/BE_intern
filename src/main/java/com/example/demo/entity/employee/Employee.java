@@ -32,7 +32,7 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String accountId;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = true)
     private String employeeName;
 
     @Column(length = 11, nullable = true)
@@ -47,7 +47,7 @@ public class Employee {
     @Column(length = 50, nullable = false)
     private String employeePosition;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = true)
     private int employeeSalary;
 
     @Column(length = 100, nullable = false)
@@ -56,8 +56,7 @@ public class Employee {
     @Column(length = 100, nullable = false)
     private String updateAt = Time.getDeadCurrentDate();
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "account")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Account account;
+    // @OneToOne(cascade = CascadeType.ALL, optional = false)
+    // @JoinColumn(name = "account")
+    // private Account account;
 }

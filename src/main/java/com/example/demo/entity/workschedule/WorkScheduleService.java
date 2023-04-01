@@ -18,6 +18,8 @@ public class WorkScheduleService {
     }
 
     public WorkSchedule getOneRecord(String id) {
+        // Optional<WorkSchedule> oneWS =
+        // workScheduleRepository.findById(id).orElseThrow();
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
         return oneWS.orElse(null);
     }
