@@ -46,6 +46,43 @@ Body:
 }
 ```
 
+# Trụ Sở
+
+## Xem tất cả trụ sở
+
+URL: `http://192.168.1.53:8080/api/v1/headquarter/`
+
+Method: `GET`
+
+Response:
+
+```json
+[
+	{
+		"headquarterId": "TS-f06ec524-84db-4235-a8dd-cbc0f9f3abaa",
+		"headquarterName": "Tru so 1",
+		"headquarterAddress": "TP.HCM",
+		"createAt": "2023-04-01T16:30:50.821520600+07:00[Asia/Bangkok]",
+		"updateAt": "2023-04-01T16:30:50.821520600+07:00[Asia/Bangkok]"
+	}
+]
+```
+
+## Thêm trụ sở
+
+URL: `http://192.168.1.53:8080/api/v1/headquarter/store`
+
+Method: `POST`
+
+Body:
+
+```json
+{
+	"headquarterName": "Tru so 1",
+	"headquarterAddress": "TP.HCM"
+}
+```
+
 # Bảng Chấm Công
 
 ## Lấy tất cả bản ghi trong bảng Chấm công

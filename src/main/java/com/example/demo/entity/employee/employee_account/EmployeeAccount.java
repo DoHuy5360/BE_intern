@@ -11,6 +11,8 @@ public class EmployeeAccount {
     @Id
     private String employeeId;
 
+    private String accountId;
+
     private String headquarterId;
 
     private String employeeName;
@@ -25,16 +27,12 @@ public class EmployeeAccount {
 
     private int employeeSalary;
 
-    private String accountId;
-
     private String accountEmail;
-
-    private String accountPassword;
 
     private String accountRole;
 
-    private String createAt;
+    private String headquarterName;
 
-    private String updateAt;
+    private String headquarterAddress;
 
 }
