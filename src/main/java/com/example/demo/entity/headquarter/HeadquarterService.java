@@ -1,5 +1,6 @@
 package com.example.demo.entity.headquarter;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import org.springframework.stereotype.Service;
 public class HeadquarterService {
     @Autowired
     private HeadquarterRepository headquarterRepository;
+
+    public List<Headquarter> getAllRecord() {
+        return headquarterRepository.findAll();
+    }
 
     public ResponseEntity<Headquarter> storeHeadquater(Headquarter headquarter) {
         headquarterRepository.save(headquarter);

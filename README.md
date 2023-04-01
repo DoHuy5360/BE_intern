@@ -28,6 +28,24 @@
 
 <br>
 
+# Tài khoản
+
+## Tạo tài khoản
+
+URL: `http://192.168.1.53:8080/api/v1/employee/store`
+
+Body:
+
+```json
+{
+	"accountEmail": "johndoe",
+	"accountPassword": "password123",
+	"accountRole": "johndoe@example.com",
+	"headquarterId": "TS-1kjniu1n-13jn13j-13jnl",
+	"employeePosition": "NV"
+}
+```
+
 # Bảng Chấm Công
 
 ## Lấy tất cả bản ghi trong bảng Chấm công
