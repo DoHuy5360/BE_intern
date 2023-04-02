@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.KIT.EmployeeAccountHeadquarterQuery;
+import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 import com.example.demo.entity.account.AccountRepository;
-import com.example.demo.entity.employee.employee_account.EmployeeAccount;
-import com.example.demo.entity.employee.employee_account.EmployeeAccountRepository;
 
 @Service
 public class EmployeeService {
@@ -19,7 +19,7 @@ public class EmployeeService {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
-    private EmployeeAccountRepository employeeAccountRepository;
+    private EmployeeAccountHeadquarterQuery employeeAccountRepository;
 
     public List<Employee> getAllEmployee() {
         System.out.println("From getAllEmployee()");
@@ -68,7 +68,7 @@ public class EmployeeService {
         }
     }
 
-    public ResponseEntity<EmployeeAccount> getEmployeeInfo(String id) {
+    public ResponseEntity<EmployeeAccountHeadquarterTray> getEmployeeInfo(String id) {
         System.out.println("From getEmployeeInfo()");
         return new ResponseEntity<>(employeeAccountRepository.getInformation(id).get(), HttpStatus.OK);
     }

@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.entity.DTO.EmployeeAccountHeadquarter;
-import com.example.demo.entity.TRAY.HeadquarterAccount;
+import com.example.demo.KIT.DTO.EmployeeAccountHeadquarter;
+import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
+import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
-import com.example.demo.entity.employee.employee_account.EmployeeAccount;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterService;
 
@@ -58,12 +58,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/information")
-    public ResponseEntity<EmployeeAccount> getInfo(@PathVariable String id) {
+    public ResponseEntity<EmployeeAccountHeadquarterTray> getInfo(@PathVariable String id) {
         return employeeService.getEmployeeInfo(id);
     }
 
     @PostMapping("/store")
-    public ResponseEntity<HeadquarterAccount> createEmployee(@RequestBody HeadquarterAccount headquarterAccount) {
+    public ResponseEntity<HeadquarterAccountTray> createEmployee(
+            @RequestBody HeadquarterAccountTray headquarterAccount) {
         Account _account = new Account();
         _account.setAccountEmail(headquarterAccount.getAccountEmail());
         _account.setAccountPassword(headquarterAccount.getAccountPassword());

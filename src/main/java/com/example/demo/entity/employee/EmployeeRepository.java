@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.employee.employee_account.EmployeeAccount;
+import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, String> {
