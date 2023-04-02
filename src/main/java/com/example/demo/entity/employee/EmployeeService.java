@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.KIT.EmployeeAccountHeadquarterQuery;
+import com.example.demo.KIT.RES.Message;
+import com.example.demo.KIT.RES.Response;
+import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 import com.example.demo.entity.account.AccountRepository;
-import com.example.demo.entity.employee.employee_account.EmployeeAccount;
-import com.example.demo.entity.employee.employee_account.EmployeeAccountRepository;
 
 @Service
 public class EmployeeService {
@@ -19,15 +21,13 @@ public class EmployeeService {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
-    private EmployeeAccountRepository employeeAccountRepository;
+    private EmployeeAccountHeadquarterQuery employeeAccountRepository;
 
     public List<Employee> getAllEmployee() {
-        System.out.println("From getAllEmployee()");
         return (List<Employee>) employeeRepository.findAll();
     }
 
     public Employee getEmployeeById(String EmployeeUserId) {
-        System.out.println("From getEmployeeById()");
         Optional<Employee> one_E = employeeRepository.findById(EmployeeUserId);
         return one_E.orElse(null);
     }
@@ -38,7 +38,6 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Employee> updateEmployee(String employeeId, Employee employee) {
-        System.out.println("From updateEmployee()");
         Optional<Employee> updatEmployeeExist = employeeRepository.findById(employeeId);
         if (updatEmployeeExist.isPresent()) {
             Employee _Employee = updatEmployeeExist.get();
@@ -56,7 +55,6 @@ public class EmployeeService {
     }
 
     public ResponseEntity<String> deleteEmployee(String id) {
-        System.out.println("From deleteEmployee()");
         Optional<Employee> oneEm = employeeRepository.findById(id);
         if (oneEm.isPresent()) {
             Employee _Employee = oneEm.get();
@@ -68,8 +66,13 @@ public class EmployeeService {
         }
     }
 
-    public ResponseEntity<EmployeeAccount> getEmployeeInfo(String id) {
-        System.out.println("From getEmployeeInfo()");
-        return new ResponseEntity<>(employeeAccountRepository.getInformation(id).get(), HttpStatus.OK);
+    public Response getEmployeeInfo(String id) {
+        Optional<EmployeeAccountHeadquarterTray> oneE = employeeAccountRepository.getInformation(id);
+        if (oneE.isPresent()) {
+            return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
+        } else {
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+
+        }
     }
 }
