@@ -2,6 +2,7 @@ package com.example.demo.entity.account;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.entity.dto.AccountEmployeeDTO;
 
 @RestController
 @RequestMapping("/api/account")
@@ -64,5 +67,32 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
-
+    //Add account with employee
+    @PostMapping("/create")
+    public ResponseEntity<Account> createAccountWithEmployee(@RequestBody AccountRequest request) {
+        return ResponseEntity.ok(accountService.createAccountWithEmployee(request));
+    }
+    //updating data of account with employee
+    @PutMapping("/{id}/updating")
+    public Account updateAccountWithEmployee(@PathVariable String id, @RequestBody AccountRequest request) {
+        return accountService.updateAccountWithEmployee(id, request);
+    }
+    //deleting account with employee
+    @DeleteMapping("/{id}/deleting")
+    public ResponseEntity<?> deleteAccountWithEmployee(@PathVariable("id") String id) {
+        try {
+            accountService.deleteAccountWithEmployee(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    //showing all account with employee
+    @GetMapping("/accountandemployee")
+    public ResponseEntity<List<AccountEmployeeDTO>> getAllAccountsAndEmployees() {
+        List<AccountEmployeeDTO> accountEmployeeDTOList = accountService.getAllAccountsAndEmployees();
+        return new ResponseEntity<>(accountEmployeeDTOList, HttpStatus.OK);
+    }
 }
