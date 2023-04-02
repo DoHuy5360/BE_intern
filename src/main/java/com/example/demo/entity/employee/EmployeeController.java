@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.KIT.DTO.EmployeeAccountHeadquarter;
+import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
 import com.example.demo.entity.account.Account;
@@ -58,7 +59,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}/information")
-    public ResponseEntity<EmployeeAccountHeadquarterTray> getInfo(@PathVariable String id) {
+    public Response getInfo(@PathVariable String id) {
         return employeeService.getEmployeeInfo(id);
     }
 

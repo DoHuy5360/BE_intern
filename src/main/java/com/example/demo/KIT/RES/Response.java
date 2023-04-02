@@ -6,17 +6,17 @@ public class Response {
 
     private HttpStatus status;
     private String message;
-    private Object entity;
+    private Object data;
+
+    public Response(HttpStatus status, String message, Object data) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
 
     public Response(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
-    }
-
-    public Response(HttpStatus status, String message, Object entity) {
-        this.status = status;
-        this.message = message;
-        this.entity = entity;
     }
 
     public HttpStatus getStatus() {
@@ -35,12 +35,12 @@ public class Response {
         this.message = message;
     }
 
-    public Object getEntity() {
-        return entity;
+    public Object getdata() {
+        return data;
     }
 
-    public void setEntity(Object entity) {
-        this.entity = entity;
+    public void setdata(Object data) {
+        this.data = data;
     }
 
 }
