@@ -3,12 +3,11 @@ package com.example.demo.entity.account;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
@@ -64,23 +63,24 @@ public class AccountService {
         }
     }
 
+    @Transactional
     public Response resetPassword(Account account) {
         if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
             Optional<Account> one_AC = accountRepository.findByEmail(account.getAccountEmail());
             if (one_AC.isPresent()) {
-                if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
+                try {
                     Account _Account = one_AC.get();
                     _Account.setAccountPassword(account.getAccountPassword());
                     accountRepository.save(_Account);
-                    return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
-                } else {
-                    return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL);
+                } catch (Exception e) {
+                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
                 }
+                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
             } else {
-                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_MATCH);
+                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_FOUND);
             }
         } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_MATCH);
         }
     }
 
