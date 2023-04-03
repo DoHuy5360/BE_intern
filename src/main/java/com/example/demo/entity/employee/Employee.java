@@ -39,6 +39,9 @@ public class Employee {
     private String employeePhone;
 
     @Column(length = 300, nullable = true)
+    private String employeeAvatar;
+
+    @Column(length = 300, nullable = true)
     private String employeeAddress;
 
     @Column(length = 1, nullable = true)

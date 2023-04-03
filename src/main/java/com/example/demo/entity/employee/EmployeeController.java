@@ -75,6 +75,8 @@ public class EmployeeController {
         _employee.setAccountId(_account.getAccountId());
         _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
         _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
+        _employee.setEmployeeAvatar(
+                "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
 
         accountService.storeAccount(_account);
         employeeService.storeEmployee(_employee);

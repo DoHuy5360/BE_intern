@@ -142,6 +142,34 @@ URL: `http://192.168.1.53:8080/api/v1/employee/NV-5de53312-94f7-47bf-b82f-9c6b84
 
 Method: "DELETE"
 
+# Tài khoản
+
+## Đổi mật khẩu
+
+URL: `http://192.168.1.53:8080/api/v1/account/reset-password`
+
+Method: `PUT`
+
+Body:
+
+```json
+{
+	"accountEmail": "example@gmail.com",
+	"accountPassword": "newPassword123",
+	"retypeAccountPassword": "newPassword123"
+}
+```
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Cập Nhật Thành Công",
+	"data": null
+}
+```
+
 # Trụ Sở
 
 ## Xem tất cả trụ sở
