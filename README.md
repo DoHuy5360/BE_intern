@@ -107,12 +107,46 @@ Response:
 		"employeeAddress": "TP.HCM",
 		"employeeGender": "1",
 		"employeePosition": "QL",
+		"employeeAvatar": "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg",
 		"employeeSalary": 100000,
-		"accountEmail": "example@gmail.com",
-		"accountRole": "Admin",
+		"accountEmail": "DoHuy@gmail.com",
+		"accountRole": "huy@example.com",
 		"headquarterName": "Tru so 1",
 		"headquarterAddress": "Ha Noi"
 	}
+}
+```
+
+## Xem tất cả nhân viên + Thông tin tài khoản
+
+URL: `http://192.168.1.18:8080/api/v1/employee/all-information`
+
+Method: `GET`
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Đọc Thành Công",
+	"data": [
+		{
+			"employeeId": "NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce",
+			"accountId": "TK-32a16183-699a-4022-8197-d3db35ddb5b0",
+			"headquarterId": "TS-ed0d156f-5cfa-4f90-aa05-b2cf2aac2708",
+			"employeeName": "Huy",
+			"employeePhone": "0963723",
+			"employeeAddress": "TP.HCM",
+			"employeeGender": "1",
+			"employeePosition": "QL",
+			"employeeAvatar": "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg",
+			"employeeSalary": 100000,
+			"accountEmail": "DoHuy@gmail.com",
+			"accountRole": "huy@example.com",
+			"headquarterName": "Tru so 1",
+			"headquarterAddress": "Ha Noi"
+		}
+	]
 }
 ```
 
@@ -140,7 +174,39 @@ Body:
 
 URL: `http://192.168.1.53:8080/api/v1/employee/NV-5de53312-94f7-47bf-b82f-9c6b84984e7b/delete`
 
-Method: "DELETE"
+Method: `DELETE`
+
+# Lịch trình làm việc
+
+## Xem tất cả lịch trình làm việc
+
+URL: `http://192.168.1.18:8080/api/v1/workschedule/all-information`
+
+Method: `GET`
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Đọc Thành Công",
+	"data": [
+		{
+			"workScheduleId": "WS-f839472f-ca7a-4441-bf9e-408d1ebfcd5d",
+			"employeeId": "NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce",
+			"employeeName": "Huy",
+			"employeePhone": "0963723",
+			"employeeAvatar": "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg",
+			"employeePosition": "QL",
+			"workSchedulePlan": "Quet Nha 2",
+			"workScheduleTime": "2023-04-03T11:31:40.238996200+07:00[Asia/Bangkok]",
+			"workScheduleColor": null,
+			"headquarterName": "Tru so 1",
+			"headquarterAddress": "Ha Noi"
+		}
+	]
+}
+```
 
 # Tài khoản
 

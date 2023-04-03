@@ -75,4 +75,15 @@ public class EmployeeService {
 
         }
     }
+
+    public Response getAllEmployeeInfo() {
+        List<EmployeeAccountHeadquarterTray> oneE;
+        try {
+            oneE = employeeAccountRepository.getAllInformation();
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
+
+        }
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
+    }
 }

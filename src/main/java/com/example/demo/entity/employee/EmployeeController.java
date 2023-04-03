@@ -63,6 +63,11 @@ public class EmployeeController {
         return employeeService.getEmployeeInfo(id);
     }
 
+    @GetMapping("/all-information")
+    public Response getAllInfo() {
+        return employeeService.getAllEmployeeInfo();
+    }
+
     @PostMapping("/store")
     public ResponseEntity<HeadquarterAccountTray> createEmployee(
             @RequestBody HeadquarterAccountTray headquarterAccount) {
