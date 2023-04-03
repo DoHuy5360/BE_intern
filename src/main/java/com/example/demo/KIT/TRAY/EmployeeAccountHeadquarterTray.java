@@ -17,6 +17,7 @@ public class EmployeeAccountHeadquarterTray {
     private String employeeAddress;
     private String employeeGender;
     private String employeePosition;
+    private String employeeAvatar;
     private int employeeSalary;
     private String accountEmail;
     private String accountRole;
