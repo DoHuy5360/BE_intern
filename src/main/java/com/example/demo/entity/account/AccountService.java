@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.KIT.RES.Message;
+import com.example.demo.KIT.RES.Response;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -69,20 +72,24 @@ public class AccountService {
         }
     }
 
-    public ResponseEntity<String> resetPassword(Account account) {
+    public Response resetPassword(Account account) {
         if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
             Optional<Account> one_AC = accountRepository.findByEmail(account.getAccountEmail());
             if (one_AC.isPresent()) {
-                Account _Account = one_AC.get();
-                _Account.setAccountPassword(account.getAccountPassword());
-                _Account.setRetypeAccountPassword(account.getRetypeAccountPassword());
-                accountRepository.save(_Account);
-                return new ResponseEntity<>(HttpStatus.OK);
+                if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
+                    Account _Account = one_AC.get();
+                    System.out.println(_Account);
+                    _Account.setAccountPassword(account.getAccountPassword());
+                    accountRepository.save(_Account);
+                    return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
+                } else {
+                    return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL);
+                }
             } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_MATCH);
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }
     }
 

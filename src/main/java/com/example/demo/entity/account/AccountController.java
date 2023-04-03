@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.KIT.RES.Response;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -51,7 +53,7 @@ public class AccountController {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<String> reset(@RequestBody Account account) {
+    public Response reset(@RequestBody Account account) {
         return accountService.resetPassword(account);
     }
 
