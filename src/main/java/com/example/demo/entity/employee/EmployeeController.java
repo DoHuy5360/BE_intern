@@ -1,8 +1,16 @@
 package com.example.demo.entity.employee;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.KIT.DTO.EmployeeAccountHeadquarter;
 import com.example.demo.KIT.RES.Message;
@@ -93,6 +103,50 @@ public class EmployeeController {
 
         return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarterAccount);
     }
+
+    @PostMapping("/store/multiple")
+    public Response createEmployees(@RequestParam("file") MultipartFile file) {
+        try {
+            System.out.println(file);
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
+            // dụng HSSFWorkbook nếu file có định dạng .xls
+            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next(); // todo: Chọn Hàng N
+                Iterator<Cell> cellIterator = row.cellIterator(); // todo: Lấy lấy cả ô trên hàng N
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next(); // todo: Lấy 1 ô
+                    switch (cell.getCellType()) {
+                        case STRING:
+                            System.out.print(cell.getStringCellValue() + "\t");
+                            break;
+                        case NUMERIC:
+                            System.out.print(cell.getNumericCellValue() + "\t");
+                            break;
+                        case BOOLEAN:
+                            System.out.print(cell.getBooleanCellValue() + "\t");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                System.out.println("");
+            }
+
+            workbook.close();
+            inputStream.close();
+
+            return new Response(HttpStatus.OK, Message.UPLOAD_SUCCESS);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new Response(HttpStatus.BAD_REQUEST, Message.UPLOAD_FAIL);
+        }
+    }
+
     // @PostMapping("/store")
     // public ResponseEntity<EmployeeAccountHeadquarter> createEmployee(
     // @RequestBody EmployeeAccountHeadquarter employeeAccountHeadquarter) {

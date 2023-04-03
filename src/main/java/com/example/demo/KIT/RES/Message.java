@@ -12,4 +12,7 @@ public class Message {
 
     public static final String NOT_FOUND = "Không Tìm Thấy";
     public static final String NOT_MATCH = "Không KhỚp";
+
+    public static final String UPLOAD_FAIL = "Tải File Thất Bại";
+    public static final String UPLOAD_SUCCESS = "Tải File Thành Công";
 }
