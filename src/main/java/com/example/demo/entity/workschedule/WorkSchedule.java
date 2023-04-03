@@ -1,5 +1,7 @@
 package com.example.demo.entity.workschedule;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,10 +17,13 @@ import com.example.demo.utilities.Time;
 public class WorkSchedule {
     @Id
     @Column(length = 50, nullable = false)
-    private String workScheduleId = Time.getDeadCurrentDate();
+    private String workScheduleId = "WS-" + UUID.randomUUID().toString();
 
     @Column(length = 50, nullable = false)
     private String employeeId;
+
+    @Column(length = 50, nullable = true)
+    private String workScheduleColor;
 
     @Column(length = 300, nullable = false)
     private String workSchedulePlan;

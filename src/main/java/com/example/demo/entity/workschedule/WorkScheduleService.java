@@ -1,5 +1,6 @@
 package com.example.demo.entity.workschedule;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,13 +9,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.KIT.Query.EmployeeWorkscheduleQuery;
+import com.example.demo.KIT.RES.Message;
+import com.example.demo.KIT.RES.Response;
+import com.example.demo.KIT.TRAY.EmployeeWorkscheduleTray;
+
 @Service
 public class WorkScheduleService {
     @Autowired
     private WorkScheduleRepository workScheduleRepository;
+    @Autowired
+    private EmployeeWorkscheduleQuery employeeWorkscheduleQuery;
 
     public List<WorkSchedule> getRecord() {
         return (List<WorkSchedule>) workScheduleRepository.findAll();
+    }
+
+    public Response getAllInfo() {
+        List<EmployeeWorkscheduleTray> manyWS;
+        try {
+            manyWS = employeeWorkscheduleQuery.getWorkSchedule();
+            System.out.println(manyWS);
+
+        } catch (Exception e) {
+            return new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL);
+
+        }
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, manyWS);
     }
 
     public WorkSchedule getOneRecord(String id) {

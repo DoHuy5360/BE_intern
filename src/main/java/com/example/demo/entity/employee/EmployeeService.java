@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.KIT.EmployeeAccountHeadquarterQuery;
+import com.example.demo.KIT.Query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;

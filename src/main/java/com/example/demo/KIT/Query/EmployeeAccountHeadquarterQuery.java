@@ -1,4 +1,4 @@
-package com.example.demo.KIT;
+package com.example.demo.KIT.Query;
 
 import java.util.Optional;
 
