@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.KIT.Query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.KIT.RES.Message;
@@ -23,13 +24,14 @@ public class EmployeeService {
     @Autowired
     private EmployeeAccountHeadquarterQuery employeeAccountRepository;
 
-    public List<Employee> getAllEmployee() {
-        return (List<Employee>) employeeRepository.findAll();
+    public Response getAllEmployee() {
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, (List<Employee>) employeeRepository.findAll());
     }
 
-    public Employee getEmployeeById(String EmployeeUserId) {
+    public Response getEmployeeById(String EmployeeUserId) {
         Optional<Employee> one_E = employeeRepository.findById(EmployeeUserId);
-        return one_E.orElse(null);
+        return (one_E.isPresent()) ? new Response(HttpStatus.OK, Message.READ_SUCCESS, one_E.get())
+                : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
     }
 
     public Employee storeEmployee(Employee employee) {
@@ -37,32 +39,42 @@ public class EmployeeService {
         return employee;
     }
 
-    public ResponseEntity<Employee> updateEmployee(String employeeId, Employee employee) {
-        Optional<Employee> updatEmployeeExist = employeeRepository.findById(employeeId);
-        if (updatEmployeeExist.isPresent()) {
-            Employee _Employee = updatEmployeeExist.get();
-            _Employee.setHeadquarterId(employee.getHeadquarterId());
-            _Employee.setEmployeeName(employee.getEmployeeName());
-            _Employee.setEmployeePhone(employee.getEmployeePhone());
-            _Employee.setEmployeeAddress(employee.getEmployeeAddress());
-            _Employee.setEmployeeGender(employee.getEmployeeGender());
-            _Employee.setEmployeePosition(employee.getEmployeePosition());
-            _Employee.setEmployeeSalary(employee.getEmployeeSalary());
-            return new ResponseEntity<>(employeeRepository.save(_Employee), HttpStatus.OK);
+    @Transactional
+    public Response updateEmployee(String employeeId, Employee employee) {
+        Optional<Employee> oneE = employeeRepository.findById(employeeId);
+        if (oneE.isPresent()) {
+            try {
+                Employee _Employee = oneE.get();
+                _Employee.setHeadquarterId(employee.getHeadquarterId());
+                _Employee.setEmployeeName(employee.getEmployeeName());
+                _Employee.setEmployeePhone(employee.getEmployeePhone());
+                _Employee.setEmployeeAddress(employee.getEmployeeAddress());
+                _Employee.setEmployeeGender(employee.getEmployeeGender());
+                _Employee.setEmployeePosition(employee.getEmployeePosition());
+                _Employee.setEmployeeSalary(employee.getEmployeeSalary());
+                employeeRepository.save(_Employee);
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+            }
+            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, oneE);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }
     }
 
-    public ResponseEntity<String> deleteEmployee(String id) {
+    public Response deleteEmployee(String id) {
         Optional<Employee> oneEm = employeeRepository.findById(id);
         if (oneEm.isPresent()) {
-            Employee _Employee = oneEm.get();
-            employeeRepository.deleteById(id);
-            accountRepository.deleteById(_Employee.getAccountId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            try {
+                Employee _Employee = oneEm.get();
+                employeeRepository.deleteById(id);
+                accountRepository.deleteById(_Employee.getAccountId());
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
+            }
+            return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
         } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }
     }
 

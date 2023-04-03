@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.KIT.RES.Response;
+
 @RestController
 @RequestMapping("/api/v1/timekeeping")
 @CrossOrigin("*")
@@ -23,16 +25,13 @@ public class TimekeepingController {
     private TimekeepingService timekeepingService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Timekeeping>> index() {
-        List<Timekeeping> timekeeping_record = timekeepingService.getRecordTimekeeping();
-        System.out.println(timekeeping_record);
-        return new ResponseEntity<>(timekeeping_record, HttpStatus.OK);
+    public Response index() {
+        return timekeepingService.getRecordTimekeeping();
     }
 
     @GetMapping("/{id}/show")
-    public Timekeeping show(@PathVariable("id") String id) {
-        Timekeeping timekeeping_one = timekeepingService.getOneRecordTimekeeping(id);
-        return timekeeping_one;
+    public Response show(@PathVariable("id") String id) {
+        return timekeepingService.getOneRecordTimekeeping(id);
     }
 
     @PostMapping("/store")

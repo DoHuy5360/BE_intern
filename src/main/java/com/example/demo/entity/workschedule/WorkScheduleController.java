@@ -41,17 +41,17 @@ public class WorkScheduleController {
     }
 
     @PostMapping("/store")
-    public ResponseEntity<WorkSchedule> store(@RequestBody WorkSchedule workSchedule) {
+    public Response store(@RequestBody WorkSchedule workSchedule) {
         return workScheduleService.storeRecord(workSchedule);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable String id) {
+    public Response delete(@PathVariable String id) {
         return workScheduleService.deleteRecord(id);
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<WorkSchedule> update(@PathVariable String id, @RequestBody WorkSchedule workSchedule) {
+    public Response update(@PathVariable String id, @RequestBody WorkSchedule workSchedule) {
         return workScheduleService.updateRecord(id, workSchedule);
     }
 }

@@ -26,12 +26,12 @@ public class HeadquarterController {
     private HeadquarterService headquarterService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Headquarter>> getAllHeadquarter() {
-        return new ResponseEntity<>(headquarterService.getAllRecord(), HttpStatus.OK);
+    public Response getAllHeadquarter() {
+        return headquarterService.getAllRecord();
     }
 
     @PostMapping("/store")
-    public ResponseEntity<Headquarter> store(@RequestBody Headquarter headquarter) {
+    public Response store(@RequestBody Headquarter headquarter) {
         return headquarterService.storeHeadquater(headquarter);
     }
 

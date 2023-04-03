@@ -17,16 +17,18 @@ public class HeadquarterService {
     @Autowired
     private HeadquarterRepository headquarterRepository;
 
-    public List<Headquarter> getAllRecord() {
-        return headquarterRepository.findAll();
+    public Response getAllRecord() {
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, (List<Headquarter>) headquarterRepository.findAll());
     }
 
-    public ResponseEntity<Headquarter> storeHeadquater(Headquarter headquarter) {
-        headquarterRepository.save(headquarter);
-        Optional<Headquarter> oneHq = headquarterRepository.findById(headquarter.getHeadquarterId());
-        return (oneHq.isPresent())
-                ? new ResponseEntity<>(oneHq.get(), HttpStatus.OK)
-                : new ResponseEntity<Headquarter>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public Response storeHeadquater(Headquarter headquarter) {
+        try {
+            headquarterRepository.save(headquarter);
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
+
+        }
+        return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarter);
 
     }
 
