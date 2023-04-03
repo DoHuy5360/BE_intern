@@ -90,9 +90,14 @@ public class AccountController {
         }
     }
     //showing all account with employee
-    @GetMapping("/accountandemployee")
+    @GetMapping("/showboth/")
     public ResponseEntity<List<AccountEmployeeDTO>> getAllAccountsAndEmployees() {
         List<AccountEmployeeDTO> accountEmployeeDTOList = accountService.getAllAccountsAndEmployees();
+        return new ResponseEntity<>(accountEmployeeDTOList, HttpStatus.OK);
+    }
+    @GetMapping("/both/{id}/")
+    public ResponseEntity<List<AccountEmployeeDTO>> getAllAccountsAndEmployeesbyId(@PathVariable(value = "id") String id) {
+        List<AccountEmployeeDTO> accountEmployeeDTOList = accountService.getAllAccountsAndEmployeesbyId(id);
         return new ResponseEntity<>(accountEmployeeDTOList, HttpStatus.OK);
     }
 }

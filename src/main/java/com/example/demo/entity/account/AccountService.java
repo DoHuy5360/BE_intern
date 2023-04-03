@@ -9,6 +9,8 @@ import com.example.demo.entity.dto.AccountEmployeeDTO;
 public interface AccountService {
     List<Account> getAllAccounts();
     List<AccountEmployeeDTO> getAllAccountsAndEmployees();
+    List<AccountEmployeeDTO> getAllAccountsAndEmployeesbyId(String id);
+
 
     Account getAccountById(String id);
 

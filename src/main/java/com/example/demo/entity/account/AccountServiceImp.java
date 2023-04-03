@@ -39,8 +39,10 @@ public class AccountServiceImp implements AccountService {
     public List<AccountEmployeeDTO> getAllAccountsAndEmployees() {
         List<Account> accounts = new ArrayList<>();
         accountRepository.findAll().forEach(accounts::add);
+
         List<Employee> employees = new ArrayList<>();
         employeeRepository.findAll().forEach(employees::add);
+        
         List<AccountEmployeeDTO> accountEmployeeDTOList = new ArrayList<>();
         for (Account account : accounts) {
             Optional<Employee> optionalEmployee = employeeRepository.findByAccountId(account.getAccountId());
@@ -51,6 +53,19 @@ public class AccountServiceImp implements AccountService {
         }
         return accountEmployeeDTOList;
     }
+    
+    @Override
+    public List<AccountEmployeeDTO> getAllAccountsAndEmployeesbyId(String id) {
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        Account account = optionalAccount.get();
+        String accountId = account.getAccountId();
+        Optional<Employee> optionalEmployee = employeeRepository.findByAccountId(accountId);
+        Employee employee = optionalEmployee.get();
+        List<AccountEmployeeDTO> accountEmployeeDTOList = new ArrayList<>();
+        accountEmployeeDTOList.add(new AccountEmployeeDTO(account, employee));
+        return accountEmployeeDTOList;
+    }
+
 
     @Override
     public Account getAccountById(String id) {
