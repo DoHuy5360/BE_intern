@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.KIT.RES.Response;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@RestController
 @RequestMapping("/api/v1/workschedule")
 @CrossOrigin("*")
 public class WorkScheduleController {
@@ -23,6 +28,11 @@ public class WorkScheduleController {
     @GetMapping("/")
     public List<WorkSchedule> index() {
         return workScheduleService.getRecord();
+    }
+
+    @GetMapping("/all-information")
+    public Response getAllInformation() {
+        return workScheduleService.getAllInfo();
     }
 
     @GetMapping("/{id}")
