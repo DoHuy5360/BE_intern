@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.hssf.record.PageBreakRecord.Break;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -105,46 +107,85 @@ public class EmployeeController {
     }
 
     @PostMapping("/store/multiple")
+    @Transactional
     public Response createEmployees(@RequestParam("file") MultipartFile file) {
         try {
-            System.out.println(file);
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
             // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
             // dụng HSSFWorkbook nếu file có định dạng .xls
             Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
             Iterator<Row> rowIterator = sheet.iterator();
-
+            int limitCount = 5;
+            int cellCount = 0;
+            Row row = rowIterator.next(); // todo: bypass first row ( title )
+            Boolean emptyRow = false;
             while (rowIterator.hasNext()) {
-                Row row = rowIterator.next(); // todo: Chọn Hàng N
-                Iterator<Cell> cellIterator = row.cellIterator(); // todo: Lấy lấy cả ô trên hàng N
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next(); // todo: Lấy 1 ô
-                    switch (cell.getCellType()) {
-                        case STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
+                row = rowIterator.next();
+                if (row == null) {
+                    break;
+                }
+                Account _account = new Account();
+                Employee _employee = new Employee();
+                Iterator<Cell> cellIterator = row.cellIterator();
+                Boolean nextCellExist = cellIterator.hasNext();
+
+                while (nextCellExist) {
+                    Cell cell = cellIterator.next();
+                    if (cell.getCellType() == CellType.BLANK) {
+                        emptyRow = true;
+                        break;
+                    }
+                    switch (cellCount) {
+                        case 0:
+                            _account.setAccountEmail(cell.getStringCellValue());
                             break;
-                        case NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "\t");
+                        case 1:
+                            _account.setAccountRole(cell.getStringCellValue());
                             break;
-                        case BOOLEAN:
-                            System.out.print(cell.getBooleanCellValue() + "\t");
+                        case 2:
+                            _account.setAccountPassword(String.valueOf(cell.getNumericCellValue()));
+                            break;
+                        case 3:
+                            _employee.setHeadquarterId(cell.getStringCellValue());
+                            break;
+                        case 4:
+                            _employee.setEmployeePosition(cell.getStringCellValue());
                             break;
                         default:
                             break;
                     }
+                    if (emptyRow == true) {
+                        break;
+                    }
+                    cellCount++;
+                    if (cellCount % limitCount == 0) {
+                        row = sheet.getRow(row.getRowNum() + 1);
+                        if (row == null) {
+                            break;
+                        }
+                        cellIterator = row.cellIterator();
+                        break;
+                    }
                 }
-                System.out.println("");
+
+                _employee.setAccountId(_account.getAccountId());
+                _employee.setEmployeeAvatar(
+                        "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                accountService.storeAccount(_account);
+                employeeService.storeEmployee(_employee);
+
+                cellCount = 0;
             }
 
             workbook.close();
             inputStream.close();
 
-            return new Response(HttpStatus.OK, Message.UPLOAD_SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
             return new Response(HttpStatus.BAD_REQUEST, Message.UPLOAD_FAIL);
         }
+        return new Response(HttpStatus.OK, Message.UPLOAD_SUCCESS);
     }
 
     // @PostMapping("/store")
@@ -167,6 +208,12 @@ public class EmployeeController {
     public Response updateEmployee(@PathVariable String id,
             @RequestBody Employee employee) {
         return employeeService.updateEmployee(id, employee);
+    }
+
+    @PutMapping("/{id}/update-self")
+    public Response updateEmployeSelf(@PathVariable String id,
+            @RequestBody Employee employee) {
+        return employeeService.updateSelf(id, employee);
     }
 
     @DeleteMapping("/{id}/delete")

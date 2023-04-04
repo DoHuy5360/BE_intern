@@ -91,9 +91,9 @@ public class AccountService {
                 accountRepository.deleteById(id);
 
             } catch (Exception e) {
-                return new Response(HttpStatus.OK, Message.DELETE_FAIL);
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
             }
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
+            return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
         } else {
             return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }

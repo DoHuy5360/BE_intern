@@ -62,6 +62,31 @@ public class EmployeeService {
         }
     }
 
+    @Transactional
+    public Response updateSelf(String employeeId, Employee employee) {
+        Optional<Employee> oneE = employeeRepository.findById(employeeId);
+        if (oneE.isPresent()) {
+            try {
+                Employee _Employee = oneE.get();
+                // Name
+                // Phone
+                // Adress
+                // Gender
+                // Avatar
+                _Employee.setEmployeeName(employee.getEmployeeName());
+                _Employee.setEmployeePhone(employee.getEmployeePhone());
+                _Employee.setEmployeeAddress(employee.getEmployeeAddress());
+                _Employee.setEmployeeGender(employee.getEmployeeGender());
+                employeeRepository.save(_Employee);
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+            }
+            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, oneE);
+        } else {
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        }
+    }
+
     public Response deleteEmployee(String id) {
         Optional<Employee> oneEm = employeeRepository.findById(id);
         if (oneEm.isPresent()) {
