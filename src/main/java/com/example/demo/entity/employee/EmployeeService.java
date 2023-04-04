@@ -5,22 +5,23 @@ import java.util.Optional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.hssf.record.PageBreakRecord.Break;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.KIT.Query.EmployeeAccountHeadquarterQuery;
+import com.example.demo.KIT.RES.EmployeeEmailExcelResponse;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
@@ -70,8 +71,8 @@ public class EmployeeService {
         return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarterAccount);
     }
 
-    @Transactional
     public Response storeEmployeeFromExcel(MultipartFile file) {
+        ArrayList<EmployeeEmailExcelResponse> emails = new ArrayList<EmployeeEmailExcelResponse>();
         try {
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
@@ -79,66 +80,55 @@ public class EmployeeService {
             // dụng HSSFWorkbook nếu file có định dạng .xls
             Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
             Iterator<Row> rowIterator = sheet.iterator();
-            int limitCount = 5;
-            int cellCount = 0;
             Row row = rowIterator.next(); // todo: bypass first row ( title )
-            Boolean emptyRow = false;
+            ArrayList<String> errors = new ArrayList<String>();
             while (rowIterator.hasNext()) {
                 row = rowIterator.next();
-                if (row == null) {
-                    break;
-                }
-                Account _account = new Account();
-                Employee _employee = new Employee();
                 Iterator<Cell> cellIterator = row.cellIterator();
-                Boolean nextCellExist = cellIterator.hasNext();
 
-                while (nextCellExist) {
+                if (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    if (cell.getCellType() == CellType.BLANK) {
-                        emptyRow = true;
-                        break;
-                    }
-                    switch (cellCount) {
-                        case 0:
-                            _account.setAccountEmail(cell.getStringCellValue());
-                            break;
-                        case 1:
-                            _account.setAccountRole(cell.getStringCellValue());
-                            break;
-                        case 2:
-                            _account.setAccountPassword(String.valueOf(cell.getNumericCellValue()));
-                            break;
-                        case 3:
-                            _employee.setHeadquarterId(cell.getStringCellValue());
-                            break;
-                        case 4:
-                            _employee.setEmployeePosition(cell.getStringCellValue());
-                            break;
-                        default:
-                            break;
-                    }
-                    if (emptyRow == true) {
-                        break;
-                    }
-                    cellCount++;
-                    if (cellCount % limitCount == 0) {
-                        row = sheet.getRow(row.getRowNum() + 1);
-                        if (row == null) {
-                            break;
+                    if (cell.getCellType() != CellType.BLANK) {
+                        Account _account = new Account();
+                        Employee _employee = new Employee();
+                        _account.setAccountEmail(cell.getStringCellValue());
+                        try {
+                            _account.setAccountRole(cellIterator.next().getStringCellValue());
+                        } catch (Exception e) {
+                            errors.add(Message.ROLE_ERROR);
                         }
-                        cellIterator = row.cellIterator();
+                        try {
+                            _account.setAccountPassword(cellIterator.next().getStringCellValue());
+                        } catch (Exception e) {
+                            errors.add(Message.PASSWORD_ERROR);
+                        }
+                        try {
+                            _employee.setHeadquarterId(cellIterator.next().getStringCellValue());
+                        } catch (Exception e) {
+                            errors.add(Message.HEADQUARTER_ID_ERROR);
+                        }
+                        try {
+                            _employee.setEmployeePosition(cellIterator.next().getStringCellValue());
+                        } catch (Exception e) {
+                            errors.add(Message.POSITION_ERROR);
+                        }
+                        _employee.setAccountId(_account.getAccountId());
+                        _employee.setEmployeeAvatar(
+                                "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                        try {
+                            accountRepository.save(_account);
+                            employeeRepository.save(_employee);
+
+                        } catch (Exception e) {
+                            emails.add(new EmployeeEmailExcelResponse(_account.getAccountEmail(), errors,
+                                    "Hàng:" + String.valueOf(cell.getRowIndex()),
+                                    "Cột:" + String.valueOf(cell.getColumnIndex())));
+                        }
+                    } else {
                         break;
                     }
+
                 }
-
-                _employee.setAccountId(_account.getAccountId());
-                _employee.setEmployeeAvatar(
-                        "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
-                accountRepository.save(_account);
-                employeeRepository.save(_employee);
-
-                cellCount = 0;
             }
 
             workbook.close();
@@ -148,7 +138,7 @@ public class EmployeeService {
             e.printStackTrace();
             return new Response(HttpStatus.BAD_REQUEST, Message.UPLOAD_FAIL);
         }
-        return new Response(HttpStatus.OK, Message.UPLOAD_SUCCESS);
+        return new Response(HttpStatus.OK, Message.CREATE_FAIL_AMOUNT, emails.size(), emails);
     }
 
     @Transactional
