@@ -1,18 +1,8 @@
 package com.example.demo.entity.employee;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.hssf.record.PageBreakRecord.Break;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,108 +74,12 @@ public class EmployeeController {
     @Transactional
     public Response createEmployee(
             @RequestBody HeadquarterAccountTray headquarterAccount) {
-        try {
-            Account _account = new Account();
-            _account.setAccountEmail(headquarterAccount.getAccountEmail());
-            _account.setAccountPassword(headquarterAccount.getAccountPassword());
-            _account.setAccountRole(headquarterAccount.getAccountRole());
-
-            Employee _employee = new Employee();
-            _employee.setAccountId(_account.getAccountId());
-            _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
-            _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
-            _employee.setEmployeeAvatar(
-                    "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
-
-            accountService.storeAccount(_account);
-            employeeService.storeEmployee(_employee);
-        } catch (Exception e) {
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
-        }
-
-        return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarterAccount);
+        return employeeService.storeEmployee(headquarterAccount);
     }
 
     @PostMapping("/store/multiple")
-    @Transactional
     public Response createEmployees(@RequestParam("file") MultipartFile file) {
-        try {
-            InputStream inputStream = file.getInputStream();
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
-            // dụng HSSFWorkbook nếu file có định dạng .xls
-            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
-            Iterator<Row> rowIterator = sheet.iterator();
-            int limitCount = 5;
-            int cellCount = 0;
-            Row row = rowIterator.next(); // todo: bypass first row ( title )
-            Boolean emptyRow = false;
-            while (rowIterator.hasNext()) {
-                row = rowIterator.next();
-                if (row == null) {
-                    break;
-                }
-                Account _account = new Account();
-                Employee _employee = new Employee();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                Boolean nextCellExist = cellIterator.hasNext();
-
-                while (nextCellExist) {
-                    Cell cell = cellIterator.next();
-                    if (cell.getCellType() == CellType.BLANK) {
-                        emptyRow = true;
-                        break;
-                    }
-                    switch (cellCount) {
-                        case 0:
-                            _account.setAccountEmail(cell.getStringCellValue());
-                            break;
-                        case 1:
-                            _account.setAccountRole(cell.getStringCellValue());
-                            break;
-                        case 2:
-                            _account.setAccountPassword(String.valueOf(cell.getNumericCellValue()));
-                            break;
-                        case 3:
-                            _employee.setHeadquarterId(cell.getStringCellValue());
-                            break;
-                        case 4:
-                            _employee.setEmployeePosition(cell.getStringCellValue());
-                            break;
-                        default:
-                            break;
-                    }
-                    if (emptyRow == true) {
-                        break;
-                    }
-                    cellCount++;
-                    if (cellCount % limitCount == 0) {
-                        row = sheet.getRow(row.getRowNum() + 1);
-                        if (row == null) {
-                            break;
-                        }
-                        cellIterator = row.cellIterator();
-                        break;
-                    }
-                }
-
-                _employee.setAccountId(_account.getAccountId());
-                _employee.setEmployeeAvatar(
-                        "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
-                accountService.storeAccount(_account);
-                employeeService.storeEmployee(_employee);
-
-                cellCount = 0;
-            }
-
-            workbook.close();
-            inputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Response(HttpStatus.BAD_REQUEST, Message.UPLOAD_FAIL);
-        }
-        return new Response(HttpStatus.OK, Message.UPLOAD_SUCCESS);
+        return employeeService.storeEmployeeFromExcel(file);
     }
 
     // @PostMapping("/store")

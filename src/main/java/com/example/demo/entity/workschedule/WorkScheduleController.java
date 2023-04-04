@@ -26,7 +26,7 @@ public class WorkScheduleController {
     private WorkScheduleService workScheduleService;
 
     @GetMapping("/")
-    public List<WorkSchedule> index() {
+    public Response index() {
         return workScheduleService.getRecord();
     }
 

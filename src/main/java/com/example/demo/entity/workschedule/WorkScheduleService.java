@@ -22,8 +22,9 @@ public class WorkScheduleService {
     @Autowired
     private EmployeeWorkscheduleQuery employeeWorkscheduleQuery;
 
-    public List<WorkSchedule> getRecord() {
-        return (List<WorkSchedule>) workScheduleRepository.findAll();
+    public Response getRecord() {
+        List<WorkSchedule> workSchedules = (List<WorkSchedule>) workScheduleRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, workSchedules.size(), workSchedules);
     }
 
     public Response getAllInfo() {

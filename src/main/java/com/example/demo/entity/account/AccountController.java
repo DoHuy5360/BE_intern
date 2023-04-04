@@ -32,8 +32,8 @@ public class AccountController {
     @GetMapping("/")
     public Response index() {
         // Page
-        List<Account> accounts = accountService.getAllAccount();
-        return new Response(HttpStatus.OK, Message.READ_SUCCESS, accounts);
+        return accountService.getAllAccount();
+
     }
 
     @GetMapping("/{id}")

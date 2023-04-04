@@ -19,8 +19,9 @@ public class AccountService {
     @Autowired
     AccountRepository accountRepository;
 
-    public List<Account> getAllAccount() {
-        return (List<Account>) accountRepository.findAll();
+    public Response getAllAccount() {
+        List<Account> accounts = (List<Account>) accountRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, accounts.size(), accounts);
     }
 
     public Response getAccountById(String AccountUserId) {

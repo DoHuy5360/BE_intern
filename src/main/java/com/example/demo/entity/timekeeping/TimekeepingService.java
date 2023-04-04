@@ -18,7 +18,8 @@ public class TimekeepingService {
     private TimekeepingRepository timekeepingRepository;
 
     public Response getRecordTimekeeping() {
-        return new Response(HttpStatus.OK, Message.READ_SUCCESS, (List<Timekeeping>) timekeepingRepository.findAll());
+        List<Timekeeping> timekeepings = (List<Timekeeping>) timekeepingRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, timekeepings.size(), timekeepings);
     }
 
     public Response getOneRecordTimekeeping(String id) {

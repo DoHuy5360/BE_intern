@@ -18,7 +18,8 @@ public class HeadquarterService {
     private HeadquarterRepository headquarterRepository;
 
     public Response getAllRecord() {
-        return new Response(HttpStatus.OK, Message.READ_SUCCESS, (List<Headquarter>) headquarterRepository.findAll());
+        List<Headquarter> headquarters = (List<Headquarter>) headquarterRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, headquarters.size(), headquarters);
     }
 
     public Response storeHeadquater(Headquarter headquarter) {
@@ -29,7 +30,6 @@ public class HeadquarterService {
 
         }
         return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarter);
-
     }
 
     @Transactional
