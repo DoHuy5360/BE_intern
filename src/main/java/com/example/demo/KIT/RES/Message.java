@@ -1,5 +1,7 @@
 package com.example.demo.KIT.RES;
 
+import io.micrometer.core.instrument.config.validate.Validated.Invalid;
+
 public class Message {
     public static final String CREATE_FAIL_AMOUNT = "Số Bản Ghi Thất Bại";
 
@@ -28,6 +30,7 @@ public class Message {
     public static final String EMPTY = "Empty";
     public static final String EXIST = "Exist";
     public static final String FAIL = "Fail";
+    public static final String INVALID = "Invalid";
 
     public static String setEmptyMessage(String name) {
         return name + EMPTY;
@@ -39,5 +42,9 @@ public class Message {
 
     public static String setUploadFail(String name) {
         return name + " Upload " + FAIL;
+    }
+
+    public static String setInvalid(String name) {
+        return name + " " + INVALID;
     }
 }
