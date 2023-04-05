@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.KIT.Query.EmployeeWorkscheduleQuery;
 import com.example.demo.KIT.RES.Message;
@@ -21,8 +22,9 @@ public class WorkScheduleService {
     @Autowired
     private EmployeeWorkscheduleQuery employeeWorkscheduleQuery;
 
-    public List<WorkSchedule> getRecord() {
-        return (List<WorkSchedule>) workScheduleRepository.findAll();
+    public Response getRecord() {
+        List<WorkSchedule> workSchedules = (List<WorkSchedule>) workScheduleRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, workSchedules.size(), workSchedules);
     }
 
     public Response getAllInfo() {
@@ -45,34 +47,40 @@ public class WorkScheduleService {
         return oneWS.orElse(null);
     }
 
-    public ResponseEntity<WorkSchedule> storeRecord(WorkSchedule workSchedule) {
+    public Response storeRecord(WorkSchedule workSchedule) {
         workScheduleRepository.save(workSchedule);
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(workSchedule.getWorkScheduleId());
         if (oneWS.isPresent()) {
-            return new ResponseEntity<>(oneWS.get(), HttpStatus.OK);
+            return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, oneWS.get());
         } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL);
         }
     }
 
-    public ResponseEntity<String> deleteRecord(String id) {
+    public Response deleteRecord(String id) {
         if (workScheduleRepository.existsById(id)) {
             workScheduleRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new Response(HttpStatus.NOT_FOUND, Message.DELETE_FAIL);
         }
     }
 
-    public ResponseEntity<WorkSchedule> updateRecord(String id, WorkSchedule workSchedule) {
+    @Transactional
+    public Response updateRecord(String id, WorkSchedule workSchedule) {
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
         if (oneWS.isPresent()) {
-            WorkSchedule _WS = oneWS.get();
-            _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
-            _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
-            return new ResponseEntity<>(workScheduleRepository.save(_WS), HttpStatus.OK);
+            try {
+                WorkSchedule _WS = oneWS.get();
+                _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
+                _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
+                workScheduleRepository.save(_WS);
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
+            }
+            return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }
 
     }

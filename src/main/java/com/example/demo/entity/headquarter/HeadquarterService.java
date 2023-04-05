@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,17 +16,19 @@ public class HeadquarterService {
     @Autowired
     private HeadquarterRepository headquarterRepository;
 
-    public List<Headquarter> getAllRecord() {
-        return headquarterRepository.findAll();
+    public Response getAllRecord() {
+        List<Headquarter> headquarters = (List<Headquarter>) headquarterRepository.findAll();
+        return new Response(HttpStatus.OK, Message.READ_SUCCESS, headquarters.size(), headquarters);
     }
 
-    public ResponseEntity<Headquarter> storeHeadquater(Headquarter headquarter) {
-        headquarterRepository.save(headquarter);
-        Optional<Headquarter> oneHq = headquarterRepository.findById(headquarter.getHeadquarterId());
-        return (oneHq.isPresent())
-                ? new ResponseEntity<>(oneHq.get(), HttpStatus.OK)
-                : new ResponseEntity<Headquarter>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public Response storeHeadquater(Headquarter headquarter) {
+        try {
+            headquarterRepository.save(headquarter);
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
 
+        }
+        return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarter);
     }
 
     @Transactional

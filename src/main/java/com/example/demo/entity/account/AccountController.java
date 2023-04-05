@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 
 import lombok.RequiredArgsConstructor;
@@ -29,25 +30,25 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Account>> index() {
+    public Response index() {
         // Page
-        List<Account> accounts = accountService.getAllAccount();
-        return new ResponseEntity<>(accounts, HttpStatus.OK);
+        return accountService.getAllAccount();
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> show(@PathVariable String id) {
+    public Response show(@PathVariable String id) {
         return accountService.getAccountById(id);
     }
 
     @PostMapping("/store")
-    public ResponseEntity<Account> store(@RequestBody Account account) {
+    public Response store(@RequestBody Account account) {
 
         return accountService.storeAccount(account);
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<Account> updateAccount(@PathVariable String id, @RequestBody Account account) {
+    public Response updateAccount(@PathVariable String id, @RequestBody Account account) {
         return accountService.updateAccount(id, account);
 
     }
@@ -58,7 +59,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> deleteAccount(@PathVariable String id) {
+    public Response deleteAccount(@PathVariable String id) {
         return accountService.deleteAccount(id);
     }
 }
