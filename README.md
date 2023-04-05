@@ -208,6 +208,32 @@ Response:
 }
 ```
 
+## Xem 1 lịch trình làm việc
+
+URL: `http://192.168.1.6:8080/api/v1/workschedule/WS-f839472f-ca7a-4441-bf9e-408d1ebfcd5d`
+
+Method: `GET`
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Đọc Thành Công",
+	"amount": 0,
+	"data": {
+		"workScheduleId": "WS-f839472f-ca7a-4441-bf9e-408d1ebfcd5d",
+		"employeeId": "NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce",
+		"workScheduleColor": null,
+		"workSchedulePlan": "Quet Nha 2",
+		"workSchedulePlace": null,
+		"workScheduleTime": "2023-04-03T11:31:40.238996200+07:00[Asia/Bangkok]",
+		"createAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]",
+		"updateAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]"
+	}
+}
+```
+
 ## Thêm 1 lịch trình làm việc
 
 URL: `http://192.168.1.18:8080/api/v1/workschedule/store`
@@ -239,6 +265,17 @@ Body:
 	"workScheduleColor": "black",
 	"workSchedulePlan": "Quét nhà X",
 	"workSchedulePlace": "Công Tác"
+}
+```
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Lưu Thành Công",
+	"amount": 0,
+	"data": null
 }
 ```
 
