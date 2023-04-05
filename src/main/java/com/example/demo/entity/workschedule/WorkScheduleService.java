@@ -14,6 +14,7 @@ import com.example.demo.KIT.Query.EmployeeWorkscheduleQuery;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeWorkscheduleTray;
+import com.example.demo.utilities.Time;
 
 @Service
 public class WorkScheduleService {
@@ -72,8 +73,12 @@ public class WorkScheduleService {
         if (oneWS.isPresent()) {
             try {
                 WorkSchedule _WS = oneWS.get();
+                _WS.setEmployeeId(workSchedule.getEmployeeId());
                 _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
                 _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
+                _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
+                _WS.setWorkScheduleColor(workSchedule.getWorkScheduleColor());
+                _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
                 workScheduleRepository.save(_WS);
             } catch (Exception e) {
                 return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
