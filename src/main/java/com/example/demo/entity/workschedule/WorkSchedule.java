@@ -28,6 +28,9 @@ public class WorkSchedule {
     @Column(length = 300, nullable = false)
     private String workSchedulePlan;
 
+    @Column(length = 500, nullable = true, columnDefinition = "Varchar(500) default ''")
+    private String workSchedulePlace;
+
     @Column(length = 100, nullable = false)
     private String workScheduleTime = Time.getDeadCurrentDate();
 

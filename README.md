@@ -208,6 +208,57 @@ Response:
 }
 ```
 
+## Thêm 1 lịch trình làm việc
+
+URL: `http://192.168.1.18:8080/api/v1/workschedule/store`
+
+Method: `POST`
+
+Body:
+
+```json
+{
+	"employeeId": "NV-6ac91ec9-03ff-4da6-a04a-583a3fa17bce",
+	"workScheduleColor": "green",
+	"workSchedulePlan": "Đi gặp đối tác",
+	"workSchedulePlace": "Quận 13"
+}
+```
+
+## Cập nhật 1 lịch trình làm việc
+
+URL: `http://192.168.1.6:8080/api/v1/workschedule/WS-b368072b-5d3a-4141-b46a-3ceaf4094748/update`
+
+Method: `PUT`
+
+Body:
+
+```json
+{
+	"employeeId": "NV-e81390c9-9df4-44ed-929b-6b41adcbc46f",
+	"workScheduleColor": "black",
+	"workSchedulePlan": "Quét nhà X",
+	"workSchedulePlace": "Công Tác"
+}
+```
+
+## Xóa 1 lịch trình làm việc
+
+URL: `http://192.168.1.6:8080/api/v1/workschedule/WS-b368072b-5d3a-4141-b46a-3ceaf4094fgh/delete`
+
+Method: `PUT`
+
+Body:
+
+```json
+{
+	"status": "OK",
+	"message": "Xóa Thành Công",
+	"amount": 0,
+	"data": null
+}
+```
+
 # Tài khoản
 
 ## Đổi mật khẩu

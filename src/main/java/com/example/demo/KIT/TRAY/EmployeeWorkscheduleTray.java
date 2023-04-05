@@ -18,6 +18,7 @@ public class EmployeeWorkscheduleTray {
     private String workSchedulePlan;
     private String workScheduleTime;
     private String workScheduleColor;
+    private String workSchedulePlace;
     private String headquarterName;
     private String headquarterAddress;
 
