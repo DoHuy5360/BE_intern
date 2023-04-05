@@ -2,7 +2,6 @@ package com.example.demo.entity.employee;
 
 import java.util.List;
 import java.util.Optional;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.KIT.Interface.Validation;
 import com.example.demo.KIT.Query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.KIT.RES.EmployeeEmailExcelResponse;
 import com.example.demo.KIT.RES.Message;
@@ -29,6 +28,8 @@ import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
 import com.example.demo.KIT.Validation.EmailValidation;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
+import com.example.demo.entity.headquarter.Headquarter;
+import com.example.demo.entity.headquarter.HeadquarterRepository;
 
 @Service
 public class EmployeeService {
@@ -36,6 +37,8 @@ public class EmployeeService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private HeadquarterRepository headquarterRepository;
     @Autowired
     private EmployeeAccountHeadquarterQuery employeeAccountRepository;
 
@@ -172,24 +175,26 @@ public class EmployeeService {
 
     @Transactional
     public Response updateEmployee(String employeeId, Employee employee) {
-        Optional<Employee> oneE = employeeRepository.findById(employeeId);
-        if (oneE.isPresent()) {
+        Validation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
+                headquarterRepository).trackIdExist()
+                .trackHeadquarterId().trackNumberLenghtEqual();
+        if (employeeValidation.isValid()) {
+            Employee _Employee = employeeValidation.get();
+            _Employee.setHeadquarterId(employee.getHeadquarterId());
+            _Employee.setEmployeeName(employee.getEmployeeName());
+            _Employee.setEmployeePhone(employee.getEmployeePhone());
+            _Employee.setEmployeeAddress(employee.getEmployeeAddress());
+            _Employee.setEmployeeGender(employee.getEmployeeGender());
+            _Employee.setEmployeePosition(employee.getEmployeePosition());
+            _Employee.setEmployeeSalary(employee.getEmployeeSalary());
             try {
-                Employee _Employee = oneE.get();
-                _Employee.setHeadquarterId(employee.getHeadquarterId());
-                _Employee.setEmployeeName(employee.getEmployeeName());
-                _Employee.setEmployeePhone(employee.getEmployeePhone());
-                _Employee.setEmployeeAddress(employee.getEmployeeAddress());
-                _Employee.setEmployeeGender(employee.getEmployeeGender());
-                _Employee.setEmployeePosition(employee.getEmployeePosition());
-                _Employee.setEmployeeSalary(employee.getEmployeeSalary());
                 employeeRepository.save(_Employee);
             } catch (Exception e) {
                 return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
             }
-            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, oneE);
+            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
         } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+            return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getErrors());
         }
     }
 
@@ -199,11 +204,6 @@ public class EmployeeService {
         if (oneE.isPresent()) {
             try {
                 Employee _Employee = oneE.get();
-                // Name
-                // Phone
-                // Adress
-                // Gender
-                // Avatar
                 _Employee.setEmployeeName(employee.getEmployeeName());
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());

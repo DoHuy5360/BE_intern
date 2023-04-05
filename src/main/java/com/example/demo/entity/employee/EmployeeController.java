@@ -32,16 +32,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Response getEmployeeById(@PathVariable String id) {
         return employeeService.getEmployeeById(id);
-        // -name
-        // -age
-        // -gender
-        // -bỉrthday
-        // -phone
-        // -email
-        // -ID number
-        // -chuc vu
-        // -noi lam viec
-        // -image
     }
 
     @GetMapping("/{id}/information")
@@ -61,7 +51,7 @@ public class EmployeeController {
         return employeeService.storeEmployee(headquarterAccount);
     }
 
-    @PostMapping("/store/multiple")
+    @PostMapping("/multiple-store")
     public Response createEmployees(@RequestParam("file") MultipartFile file) {
         return employeeService.storeEmployeeFromExcel(file);
     }
@@ -98,35 +88,5 @@ public class EmployeeController {
     public Response deleteEmployee(@PathVariable String id) {
         return employeeService.deleteEmployee(id);
     }
-
-    // @PostMapping("/de")
-    // public ResponseEntity<String> createEmployee(@RequestBody EmployeeAccount
-    // employeeDTO) {
-    // try {
-    // // Tạo đối tượng Account từ thông tin trong employeeDTO
-    // Account account = new Account();
-    // account.setaccountEmail(employeeDTO.getUsername());
-    // account.setaccountPassword(employeeDTO.getPassword());
-    // account.setaccountRole(employeeDTO.getEmail());
-    // account = accountRepository.save(account);
-
-    // // Tạo đối tượng Employee từ thông tin trong employeeDTO và Account vừa tạo
-    // Employee employee = new Employee();
-    // employee.setHeadquarterId(employeeDTO.getHeadquarterId());
-    // employee.setEmployeeName(employeeDTO.getEmployeeName());
-    // employee.setEmployeePhone(employeeDTO.getEmployeePhone());
-    // employee.setEmployeeAddress(employeeDTO.getEmployeeAddress());
-    // employee.setEmployeeGender(employeeDTO.getEmployeeGender());
-    // employee.setEmployeePosition(employeeDTO.getEmployeePosition());
-    // employee.setEmployeeSalary(employeeDTO.getEmployeeSalary());
-    // employee.setAccount(account);
-    // employeeRepository.save(employee);
-
-    // return ResponseEntity.ok("Employee created successfully.");
-    // } catch (Exception e) {
-    // return ResponseEntity.badRequest().body("Could not create employee: " +
-    // e.getMessage());
-    // }
-    // }
 
 }
