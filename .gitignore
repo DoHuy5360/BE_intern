@@ -32,6 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-
-# testController.java
-# application.properties
+.env

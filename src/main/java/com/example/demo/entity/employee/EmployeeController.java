@@ -32,16 +32,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Response getEmployeeById(@PathVariable String id) {
         return employeeService.getEmployeeById(id);
-        // -name
-        // -age
-        // -gender
-        // -bỉrthday
-        // -phone
-        // -email
-        // -ID number
-        // -chuc vu
-        // -noi lam viec
-        // -image
     }
 
     @GetMapping("/{id}/information")

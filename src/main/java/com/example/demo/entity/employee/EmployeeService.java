@@ -2,7 +2,6 @@ package com.example.demo.entity.employee;
 
 import java.util.List;
 import java.util.Optional;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -199,11 +197,6 @@ public class EmployeeService {
         if (oneE.isPresent()) {
             try {
                 Employee _Employee = oneE.get();
-                // Name
-                // Phone
-                // Adress
-                // Gender
-                // Avatar
                 _Employee.setEmployeeName(employee.getEmployeeName());
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());
