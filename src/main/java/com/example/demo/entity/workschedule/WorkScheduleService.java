@@ -41,11 +41,11 @@ public class WorkScheduleService {
         return new Response(HttpStatus.OK, Message.READ_SUCCESS, manyWS);
     }
 
-    public WorkSchedule getOneRecord(String id) {
-        // Optional<WorkSchedule> oneWS =
-        // workScheduleRepository.findById(id).orElseThrow();
+    public Response getOneRecord(String id) {
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
-        return oneWS.orElse(null);
+        return oneWS.isPresent() ? new Response(HttpStatus.OK, Message.READ_SUCCESS, oneWS)
+                : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+
     }
 
     public Response storeRecord(WorkSchedule workSchedule) {
@@ -81,9 +81,9 @@ public class WorkScheduleService {
                 _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
                 workScheduleRepository.save(_WS);
             } catch (Exception e) {
-                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
             }
-            return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
+            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
         } else {
             return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }

@@ -36,7 +36,7 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/{id}")
-    public WorkSchedule show(@PathVariable String id) {
+    public Response show(@PathVariable String id) {
         return workScheduleService.getOneRecord(id);
     }
 
