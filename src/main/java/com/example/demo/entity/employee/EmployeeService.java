@@ -2,7 +2,7 @@ package com.example.demo.entity.employee;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
+import com.example.demo.KIT.Validation.EmailValidation;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
 
@@ -71,74 +72,102 @@ public class EmployeeService {
         return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarterAccount);
     }
 
-    public Response storeEmployeeFromExcel(MultipartFile file) {
-        ArrayList<EmployeeEmailExcelResponse> emails = new ArrayList<EmployeeEmailExcelResponse>();
+    public Response storeEmployeeFromExcel(MultipartFile multipartFile) {
         try {
-            InputStream inputStream = file.getInputStream();
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
-            // dụng HSSFWorkbook nếu file có định dạng .xls
-            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
-            Iterator<Row> rowIterator = sheet.iterator();
-            Row row = rowIterator.next(); // todo: bypass first row ( title )
-            ArrayList<String> errors = new ArrayList<String>();
-            while (rowIterator.hasNext()) {
-                row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
+            if (!multipartFile.isEmpty()) {
+                ArrayList<EmployeeEmailExcelResponse> emails = new ArrayList<EmployeeEmailExcelResponse>();
+                InputStream inputStream = multipartFile.getInputStream();
+                Workbook workbook = new XSSFWorkbook(inputStream);
+                // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
+                // dụng HSSFWorkbook nếu file có định dạng .xls
+                Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
+                Iterator<Row> rowIterator = sheet.iterator();
+                Row row = rowIterator.next(); // todo: bypass first row ( title )
+                while (rowIterator.hasNext()) {
+                    row = rowIterator.next();
+                    ArrayList<String> errors = new ArrayList<String>();
+                    Iterator<Cell> cellIterator = row.cellIterator();
 
-                if (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    if (cell.getCellType() != CellType.BLANK) {
-                        Account _account = new Account();
-                        Employee _employee = new Employee();
-                        _account.setAccountEmail(cell.getStringCellValue());
-                        try {
-                            _account.setAccountRole(cellIterator.next().getStringCellValue());
-                        } catch (Exception e) {
-                            errors.add(Message.ROLE_ERROR);
+                    if (cellIterator.hasNext()) {
+                        Cell emailCell = cellIterator.next();
+                        if (emailCell.getCellType() != CellType.BLANK) {
+                            Account _account = new Account();
+                            Employee _employee = new Employee();
+                            try {
+                                String emailValue = emailCell.getStringCellValue();
+                                if (accountRepository.getAccountByEmail(emailValue).isEmpty()
+                                        && EmailValidation.track(emailValue)) {
+                                    _account.setAccountEmail(emailValue);
+                                } else {
+                                    System.out.println(emailValue);
+                                    throw new Exception(Message.EMAIL_UNVALID);
+                                }
+                            } catch (Exception error) {
+                                errors.add(error.getMessage());
+                            }
+                            try {
+                                _account.setAccountRole(cellIterator.next().getStringCellValue());
+                                // throw new Exception(Message.ROLE_ERROR);
+                            } catch (Exception error) {
+                                // errors.add(error.getMessage());
+                                errors.add(Message.ROLE_ERROR);
+                            }
+                            try {
+                                _account.setAccountPassword(cellIterator.next().getStringCellValue());
+                                // throw new Exception(Message.PASSWORD_ERROR);
+                            } catch (Exception error) {
+                                // errors.add(error.getMessage());
+                                errors.add(Message.PASSWORD_ERROR);
+                            }
+                            try {
+                                _employee.setHeadquarterId(cellIterator.next().getStringCellValue());
+                                // throw new Exception(Message.HEADQUARTER_ID_ERROR);
+                            } catch (Exception error) {
+                                // errors.add(error.getMessage());
+                                errors.add(Message.HEADQUARTER_ID_ERROR);
+                            }
+                            try {
+                                _employee.setEmployeePosition(cellIterator.next().getStringCellValue());
+                                // throw new Exception(Message.POSITION_ERROR);
+                            } catch (Exception error) {
+                                // errors.add(error.getMessage());
+                                errors.add(Message.POSITION_ERROR);
+                            }
+                            _employee.setAccountId(_account.getAccountId());
+                            _employee.setEmployeeAvatar(
+                                    "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                            if (errors.isEmpty()) {
+                                try {
+                                    accountRepository.save(_account);
+                                } catch (Exception e) {
+                                    emails.add(new EmployeeEmailExcelResponse(errors, emailCell.getRowIndex()));
+                                    break;
+                                }
+                                try {
+                                    employeeRepository.save(_employee);
+                                } catch (Exception e) {
+                                    accountRepository.deleteById(_account.getAccountId());
+                                }
+                            } else {
+                                emails.add(new EmployeeEmailExcelResponse(errors, emailCell.getRowIndex()));
+                            }
+                        } else {
+                            errors.add(new Exception(Message.EMAIL_ERROR).getMessage());
                         }
-                        try {
-                            _account.setAccountPassword(cellIterator.next().getStringCellValue());
-                        } catch (Exception e) {
-                            errors.add(Message.PASSWORD_ERROR);
-                        }
-                        try {
-                            _employee.setHeadquarterId(cellIterator.next().getStringCellValue());
-                        } catch (Exception e) {
-                            errors.add(Message.HEADQUARTER_ID_ERROR);
-                        }
-                        try {
-                            _employee.setEmployeePosition(cellIterator.next().getStringCellValue());
-                        } catch (Exception e) {
-                            errors.add(Message.POSITION_ERROR);
-                        }
-                        _employee.setAccountId(_account.getAccountId());
-                        _employee.setEmployeeAvatar(
-                                "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
-                        try {
-                            accountRepository.save(_account);
-                            employeeRepository.save(_employee);
 
-                        } catch (Exception e) {
-                            emails.add(new EmployeeEmailExcelResponse(_account.getAccountEmail(), errors,
-                                    "Hàng:" + String.valueOf(cell.getRowIndex()),
-                                    "Cột:" + String.valueOf(cell.getColumnIndex())));
-                        }
-                    } else {
-                        break;
                     }
-
                 }
+
+                workbook.close();
+                inputStream.close();
+
+                return new Response(HttpStatus.OK, Message.CREATE_FAIL_AMOUNT, emails.size(), emails);
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.setNotExistMessage("File"));
             }
-
-            workbook.close();
-            inputStream.close();
-
         } catch (IOException e) {
-            e.printStackTrace();
-            return new Response(HttpStatus.BAD_REQUEST, Message.UPLOAD_FAIL);
+            return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("File"));
         }
-        return new Response(HttpStatus.OK, Message.CREATE_FAIL_AMOUNT, emails.size(), emails);
     }
 
     @Transactional

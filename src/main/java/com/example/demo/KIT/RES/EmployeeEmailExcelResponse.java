@@ -8,14 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeEmailExcelResponse {
-    private String email;
     private ArrayList<String> errors;
-    private String[] coordinates = new String[2];
+    private int row;
 
-    public EmployeeEmailExcelResponse(String email, ArrayList<String> errors, String x, String y) {
-        this.email = email;
+    public EmployeeEmailExcelResponse(ArrayList<String> errors, int row) {
+        this.row = row;
         this.errors = errors;
-        this.coordinates[0] = x;
-        this.coordinates[1] = y;
     }
 }

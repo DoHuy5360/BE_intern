@@ -18,8 +18,26 @@ public class Message {
     public static final String UPLOAD_FAIL = "Tải File Thất Bại";
     public static final String UPLOAD_SUCCESS = "Tải File Thành Công";
 
-    public static final String ROLE_ERROR = "Vai Trò";
-    public static final String PASSWORD_ERROR = "Mật Khẩu";
-    public static final String HEADQUARTER_ID_ERROR = "Mã Trụ Sở";
-    public static final String POSITION_ERROR = "Vị Trí";
+    public static final String EMAIL_ERROR = "Email";
+    public static final String EMAIL_UNVALID = "Email Unvalid";
+    public static final String ROLE_ERROR = "Role";
+    public static final String PASSWORD_ERROR = "Password";
+    public static final String HEADQUARTER_ID_ERROR = "Headquarter ID";
+    public static final String POSITION_ERROR = "Position";
+
+    public static final String EMPTY = "Empty";
+    public static final String EXIST = "Exist";
+    public static final String FAIL = "Fail";
+
+    public static String setEmptyMessage(String name) {
+        return name + EMPTY;
+    }
+
+    public static String setNotExistMessage(String name) {
+        return name + " Not " + EXIST;
+    }
+
+    public static String setUploadFail(String name) {
+        return name + " Upload " + FAIL;
+    }
 }
