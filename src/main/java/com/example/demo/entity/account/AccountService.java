@@ -12,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
 public class AccountService {
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
+
+    public List<Account> checkLogin(String email, String password) {
+        return accountRepository.getAccountByEmailPassword(email, password);
+    }
 
     public Response getAllAccount() {
         List<Account> accounts = (List<Account>) accountRepository.findAll();

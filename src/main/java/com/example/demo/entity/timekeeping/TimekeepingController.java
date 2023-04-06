@@ -36,7 +36,6 @@ public class TimekeepingController {
 
     @PostMapping("/store")
     public void store(@RequestBody Timekeeping timekeeping) {
-        System.out.println(timekeeping);
         timekeepingService.storeTimekeeping(timekeeping);
     }
 

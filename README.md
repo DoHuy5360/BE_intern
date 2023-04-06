@@ -46,7 +46,7 @@ Response:
 ]
 ```
 
-## Thêm nhân viên
+## Thêm 1 nhân viên
 
 URL: `http://192.168.1.53:8080/api/v1/employee/store`
 

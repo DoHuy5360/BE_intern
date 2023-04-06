@@ -1,5 +1,7 @@
 package com.example.demo.KIT.RES;
 
+import java.util.Optional;
+
 import io.micrometer.core.instrument.config.validate.Validated.Invalid;
 
 public class Message {
@@ -31,9 +33,13 @@ public class Message {
     public static final String EXIST = "Exist";
     public static final String FAIL = "Fail";
     public static final String INVALID = "Invalid";
+    public static final String CHARACTER = "Character";
+
+    public static final String LOGIN_FAIL = "Login Fail";
+    public static final String LOGIN_SUCCESS = "Login Success";
 
     public static String setEmptyMessage(String name) {
-        return name + EMPTY;
+        return name + " " + EMPTY;
     }
 
     public static String setNotExistMessage(String name) {
@@ -46,5 +52,9 @@ public class Message {
 
     public static String setInvalid(String name) {
         return name + " " + INVALID;
+    }
+
+    public static String setLengthLimit(String name, int length) {
+        return name + " Limit is " + length + " " + CHARACTER;
     }
 }
