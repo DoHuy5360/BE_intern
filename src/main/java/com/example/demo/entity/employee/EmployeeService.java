@@ -26,6 +26,7 @@ import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
 import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
 import com.example.demo.KIT.Validation.EmailValidation;
+import com.example.demo.KIT.Validation.HeadquarterAccountValidation;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
@@ -54,25 +55,33 @@ public class EmployeeService {
     }
 
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
-        try {
-            Account _account = new Account();
-            _account.setAccountEmail(headquarterAccount.getAccountEmail());
-            _account.setAccountPassword(headquarterAccount.getAccountPassword());
-            _account.setAccountRole(headquarterAccount.getAccountRole());
+        Validation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
+                headquarterRepository).trackEmail()
+                .trackPassword().trackHeadquarterId();
+        if (headquarterAccountValidation.isValid()) {
+            try {
+                Account _account = new Account();
+                _account.setAccountEmail(headquarterAccount.getAccountEmail());
+                _account.setAccountPassword(headquarterAccount.getAccountPassword());
+                _account.setAccountRole(headquarterAccount.getAccountRole());
 
-            Employee _employee = new Employee();
-            _employee.setAccountId(_account.getAccountId());
-            _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
-            _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
-            _employee.setEmployeeAvatar(
-                    "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                Employee _employee = new Employee();
+                _employee.setAccountId(_account.getAccountId());
+                _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
+                _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
+                _employee.setEmployeeAvatar(
+                        "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
 
-            accountRepository.save(_account);
-            employeeRepository.save(_employee);
-        } catch (Exception e) {
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
+                accountRepository.save(_account);
+                employeeRepository.save(_employee);
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
+            }
+            return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
+        } else {
+            return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL,
+                    headquarterAccountValidation.getAmountErrors(), headquarterAccountValidation.getErrors());
         }
-        return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, headquarterAccount);
     }
 
     public Response storeEmployeeFromExcel(MultipartFile multipartFile) {
@@ -177,7 +186,7 @@ public class EmployeeService {
     public Response updateEmployee(String employeeId, Employee employee) {
         Validation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
                 headquarterRepository).trackIdExist()
-                .trackHeadquarterId().trackNumberLenghtEqual();
+                .trackHeadquarterId().trackPhoneLength().trackGenderLength();
         if (employeeValidation.isValid()) {
             Employee _Employee = employeeValidation.get();
             _Employee.setHeadquarterId(employee.getHeadquarterId());
@@ -194,7 +203,8 @@ public class EmployeeService {
             }
             return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
         } else {
-            return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getErrors());
+            return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getAmountErrors(),
+                    employeeValidation.getErrors());
         }
     }
 

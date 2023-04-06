@@ -20,4 +20,8 @@ public abstract class Validation {
     public ArrayList<String> getErrors() {
         return this.errors;
     }
+
+    public int getAmountErrors() {
+        return this.errors.size();
+    }
 }
