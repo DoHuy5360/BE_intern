@@ -35,6 +35,9 @@ public class Message {
     public static final String INVALID = "Invalid";
     public static final String CHARACTER = "Character";
 
+    public static final String LOGIN_FAIL = "Login Fail";
+    public static final String LOGIN_SUCCESS = "Login Success";
+
     public static String setEmptyMessage(String name) {
         return name + " " + EMPTY;
     }

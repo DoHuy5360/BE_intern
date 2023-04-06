@@ -56,8 +56,11 @@ public class EmployeeService {
 
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
         Validation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
-                headquarterRepository).trackEmail()
-                .trackPassword().trackHeadquarterId().trackRole();
+                headquarterRepository)
+                .trackEmail()
+                .trackPassword()
+                .trackHeadquarterId()
+                .trackRole();
         if (headquarterAccountValidation.isValid()) {
             try {
                 Account _account = new Account();
@@ -111,7 +114,6 @@ public class EmployeeService {
                                         && EmailValidation.track(emailValue)) {
                                     _account.setAccountEmail(emailValue);
                                 } else {
-                                    System.out.println(emailValue);
                                     throw new Exception(Message.EMAIL_UNVALID);
                                 }
                             } catch (Exception error) {
@@ -185,8 +187,11 @@ public class EmployeeService {
     @Transactional
     public Response updateEmployee(String employeeId, Employee employee) {
         Validation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
-                headquarterRepository).trackIdExist()
-                .trackHeadquarterId().trackPhoneLength().trackGenderLength();
+                headquarterRepository)
+                .trackIdExist()
+                .trackHeadquarterId()
+                .trackPhoneLength()
+                .trackGenderLength();
         if (employeeValidation.isValid()) {
             Employee _Employee = employeeValidation.get();
             _Employee.setHeadquarterId(employee.getHeadquarterId());
