@@ -45,4 +45,11 @@ public class HeadquarterAccountValidation extends Validation {
             this.errors.add(Message.setNotExistMessage("Headquarter ID"));
         return this;
     }
+
+    public HeadquarterAccountValidation trackRole() {
+        if (!RoleValidation.track(this.headquarterAccountTray.getAccountRole())) {
+            this.errors.add(Message.setInvalid("Role"));
+        }
+        return this;
+    }
 }

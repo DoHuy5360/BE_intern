@@ -57,7 +57,7 @@ public class EmployeeService {
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
         Validation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
                 headquarterRepository).trackEmail()
-                .trackPassword().trackHeadquarterId();
+                .trackPassword().trackHeadquarterId().trackRole();
         if (headquarterAccountValidation.isValid()) {
             try {
                 Account _account = new Account();
