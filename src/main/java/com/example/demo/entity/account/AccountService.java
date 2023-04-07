@@ -5,20 +5,25 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.KIT.Query.EmployeeAccountQuery;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
+import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.entity.employee.Employee;
 
 @Service
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public List<Account> checkLogin(String email, String password) {
-        return accountRepository.getAccountByEmailPassword(email, password);
+    @Autowired
+    private EmployeeAccountQuery employeeAccountQuery;
+
+    public List<EmployeeAccountTray> checkLogin(String email, String password) {
+        return employeeAccountQuery.getAccountByEmailPassword(email, password);
     }
 
     public Response getAllAccount() {

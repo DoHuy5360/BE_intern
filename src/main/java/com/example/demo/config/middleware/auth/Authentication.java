@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.KIT.JWT.JwtGenerator;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
+import com.example.demo.KIT.TRAY.EmployeeAccountTray;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
+import com.example.demo.entity.employee.Employee;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -57,7 +59,7 @@ public class Authentication implements HandlerInterceptor {
         String password = jsonMap.get("password");
 
         // Do something với email và password, ví dụ: kiểm tra, xử lý dữ liệu,...
-        List<Account> account = accountService.checkLogin(email, password);
+        List<EmployeeAccountTray> account = accountService.checkLogin(email, password);
         // Trả về true để cho phép request đi tiếp, hoặc false để chặn request
         if (account.isEmpty()) {
             response.setContentType("application/json");

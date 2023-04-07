@@ -15,7 +15,4 @@ public interface AccountRepository extends CrudRepository<Account, String> {
     @Query(value = "select * from account where account_email = ?1", nativeQuery = true)
     List<Account> getAccountByEmail(String email);
 
-    @Query(value = "select * from account where account_email = ?1 and account_password = ?2 limit 1", nativeQuery = true)
-    List<Account> getAccountByEmailPassword(String email, String password);
-
 }

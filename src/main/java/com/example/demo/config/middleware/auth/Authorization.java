@@ -28,7 +28,7 @@ public class Authorization implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
-        // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về
+        // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về`
         // client
     }
 
