@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.JWT.JwtGenerator;
+import com.example.demo.KIT.JWT.JwtHandler;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountTray;
@@ -76,7 +76,9 @@ public class Authentication implements HandlerInterceptor {
             final int MINUTE = 5;
             final int SECOND = 60;
             final int MILLISECOND = 1000;
-            String jwtToken = JwtGenerator.generateToken(account.get(0).toString(), MINUTE * SECOND * MILLISECOND);
+            ObjectMapper convertJson = new ObjectMapper();
+            String employeeAccountJson = convertJson.writeValueAsString(account.get(0));
+            String jwtToken = JwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
             Cookie cookie = new Cookie("jwt-token", jwtToken);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);

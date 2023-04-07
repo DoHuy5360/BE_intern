@@ -7,22 +7,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.JWT.JwtGenerator;
+import com.example.demo.KIT.JWT.JwtHandler;
+import com.example.demo.KIT.TRAY.EmployeeAccountTray;
 
 @Component
-public class Authorization implements HandlerInterceptor {
+public class AdminAuthorization implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        // Xử lý trước khi request đi đến controller
-        // Trả về true nếu muốn cho phép request đi tiếp đến controller, ngược lại trả
-        // về false
         String header = request.getHeader("Authorization");
         String jwtToken = header.replace("Bearer ", "");
-        String re = JwtGenerator.verifyToken(jwtToken);
-        System.out.println(re);
-        return true;
+
+        EmployeeAccountTray re = JwtHandler.verifyToken(jwtToken);
+
+        return (re.getAccountRole().equals("Admin")) ? true : false;
     }
 
     @Override
