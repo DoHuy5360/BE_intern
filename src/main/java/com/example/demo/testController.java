@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.KIT.JWT.JwtHandler;
-import com.example.demo.KIT.JWT.JwtToken;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 
@@ -36,6 +35,6 @@ public class testController {
     // public void decode(@RequestHeader("Authorization") String
     // authorizationHeader) {
     public String decode() {
-        return "Hell";
+        return "Token still alive";
     }
 }

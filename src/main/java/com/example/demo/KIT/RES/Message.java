@@ -37,6 +37,8 @@ public class Message {
 
     public static final String LOGIN_FAIL = "Login Fail";
     public static final String LOGIN_SUCCESS = "Login Success";
+    public static final String WRONG = "Wrong";
+    public static final String EXPIRED = "Expired";
 
     public static String setEmptyMessage(String name) {
         return name + " " + EMPTY;
@@ -56,5 +58,17 @@ public class Message {
 
     public static String setLengthLimit(String name, int length) {
         return name + " Limit is " + length + " " + CHARACTER;
+    }
+
+    public static String setWrongMessage(String name) {
+        return WRONG + " " + name;
+    }
+
+    public static String setExpiredMessage(String name) {
+        return EXPIRED + " " + name;
+    }
+
+    public static String setFailMessage(String name) {
+        return name + " " + FAIL;
     }
 }

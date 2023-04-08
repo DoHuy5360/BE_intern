@@ -3,24 +3,39 @@ package com.example.demo.config.middleware.auth;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.JWT.JwtHandler;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.KIT.RES.Message;
+import com.example.demo.KIT.RES.Response;
 
 @Component
 public class UserAuthorization implements HandlerInterceptor {
+    private ResponseHandler responseHandler;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        String header = request.getHeader("Authorization");
-        String jwtToken = header.replace("Bearer ", "");
-        EmployeeAccountTray re = JwtHandler.verifyToken(jwtToken);
+        this.responseHandler = new ResponseHandler(request, response);
+        AuthorizationHandler authorizationHandler = new AuthorizationHandler(request);
+        if (authorizationHandler.isVerify()) {
+            String role = authorizationHandler.getAccountRole();
+            if (role.equals(Role.EMPLOYEE) || role.equals(Role.MANAGER)) {
+                System.out.println(authorizationHandler.getEmployeeId());
+                request.setAttribute("EmployeeId", authorizationHandler.getEmployeeId());
+                return true;
+            } else {
+                responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Role"))).send();
+                return false;
+            }
 
-        return (re.getAccountRole().equals("User")) ? true : false;
+        } else {
+            responseHandler.setContent(authorizationHandler.getResponse()).send();
+            return false;
+        }
+
     }
 
     @Override
