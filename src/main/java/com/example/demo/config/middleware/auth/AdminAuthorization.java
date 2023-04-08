@@ -44,7 +44,6 @@ public class AdminAuthorization implements HandlerInterceptor {
             ModelAndView modelAndView) throws Exception {
         // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về`
         // client
-        modelAndView.addObject("de", 1);
     }
 
     @Override

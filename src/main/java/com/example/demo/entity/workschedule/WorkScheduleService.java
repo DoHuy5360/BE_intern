@@ -40,7 +40,6 @@ public class WorkScheduleService {
         List<EmployeeWorkscheduleTray> manyWS;
         try {
             manyWS = employeeWorkscheduleQuery.getWorkSchedule();
-
         } catch (Exception e) {
             return new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL);
 
