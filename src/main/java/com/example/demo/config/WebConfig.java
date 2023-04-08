@@ -56,7 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(workSchedulePath + "/{id}/show")
                                 // ! account
                                 .addPathPatterns(accountPath + "/")
-                                .addPathPatterns(accountPath + "/{id}")
+                                .addPathPatterns(accountPath + "/{id}/show")
                                 .addPathPatterns(accountPath + "/store")
                                 .addPathPatterns(accountPath + "/{id}/update")
                                 .addPathPatterns(accountPath + "/{id}/delete")
@@ -67,7 +67,7 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns("/decode")
                                 // ! employee
                                 .addPathPatterns(employeePath + "/information")
-                                .addPathPatterns(employeePath + "/update-self")
+                                .addPathPatterns(employeePath + "/self-update")
                                 // ! work schedule
                                 .addPathPatterns(workSchedulePath + "/store")
                                 .addPathPatterns(workSchedulePath + "/self-schedule")

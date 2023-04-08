@@ -63,7 +63,7 @@ public class EmployeeController {
         return employeeService.updateEmployee(id, employee);
     }
 
-    @PutMapping("/update-self")
+    @PutMapping("/self-update")
     public Response updateEmployeSelf(HttpServletRequest request,
             @RequestBody Employee employee) {
         String employeeId = (String) request.getAttribute("EmployeeId");

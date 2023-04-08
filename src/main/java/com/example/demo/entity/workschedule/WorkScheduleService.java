@@ -79,9 +79,9 @@ public class WorkScheduleService {
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
         if (oneWS.isPresent()) {
             WorkSchedule _WS = oneWS.get();
+            System.out.println(_WS.getEmployeeId());
             if (_WS.getEmployeeId().equals(employeeId)) {
                 try {
-                    _WS.setEmployeeId(workSchedule.getEmployeeId());
                     _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
                     _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
                     _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
