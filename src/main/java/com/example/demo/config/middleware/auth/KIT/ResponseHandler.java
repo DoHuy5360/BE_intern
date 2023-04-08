@@ -1,4 +1,4 @@
-package com.example.demo.config.middleware.auth;
+package com.example.demo.config.middleware.auth.KIT;
 
 import java.io.IOException;
 import java.io.PrintWriter;

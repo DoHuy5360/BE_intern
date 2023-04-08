@@ -14,6 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
         private String apiPathV1 = "/api/v1";
         private String apiPathV2 = "/api/v2";
         private String employeePath = getPathOf(apiPathV2, "/employee");
+        private String headquarterPath = getPathOf(apiPathV2, "/headquarter");
         @Autowired
         private Authentication authentication;
         @Autowired
@@ -30,11 +31,10 @@ public class WebConfig implements WebMvcConfigurer {
                 interceptorRegistry.addInterceptor(authentication)
                                 // .addPathPatterns("/**")
                                 .addPathPatterns("/login")
-                                // .addPathPatterns("/api/v1")
                                 .excludePathPatterns("/public/**");
 
+                // todo: Only Manager role can access to these route.
                 interceptorRegistry.addInterceptor(adminAuthorization)
-                                .addPathPatterns("/api/v1/account/**")
                                 // ! employee
                                 .addPathPatterns(employeePath + "/")
                                 .addPathPatterns(employeePath + "/{id}/show")
@@ -43,13 +43,21 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(employeePath + "/all-information")
                                 .addPathPatterns(employeePath + "/{id}/delete")
                                 .addPathPatterns(employeePath + "/{id}/update")
+                                // ! headquarter
+                                .addPathPatterns(headquarterPath + "/")
+                                .addPathPatterns(headquarterPath + "/store")
+                                .addPathPatterns(headquarterPath + "/{id}/update")
+                                .addPathPatterns(headquarterPath + "/{id}/detele")
+                                // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
-
+                // todo: Employee & Manager can access to these route.
                 interceptorRegistry.addInterceptor(userAuthorization)
                                 .addPathPatterns("/decode")
                                 // ! employee
                                 .addPathPatterns(employeePath + "/information")
                                 .addPathPatterns(employeePath + "/update-self")
+
+                                // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
         }
 }

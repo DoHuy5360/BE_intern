@@ -1,4 +1,4 @@
-package com.example.demo.config.middleware.auth;
+package com.example.demo.config.middleware.auth.KIT;
 
 import javax.servlet.http.HttpServletRequest;
 
