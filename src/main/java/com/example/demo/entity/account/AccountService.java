@@ -12,7 +12,6 @@ import com.example.demo.KIT.Query.EmployeeAccountQuery;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeAccountTray;
-import com.example.demo.entity.employee.Employee;
 
 @Service
 public class AccountService {
@@ -88,7 +87,7 @@ public class AccountService {
                 return new Response(HttpStatus.BAD_REQUEST, Message.NOT_FOUND);
             }
         } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_MATCH);
+            return new Response(HttpStatus.NOT_FOUND, Message.setNotMatch("Retype Password"));
         }
     }
 

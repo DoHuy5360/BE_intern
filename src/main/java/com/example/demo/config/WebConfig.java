@@ -16,6 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
         private String employeePath = getPathOf(apiPathV2, "/employee");
         private String headquarterPath = getPathOf(apiPathV2, "/headquarter");
         private String workSchedulePath = getPathOf(apiPathV2, "/workschedule");
+        private String accountPath = getPathOf(apiPathV2, "/account");
         @Autowired
         private Authentication authentication;
         @Autowired
@@ -53,7 +54,12 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(workSchedulePath + "/")
                                 .addPathPatterns(workSchedulePath + "/all-information")
                                 .addPathPatterns(workSchedulePath + "/{id}/show")
-
+                                // ! account
+                                .addPathPatterns(accountPath + "/")
+                                .addPathPatterns(accountPath + "/{id}")
+                                .addPathPatterns(accountPath + "/store")
+                                .addPathPatterns(accountPath + "/{id}/update")
+                                .addPathPatterns(accountPath + "/{id}/delete")
                                 // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
                 // todo: Employee & Manager can access to these route.
@@ -67,6 +73,8 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(workSchedulePath + "/self-schedule")
                                 .addPathPatterns(workSchedulePath + "/{id}/delete")
                                 .addPathPatterns(workSchedulePath + "/{id}/update")
+                                // ! account
+                                .addPathPatterns(accountPath + "/reset-password")
                                 // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
         }
