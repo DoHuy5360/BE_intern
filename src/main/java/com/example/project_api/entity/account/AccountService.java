@@ -5,26 +5,30 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
-    @Autowired private AccountResponsesity accountResponsesity;
+    @Autowired private AccountRepository accountRepository;
+
+    @Autowired private PasswordEncoder passwordEncoder;
 
     public List<Account> getAllaccount() {
-        return (List<Account>) accountResponsesity.findAll();
+        return (List<Account>) accountRepository.findAll();
     }
 
     public Optional<Account> getAccountById(String AccountUserId) {
-        return accountResponsesity.findById(AccountUserId);
+        return accountRepository.findById(AccountUserId);
     }
 
     public Optional<Account> getAccountByEmail(String emailAcc){
-        return accountResponsesity.findByEmail(emailAcc);
+        return accountRepository.findByEmail(emailAcc);
     }
 
     public Account createAccount(Account account) {
-        accountResponsesity.save(account);
+        account.setPassword(this.passwordEncoder.encode(account.getPassword()));
+        accountRepository.save(account);
         return account;
     }
 
@@ -32,31 +36,39 @@ public class AccountService {
         Account updateAccountexist = getAccountById(account_id).orElse(null);
         if (updateAccountexist != null) {
             updateAccountexist.setEmail(account.getEmail());
-            updateAccountexist.setPassword(account.getPassword());
-            accountResponsesity.save(updateAccountexist);
+            accountRepository.save(updateAccountexist);
         }
         return updateAccountexist;
     }
 
     public boolean resetPassword(String email, Account updateAccount){
-        boolean flag = false;
-        Account updatePassexist = accountResponsesity.findByEmail(email).orElse(null);
+        Account updatePassexist = accountRepository.findByEmail(email).orElse(null);
         if (updatePassexist != null) {
-            updatePassexist.setPassword(updateAccount.getPassword());
-            updatePassexist.setRetypePassword(updateAccount.getRetypePassword());
-            if(updatePassexist.getPassword().equals(updatePassexist.getRetypePassword())){
-                accountResponsesity.save(updatePassexist);
-                flag = true;
-            }else {
-                flag = false;
-            }
+            updatePassexist.setPassword(this.passwordEncoder.encode(updateAccount.getPassword()));
+            updatePassexist.setRetypePassword(this.passwordEncoder.encode(updateAccount.getRetypePassword()));
+            accountRepository.save(updatePassexist);
         }
-        return flag;
+        return false;
+    }
+
+    public boolean forgotPassword(String token, Account accountReset) {
+        Account forgotPassAccount = accountRepository.findbyResetToken(token).orElse(null);
+        if(forgotPassAccount != null) {
+            forgotPassAccount.setResetToken(null);
+            forgotPassAccount.setPassword(this.passwordEncoder.encode(accountReset.getPassword()));
+            forgotPassAccount.setRetypePassword(this.passwordEncoder.encode(accountReset.getRetypePassword()));
+            accountRepository.save(forgotPassAccount);
+        }
+        return false;
     }
 
     public Account deleteAccount(String account_id, Account account) {
-        accountResponsesity.deleteById(account_id);
+        accountRepository.deleteById(account_id);
         return account;
+    }
+
+    public Optional<Account> getAccountResetToken(String resetToken) {
+        return accountRepository.findbyResetToken(resetToken);
     }
     
 }

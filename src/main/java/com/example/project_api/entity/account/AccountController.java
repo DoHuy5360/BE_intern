@@ -49,8 +49,18 @@ public class AccountController {
 
     @PutMapping("/resetPassword/{email}")
     public ResponseEntity<Account> resetPassword(@PathVariable String email, @RequestBody Account account) {
-        boolean updatePasswordSuccess = accountService.resetPassword(email, account);
-        if(updatePasswordSuccess) {
+        if(account.getPassword().equals(account.getRetypePassword())) {
+            accountService.resetPassword(email, account);
+            return new ResponseEntity<Account>(account, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/forgot/forgotPassword/{token}")
+    public ResponseEntity<Account> forgotPassword(@PathVariable String token, @RequestBody Account account) {
+        if(account.getPassword().equals(account.getRetypePassword())) {
+            accountService.forgotPassword(token, account);
             return new ResponseEntity<Account>(account, HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

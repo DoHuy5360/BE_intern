@@ -4,22 +4,20 @@ package com.example.project_api.entity.account;
 
 
 import java.util.UUID;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import com.example.project_api.entity.employee.Employee;
 import com.example.project_api.ulities.Time;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
+
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -46,7 +44,8 @@ public class Account {
 
     @Column(length = 100, nullable = false)
     private String updateAt = Time.getDeadCurrentDate();
+
+    @Column
+    private String resetToken; 
     
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
-    private Employee employee;
 }
