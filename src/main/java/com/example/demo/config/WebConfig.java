@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
         private String apiPathV2 = "/api/v2";
         private String employeePath = getPathOf(apiPathV2, "/employee");
         private String headquarterPath = getPathOf(apiPathV2, "/headquarter");
+        private String workSchedulePath = getPathOf(apiPathV2, "/workschedule");
         @Autowired
         private Authentication authentication;
         @Autowired
@@ -48,6 +49,11 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(headquarterPath + "/store")
                                 .addPathPatterns(headquarterPath + "/{id}/update")
                                 .addPathPatterns(headquarterPath + "/{id}/detele")
+                                // ! work schedule
+                                .addPathPatterns(workSchedulePath + "/")
+                                .addPathPatterns(workSchedulePath + "/all-information")
+                                .addPathPatterns(workSchedulePath + "/{id}/show")
+
                                 // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
                 // todo: Employee & Manager can access to these route.
@@ -56,7 +62,11 @@ public class WebConfig implements WebMvcConfigurer {
                                 // ! employee
                                 .addPathPatterns(employeePath + "/information")
                                 .addPathPatterns(employeePath + "/update-self")
-
+                                // ! work schedule
+                                .addPathPatterns(workSchedulePath + "/store")
+                                .addPathPatterns(workSchedulePath + "/self-schedule")
+                                .addPathPatterns(workSchedulePath + "/{id}/delete")
+                                .addPathPatterns(workSchedulePath + "/{id}/update")
                                 // ? Unapply to these route.
                                 .excludePathPatterns("/public/**");
         }

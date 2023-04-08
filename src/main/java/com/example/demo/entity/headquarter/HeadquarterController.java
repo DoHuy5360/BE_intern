@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.KIT.RES.Response;
 
 @RestController
-@RequestMapping("/api/v1/headquarter")
+@RequestMapping("/api/v2/headquarter")
 @CrossOrigin("*")
 public class HeadquarterController {
     @Autowired

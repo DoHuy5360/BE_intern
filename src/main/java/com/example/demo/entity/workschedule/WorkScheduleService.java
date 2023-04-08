@@ -26,6 +26,16 @@ public class WorkScheduleService {
         return new Response(HttpStatus.OK, Message.READ_SUCCESS, workSchedules.size(), workSchedules);
     }
 
+    public Response getAllMySchedule(String id) {
+        List<WorkSchedule> oneWS = workScheduleRepository.findWorkScheduleById(id);
+        if (oneWS.isEmpty()) {
+            return new Response(HttpStatus.OK, Message.setEmptyMessage("Data"));
+
+        } else {
+            return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneWS.size(), oneWS);
+        }
+    }
+
     public Response getAllInfo() {
         List<EmployeeWorkscheduleTray> manyWS;
         try {
@@ -45,7 +55,8 @@ public class WorkScheduleService {
 
     }
 
-    public Response storeRecord(WorkSchedule workSchedule) {
+    public Response storeRecord(String employeeId, WorkSchedule workSchedule) {
+        workSchedule.setEmployeeId(employeeId);
         workScheduleRepository.save(workSchedule);
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(workSchedule.getWorkScheduleId());
         if (oneWS.isPresent()) {
@@ -55,32 +66,36 @@ public class WorkScheduleService {
         }
     }
 
-    public Response deleteRecord(String id) {
-        if (workScheduleRepository.existsById(id)) {
-            workScheduleRepository.deleteById(id);
-            return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
-        } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.DELETE_FAIL);
-        }
+    @Transactional
+    public Response deleteRecord(String employeeId, String id) {
+        workScheduleRepository.deleteByEmployeeIdAndWorkScheduleId(employeeId, id);
+        Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
+
+        return (oneWS.isEmpty()) ? new Response(HttpStatus.OK, Message.DELETE_SUCCESS)
+                : new Response(HttpStatus.NOT_FOUND, Message.DELETE_FAIL);
     }
 
     @Transactional
-    public Response updateRecord(String id, WorkSchedule workSchedule) {
+    public Response updateRecord(String employeeId, String id, WorkSchedule workSchedule) {
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(id);
         if (oneWS.isPresent()) {
-            try {
-                WorkSchedule _WS = oneWS.get();
-                _WS.setEmployeeId(workSchedule.getEmployeeId());
-                _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
-                _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
-                _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
-                _WS.setWorkScheduleColor(workSchedule.getWorkScheduleColor());
-                _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
-                workScheduleRepository.save(_WS);
-            } catch (Exception e) {
-                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+            WorkSchedule _WS = oneWS.get();
+            if (_WS.getEmployeeId().equals(employeeId)) {
+                try {
+                    _WS.setEmployeeId(workSchedule.getEmployeeId());
+                    _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
+                    _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
+                    _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
+                    _WS.setWorkScheduleColor(workSchedule.getWorkScheduleColor());
+                    _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
+                    workScheduleRepository.save(_WS);
+                } catch (Exception e) {
+                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+                }
+                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.setNotMatch("User Id"));
             }
-            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
         } else {
             return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
         }
