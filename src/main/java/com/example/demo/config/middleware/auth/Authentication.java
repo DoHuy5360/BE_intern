@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.JWT.JwtGenerator;
+import com.example.demo.KIT.JWT.JwtHandler;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
+import com.example.demo.KIT.TRAY.EmployeeAccountTray;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
+import com.example.demo.entity.employee.Employee;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -57,7 +59,7 @@ public class Authentication implements HandlerInterceptor {
         String password = jsonMap.get("password");
 
         // Do something với email và password, ví dụ: kiểm tra, xử lý dữ liệu,...
-        List<Account> account = accountService.checkLogin(email, password);
+        List<EmployeeAccountTray> account = accountService.checkLogin(email, password);
         // Trả về true để cho phép request đi tiếp, hoặc false để chặn request
         if (account.isEmpty()) {
             response.setContentType("application/json");
@@ -71,10 +73,12 @@ public class Authentication implements HandlerInterceptor {
             printWriter.flush();
             return false;
         } else {
-            final int MINUTE = 5;
+            final int MINUTE = 15;
             final int SECOND = 60;
             final int MILLISECOND = 1000;
-            String jwtToken = JwtGenerator.generateToken(account.get(0).toString(), MINUTE * SECOND * MILLISECOND);
+            ObjectMapper convertJson = new ObjectMapper();
+            String employeeAccountJson = convertJson.writeValueAsString(account.get(0));
+            String jwtToken = JwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
             Cookie cookie = new Cookie("jwt-token", jwtToken);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);

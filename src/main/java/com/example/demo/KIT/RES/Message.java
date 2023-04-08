@@ -17,7 +17,7 @@ public class Message {
     public static final String DELETE_SUCCESS = "Xóa Thành Công";
 
     public static final String NOT_FOUND = "Không Tìm Thấy";
-    public static final String NOT_MATCH = "Không KhỚp";
+    public static final String MATCH = "Match";
 
     public static final String UPLOAD_FAIL = "Tải File Thất Bại";
     public static final String UPLOAD_SUCCESS = "Tải File Thành Công";
@@ -37,6 +37,12 @@ public class Message {
 
     public static final String LOGIN_FAIL = "Login Fail";
     public static final String LOGIN_SUCCESS = "Login Success";
+    public static final String WRONG = "Wrong";
+    public static final String EXPIRED = "Expired";
+
+    public static String setNotMatch(String name) {
+        return name + " not " + MATCH;
+    }
 
     public static String setEmptyMessage(String name) {
         return name + " " + EMPTY;
@@ -56,5 +62,17 @@ public class Message {
 
     public static String setLengthLimit(String name, int length) {
         return name + " Limit is " + length + " " + CHARACTER;
+    }
+
+    public static String setWrongMessage(String name) {
+        return WRONG + " " + name;
+    }
+
+    public static String setExpiredMessage(String name) {
+        return EXPIRED + " " + name;
+    }
+
+    public static String setFailMessage(String name) {
+        return name + " " + FAIL;
     }
 }
