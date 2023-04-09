@@ -21,7 +21,8 @@ import com.auth0.jwt.exceptions.TokenExpiredException;;
 
 public class JwtHandler {
 
-    private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
+    // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
+    private static final String SECRET_KEY = "abcxyz123";
 
     public static String generateToken(String subject, long expirationTimeMillis) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
