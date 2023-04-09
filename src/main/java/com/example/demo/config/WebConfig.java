@@ -29,6 +29,14 @@ public class WebConfig implements WebMvcConfigurer {
                 return api + name;
         }
 
+        public void addCorsMappings(CorsRegistry corsRegistry) {
+                corsRegistry.addMapping("/**") // Đường dẫn được áp dụng cho CORS
+                                .allowedOrigins("*") // Các domain được phép truy cập, có thể thay đổi "*" nếu muốn cho
+                                                     // phép tất cả domain
+                                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Phương thức HTTP được phép
+                                .allowedHeaders("*"); // Các header được phép
+        }
+
         public void addInterceptors(InterceptorRegistry interceptorRegistry) {
                 // .addPathPatterns("/**")
                 interceptorRegistry.addInterceptor(authentication)

@@ -36,6 +36,14 @@ public class Authentication implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        response.setHeader("Access-Control-Allow-Origin", "*"); // Cho phép tất cả các nguồn gốc
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"); // Cho phép các phương thức POST,
+                                                                                      // GET, PUT, DELETE
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Cho phép các tiêu đề
+                                                                                           // Content-Type và
+                                                                                           // Authorization
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // Cho phép sử dụng thông tin đăng nhập của
+                                                                        // người dùng
         // Lấy đối tượng BufferedReader để đọc dữ liệu từ luồng đầu vào của request
         BufferedReader reader = request.getReader();
         StringBuilder body = new StringBuilder();
