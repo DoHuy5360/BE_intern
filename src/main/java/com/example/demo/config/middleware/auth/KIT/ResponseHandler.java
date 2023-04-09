@@ -27,6 +27,14 @@ public class ResponseHandler {
         this.request = request;
         this.response.setContentType("application/json");
         this.response.setCharacterEncoding("UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*"); // Cho phép tất cả các nguồn gốc
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"); // Cho phép các phương thức POST,
+                                                                                      // GET, PUT, DELETE
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Cho phép các tiêu đề
+                                                                                           // Content-Type và
+                                                                                           // Authorization
+        response.setHeader("Access-Control-Allow-Credentials", "true"); // Cho phép sử dụng thông tin đăng nhập của
+                                                                        // người dùng
     }
 
     public ResponseHandler setContent(Response responseBody) {
