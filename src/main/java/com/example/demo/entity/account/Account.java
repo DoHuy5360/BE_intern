@@ -26,7 +26,7 @@ public class Account {
     @Column(length = 50, nullable = true, unique = false)
     private String accountEmail;
 
-    @Column(length = 50, nullable = true)
+    @Column(length = 200, nullable = true)
     private String accountPassword;
 
     @Transient
@@ -34,6 +34,9 @@ public class Account {
 
     @Column(length = 50, nullable = true)
     private String accountRole;
+    public void setAccountRole(String accountRole){
+        this.accountRole = accountRole;
+    }
 
     @Column(length = 100, nullable = false)
     private String createAt = Time.getDeadCurrentDate();

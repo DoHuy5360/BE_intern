@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.KIT.RES.Message;
@@ -19,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Account> getAllAccount() {
         return (List<Account>) accountRepository.findAll();
@@ -43,6 +47,8 @@ public class AccountService {
     }
 
     public ResponseEntity<Account> storeAccount(Account account) {
+        String encodedPassword = passwordEncoder.encode(account.getAccountPassword());
+        account.setAccountPassword(encodedPassword);
         accountRepository.save(account);
         Optional<Account> one_AC = accountRepository.findById(account.getAccountId());
         if (one_AC.isPresent()) {
@@ -102,5 +108,4 @@ public class AccountService {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
-
 }
