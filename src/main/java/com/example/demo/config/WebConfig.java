@@ -1,8 +1,13 @@
 package com.example.demo.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,12 +34,18 @@ public class WebConfig implements WebMvcConfigurer {
                 return api + name;
         }
 
-        public void addCorsMappings(CorsRegistry corsRegistry) {
-                corsRegistry.addMapping("/**") // Đường dẫn được áp dụng cho CORS
-                                .allowedOrigins("*") // Các domain được phép truy cập, có thể thay đổi "*" nếu muốn cho
-                                                     // phép tất cả domain
-                                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Phương thức HTTP được phép
-                                .allowedHeaders("*"); // Các header được phép
+        @Bean
+        public CorsFilter corsFilter() {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowCredentials(true);
+                corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+                corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+                corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+                UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+                corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
+                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+                return new CorsFilter(urlBasedCorsConfigurationSource);
         }
 
         public void addInterceptors(InterceptorRegistry interceptorRegistry) {
