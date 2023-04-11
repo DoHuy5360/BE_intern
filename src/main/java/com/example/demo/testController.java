@@ -21,10 +21,14 @@ public class testController {
     }
 
     @PostMapping("/login")
-    public Response home(HttpServletRequest httpServletRequest) {
-        Object jwtToken = (Object) httpServletRequest.getAttribute("jwtToken");
-        Object email = (String) httpServletRequest.getAttribute("email");
-        new DiscordLoger().prepareContent(String.format("**```%s -> has logged in! ✅```**", email)).send();
+    public Response home(HttpServletRequest request) {
+        String userIp = request.getRemoteAddr();
+        int userPort = request.getRemotePort();
+        Object jwtToken = (Object) request.getAttribute("jwtToken");
+        Object email = (String) request.getAttribute("email");
+        new DiscordLoger()
+                .prepareContent(String.format("**```%s : has logged in from -> %s:%d ✅```**", email, userIp, userPort))
+                .send();
         return new Response(HttpStatus.OK, Message.LOGIN_SUCCESS, jwtToken);
 
     }
