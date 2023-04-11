@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.KIT.Query.EmployeeAccountQuery;
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.kit.query.EmployeeAccountQuery;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 
 @Service
 public class AccountService {

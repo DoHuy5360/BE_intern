@@ -1,4 +1,4 @@
-package com.example.demo.KIT.Util;
+package com.example.demo.kit.util;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

@@ -1,7 +1,7 @@
-package com.example.demo.KIT.JWT;
+package com.example.demo.kit.jwt;
 
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.KIT.RES.Response;
+import com.example.demo.kit.res.Response;
 
 @RestController
 @RequestMapping("/api/v1/timekeeping")

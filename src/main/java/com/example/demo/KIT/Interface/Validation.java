@@ -1,4 +1,4 @@
-package com.example.demo.KIT.Interface;
+package com.example.demo.kit.Interface;
 
 import java.util.ArrayList;
 import java.util.Optional;

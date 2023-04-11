@@ -1,4 +1,4 @@
-package com.example.demo.KIT.RES;
+package com.example.demo.kit.res;
 
 import org.springframework.http.HttpStatus;
 

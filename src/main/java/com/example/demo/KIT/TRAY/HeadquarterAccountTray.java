@@ -1,4 +1,4 @@
-package com.example.demo.KIT.TRAY;
+package com.example.demo.kit.tray;
 
 import com.example.demo.entity.headquarter.Headquarter;
 import com.fasterxml.jackson.core.JsonProcessingException;

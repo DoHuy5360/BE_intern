@@ -1,4 +1,4 @@
-package com.example.demo.KIT.Util;
+package com.example.demo.kit.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

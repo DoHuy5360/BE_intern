@@ -1,4 +1,4 @@
-package com.example.demo.KIT.Query;
+package com.example.demo.kit.query;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.KIT.TRAY.EmployeeWorkscheduleTray;
+import com.example.demo.kit.tray.EmployeeWorkscheduleTray;
 
 @Repository
 public interface EmployeeWorkscheduleQuery extends CrudRepository<EmployeeWorkscheduleTray, String> {

@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.KIT.Query.EmployeeWorkscheduleQuery;
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeWorkscheduleTray;
-import com.example.demo.KIT.Util.Time;
+import com.example.demo.kit.query.EmployeeWorkscheduleQuery;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeWorkscheduleTray;
+import com.example.demo.kit.util.Time;
 
 @Service
 public class WorkScheduleService {
@@ -86,7 +86,7 @@ public class WorkScheduleService {
                     _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
                     _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
                     _WS.setWorkScheduleColor(workSchedule.getWorkScheduleColor());
-                    _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
+                    _WS.setWorkScheduleTime(Time.getCurrentTimeThangFormat());
                     workScheduleRepository.save(_WS);
                 } catch (Exception e) {
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);

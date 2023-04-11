@@ -1,4 +1,4 @@
-package com.example.demo.KIT.TRAY;
+package com.example.demo.kit.tray;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

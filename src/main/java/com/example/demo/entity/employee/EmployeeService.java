@@ -2,8 +2,11 @@ package com.example.demo.entity.employee;
 
 import java.util.List;
 import java.util.Optional;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,19 +21,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.KIT.Interface.Validation;
-import com.example.demo.KIT.Query.EmployeeAccountHeadquarterQuery;
-import com.example.demo.KIT.RES.EmployeeEmailExcelResponse;
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
-import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
-import com.example.demo.KIT.Validation.EmailValidation;
-import com.example.demo.KIT.Validation.HeadquarterAccountValidation;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
+import com.example.demo.kit.Interface.Validation;
+import com.example.demo.kit.file.FileHandler;
+import com.example.demo.kit.query.EmployeeAccountHeadquarterQuery;
+import com.example.demo.kit.res.EmployeeEmailExcelResponse;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
+import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.validation.EmailValidation;
+import com.example.demo.kit.validation.HeadquarterAccountValidation;
 
 @Service
 public class EmployeeService {
@@ -268,5 +272,14 @@ public class EmployeeService {
 
         }
         return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
+    }
+
+    public Response storeImage(String employeeId, MultipartFile file) {
+        try {
+            return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
+                    : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
+        } catch (Exception e) {
+            return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("File"));
+        }
     }
 }

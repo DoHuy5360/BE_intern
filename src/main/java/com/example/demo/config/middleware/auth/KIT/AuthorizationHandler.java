@@ -2,10 +2,10 @@ package com.example.demo.config.middleware.auth.KIT;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.demo.KIT.JWT.JwtHandler;
-import com.example.demo.KIT.JWT.JwtResponse;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.kit.jwt.JwtHandler;
+import com.example.demo.kit.jwt.JwtResponse;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +21,12 @@ public class AuthorizationHandler {
 
     public AuthorizationHandler(HttpServletRequest request) {
         this.request = request;
-        this.header = this.request.getHeader("Authorization");
-        this.jwtToken = header.replace("Bearer ", "");
+        try {
+            this.header = this.request.getHeader("Authorization");
+            this.jwtToken = header.replace("Bearer ", "");
+        } catch (Exception e) {
+            this.verify = false;
+        }
         this.jwtResponse = JwtHandler.verifyToken(this.jwtToken);
         this.verify = this.jwtResponse.isVerify();
     }

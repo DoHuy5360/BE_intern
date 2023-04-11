@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.JWT.JwtHandler;
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
 import com.example.demo.entity.employee.Employee;
+import com.example.demo.kit.jwt.JwtHandler;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -81,7 +81,7 @@ public class Authentication implements HandlerInterceptor {
             printWriter.flush();
             return false;
         } else {
-            final int MINUTE = 15;
+            final int MINUTE = 45;
             final int SECOND = 60;
             final int MILLISECOND = 1000;
             ObjectMapper convertJson = new ObjectMapper();

@@ -1,5 +1,7 @@
 package com.example.demo.entity.employee;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.HeadquarterAccountTray;
 
 @RestController
 @RequestMapping("/api/v2/employee")
@@ -72,6 +74,12 @@ public class EmployeeController {
     @DeleteMapping("/{id}/delete")
     public Response deleteEmployee(@PathVariable("id") String id) {
         return employeeService.deleteEmployee(id);
+    }
+
+    @PostMapping("/create-avatar")
+    public Response storeAvatar(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        String employeeId = (String) request.getAttribute("EmployeeId");
+        return employeeService.storeImage(employeeId, file);
     }
 
 }
