@@ -39,7 +39,7 @@ public class testController {
         Object email = (String) httpServletRequest.getAttribute("email");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = String.format("{ \"content\": \"`%s` Has logged in! 🔥\" }", email);
+        String requestBody = String.format("{\"content\": \"**```%s -> has logged in! 💦```**\" }", email);
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         String webhookId = "1095224498556510258";
         String webhookToken = "DJXaInfYDEijijdfPKx30rNv5xlX4mTCvQ501W_ALb6fKI59I7t16DraTl7kMN6BE1OL";
