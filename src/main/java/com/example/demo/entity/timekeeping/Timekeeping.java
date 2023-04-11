@@ -29,7 +29,7 @@ public class Timekeeping {
     private String timekeepingType;
 
     @Column(length = 100, nullable = false)
-    private String timekeepingIn = Time.getDeadCurrentDate();
+    private String timekeepingIn = Time.getCurrentTimeThangFormat();
 
     @Column(length = 100, nullable = true)
     private String timekeepingOut;
@@ -38,9 +38,9 @@ public class Timekeeping {
     private String timekeepingException;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getDeadCurrentDate();
+    private String createAt = Time.getCurrentTimeThangFormat();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getDeadCurrentDate();
+    private String updateAt = Time.getCurrentTimeThangFormat();
 
 }
