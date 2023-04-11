@@ -15,7 +15,7 @@ import com.example.demo.KIT.RES.Response;
 
 @RestController
 @RequestMapping("/api/v2/headquarter")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class HeadquarterController {
     @Autowired
     private HeadquarterService headquarterService;

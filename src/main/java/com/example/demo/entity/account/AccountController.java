@@ -17,7 +17,7 @@ import com.example.demo.KIT.RES.Response;
 @RestController
 @RequestMapping("/api/v2/account")
 // @RequiredArgsConstructor
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class AccountController {
     @Autowired
     AccountService accountService;

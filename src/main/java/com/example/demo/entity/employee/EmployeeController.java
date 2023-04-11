@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.KIT.RES.Response;
@@ -20,8 +21,9 @@ import com.example.demo.KIT.TRAY.HeadquarterAccountTray;
 
 @RestController
 @RequestMapping("/api/v2/employee")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class EmployeeController {
+
     @Autowired
     private EmployeeService employeeService;
 

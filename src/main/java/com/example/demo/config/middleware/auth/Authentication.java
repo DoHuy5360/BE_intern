@@ -36,7 +36,7 @@ public class Authentication implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "*"); // Cho phép tất cả các nguồn gốc
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Cho phép tất cả các nguồn gốc
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"); // Cho phép các phương thức POST,
                                                                                       // GET, PUT, DELETE
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Cho phép các tiêu đề
@@ -87,9 +87,9 @@ public class Authentication implements HandlerInterceptor {
             ObjectMapper convertJson = new ObjectMapper();
             String employeeAccountJson = convertJson.writeValueAsString(account.get(0));
             String jwtToken = JwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
-            Cookie cookie = new Cookie("jwt-token", jwtToken);
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
+            response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
+            request.setAttribute("jwtToken", jwtToken);
+            request.setAttribute("email", email);
             return true;
         }
 

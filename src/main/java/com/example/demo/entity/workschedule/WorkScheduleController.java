@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v2/workschedule")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class WorkScheduleController {
     @Autowired
     private WorkScheduleService workScheduleService;
