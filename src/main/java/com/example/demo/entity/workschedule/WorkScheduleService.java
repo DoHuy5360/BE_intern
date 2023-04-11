@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.kit.Query.EmployeeWorkscheduleQuery;
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.TRAY.EmployeeWorkscheduleTray;
-import com.example.demo.kit.Util.Time;
+import com.example.demo.kit.query.EmployeeWorkscheduleQuery;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeWorkscheduleTray;
+import com.example.demo.kit.util.Time;
 
 @Service
 public class WorkScheduleService {

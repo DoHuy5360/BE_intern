@@ -1,4 +1,4 @@
-package com.example.demo.kit.DTO;
+package com.example.demo.kit.dto;
 
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.employee.Employee;

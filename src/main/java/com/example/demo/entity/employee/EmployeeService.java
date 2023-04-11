@@ -26,15 +26,15 @@ import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
 import com.example.demo.kit.Interface.Validation;
-import com.example.demo.kit.Query.EmployeeAccountHeadquarterQuery;
-import com.example.demo.kit.RES.EmployeeEmailExcelResponse;
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.TRAY.EmployeeAccountHeadquarterTray;
-import com.example.demo.kit.TRAY.HeadquarterAccountTray;
-import com.example.demo.kit.Validation.EmailValidation;
-import com.example.demo.kit.Validation.HeadquarterAccountValidation;
 import com.example.demo.kit.file.FileHandler;
+import com.example.demo.kit.query.EmployeeAccountHeadquarterQuery;
+import com.example.demo.kit.res.EmployeeEmailExcelResponse;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
+import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.validation.EmailValidation;
+import com.example.demo.kit.validation.HeadquarterAccountValidation;
 
 @Service
 public class EmployeeService {

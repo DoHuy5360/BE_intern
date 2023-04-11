@@ -11,8 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.config.middleware.auth.KIT.AuthorizationHandler;
 import com.example.demo.config.middleware.auth.KIT.ResponseHandler;
 import com.example.demo.config.middleware.auth.KIT.Role;
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
 
 @Component
 public class AdminAuthorization implements HandlerInterceptor {

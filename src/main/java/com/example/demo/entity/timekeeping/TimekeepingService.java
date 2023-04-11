@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.Util.Time;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.util.Time;
 
 @Service
 public class TimekeepingService {

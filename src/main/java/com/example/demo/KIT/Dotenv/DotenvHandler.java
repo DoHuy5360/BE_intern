@@ -1,4 +1,4 @@
-package com.example.demo.kit.Dotenv;
+package com.example.demo.kit.dotenv;
 
 import io.github.cdimascio.dotenv.Dotenv;
 

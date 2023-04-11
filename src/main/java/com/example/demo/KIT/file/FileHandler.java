@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
 
 public class FileHandler {
     private String domainUrl = "https://be-intern.onrender.com";

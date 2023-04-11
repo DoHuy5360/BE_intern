@@ -20,10 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
 import com.example.demo.entity.employee.Employee;
-import com.example.demo.kit.JWT.JwtHandler;
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.TRAY.EmployeeAccountTray;
+import com.example.demo.kit.jwt.JwtHandler;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,4 +1,4 @@
-package com.example.demo.kit.RES;
+package com.example.demo.kit.res;
 
 import java.util.Optional;
 

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.kit.RES.Message;
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.Util.DiscordLoger;
+import com.example.demo.kit.res.Message;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.util.DiscordLoger;
 
 @RestController
 public class testController {

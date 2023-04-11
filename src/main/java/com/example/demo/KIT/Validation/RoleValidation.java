@@ -1,4 +1,4 @@
-package com.example.demo.kit.Validation;
+package com.example.demo.kit.validation;
 
 import java.util.Arrays;
 import java.util.List;

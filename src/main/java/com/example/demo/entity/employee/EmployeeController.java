@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.kit.RES.Response;
-import com.example.demo.kit.TRAY.HeadquarterAccountTray;
+import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.HeadquarterAccountTray;
 
 @RestController
 @RequestMapping("/api/v2/employee")

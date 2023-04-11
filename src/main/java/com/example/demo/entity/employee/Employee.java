@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.example.demo.entity.account.Account;
-import com.example.demo.kit.Util.Time;
+import com.example.demo.kit.util.Time;
 
 import lombok.Data;
 
