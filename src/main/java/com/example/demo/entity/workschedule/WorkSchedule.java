@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Data;
+import com.example.demo.KIT.Util.Time;
 
-import com.example.demo.utilities.Time;
+import lombok.Data;
 
 @Data
 @Entity

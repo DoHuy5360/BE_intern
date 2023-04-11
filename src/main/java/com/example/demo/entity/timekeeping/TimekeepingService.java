@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
-import com.example.demo.utilities.Time;
+import com.example.demo.KIT.Util.Time;
 
 @Service
 public class TimekeepingService {

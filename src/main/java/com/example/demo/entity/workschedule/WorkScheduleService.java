@@ -12,7 +12,7 @@ import com.example.demo.KIT.Query.EmployeeWorkscheduleQuery;
 import com.example.demo.KIT.RES.Message;
 import com.example.demo.KIT.RES.Response;
 import com.example.demo.KIT.TRAY.EmployeeWorkscheduleTray;
-import com.example.demo.utilities.Time;
+import com.example.demo.KIT.Util.Time;
 
 @Service
 public class WorkScheduleService {

@@ -10,8 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.example.demo.KIT.Util.Time;
 import com.example.demo.entity.employee.Employee;
-import com.example.demo.utilities.Time;
 
 import lombok.Data;
 
