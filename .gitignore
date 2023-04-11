@@ -34,5 +34,5 @@ build/
 
 .env
 
-/avatar/*
-!/avatar/
+public/image/avatar/*
+!public/image/avatar/

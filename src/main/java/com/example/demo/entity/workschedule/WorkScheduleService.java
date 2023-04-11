@@ -86,7 +86,7 @@ public class WorkScheduleService {
                     _WS.setWorkScheduleTime(workSchedule.getWorkScheduleTime());
                     _WS.setWorkSchedulePlace(workSchedule.getWorkSchedulePlace());
                     _WS.setWorkScheduleColor(workSchedule.getWorkScheduleColor());
-                    _WS.setWorkScheduleTime(Time.getDeadCurrentDate());
+                    _WS.setWorkScheduleTime(Time.getCurrentTimeThangFormat());
                     workScheduleRepository.save(_WS);
                 } catch (Exception e) {
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);

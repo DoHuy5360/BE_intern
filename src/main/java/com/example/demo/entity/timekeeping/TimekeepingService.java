@@ -40,7 +40,7 @@ public class TimekeepingService {
                 _Timekeeping.setHeadquarterId(timekeeping.getHeadquarterId());
                 _Timekeeping.setEmployeeId(timekeeping.getEmployeeId());
                 _Timekeeping.setTimekeepingType(timekeeping.getTimekeepingType());
-                _Timekeeping.setUpdateAt(Time.getDeadCurrentDate());
+                _Timekeeping.setUpdateAt(Time.getCurrentTimeThangFormat());
                 timekeepingRepository.save(_Timekeeping);
 
             } catch (Exception e) {
