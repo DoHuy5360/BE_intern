@@ -81,7 +81,7 @@ public class Authentication implements HandlerInterceptor {
             printWriter.flush();
             return false;
         } else {
-            final int MINUTE = 15;
+            final int MINUTE = 45;
             final int SECOND = 60;
             final int MILLISECOND = 1000;
             ObjectMapper convertJson = new ObjectMapper();
