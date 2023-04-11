@@ -19,7 +19,7 @@ import com.example.demo.KIT.RES.Response;
 
 @RestController
 @RequestMapping("/api/v1/timekeeping")
-@CrossOrigin("*")
+// @CrossOrigin("*")
 public class TimekeepingController {
     @Autowired
     private TimekeepingService timekeepingService;

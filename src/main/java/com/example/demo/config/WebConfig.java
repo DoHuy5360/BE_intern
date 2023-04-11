@@ -38,12 +38,13 @@ public class WebConfig implements WebMvcConfigurer {
         public CorsFilter corsFilter() {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowCredentials(true);
-                corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+                // corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+                corsConfiguration.addAllowedOrigin("http://localhost:3000");
                 corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
-                UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
                 corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
                 return new CorsFilter(urlBasedCorsConfigurationSource);
         }
