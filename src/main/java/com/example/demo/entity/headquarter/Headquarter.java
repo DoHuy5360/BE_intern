@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.example.demo.utilities.Time;
+import com.example.demo.KIT.Util.Time;
 
 import lombok.Data;
 
@@ -26,8 +26,8 @@ public class Headquarter {
     private String headquarterAddress;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getDeadCurrentDate();
+    private String createAt = Time.getCurrentTimeThangFormat();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getDeadCurrentDate();
+    private String updateAt = Time.getCurrentTimeThangFormat();
 }

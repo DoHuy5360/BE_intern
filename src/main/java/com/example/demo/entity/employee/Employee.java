@@ -13,8 +13,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.example.demo.KIT.Util.Time;
 import com.example.demo.entity.account.Account;
-import com.example.demo.utilities.Time;
 
 import lombok.Data;
 
@@ -54,10 +54,10 @@ public class Employee {
     private int employeeSalary;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getDeadCurrentDate();
+    private String createAt = Time.getCurrentTimeThangFormat();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getDeadCurrentDate();
+    private String updateAt = Time.getCurrentTimeThangFormat();
 
     // @OneToOne(cascade = CascadeType.ALL, optional = false)
     // @JoinColumn(name = "account")

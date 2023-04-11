@@ -10,8 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.example.demo.KIT.Util.Time;
 import com.example.demo.entity.employee.Employee;
-import com.example.demo.utilities.Time;
 
 import lombok.Data;
 
@@ -36,10 +36,10 @@ public class Account {
     private String accountRole;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getDeadCurrentDate();
+    private String createAt = Time.getCurrentTimeThangFormat();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getDeadCurrentDate();
+    private String updateAt = Time.getCurrentTimeThangFormat();
 
     // @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     // private Employee employee;

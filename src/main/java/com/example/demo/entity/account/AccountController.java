@@ -1,7 +1,6 @@
 package com.example.demo.entity.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -16,8 +15,6 @@ import com.example.demo.KIT.RES.Response;
 
 @RestController
 @RequestMapping("/api/v2/account")
-// @RequiredArgsConstructor
-// @CrossOrigin("*")
 public class AccountController {
     @Autowired
     AccountService accountService;
