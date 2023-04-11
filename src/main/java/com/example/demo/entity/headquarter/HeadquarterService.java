@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
+import com.example.demo.kit.RES.Message;
+import com.example.demo.kit.RES.Response;
 
 @Service
 public class HeadquarterService {

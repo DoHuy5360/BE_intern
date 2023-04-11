@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.KIT.RES.Message;
-import com.example.demo.KIT.RES.Response;
 import com.example.demo.config.middleware.auth.KIT.AuthorizationHandler;
 import com.example.demo.config.middleware.auth.KIT.ResponseHandler;
 import com.example.demo.config.middleware.auth.KIT.Role;
+import com.example.demo.kit.RES.Message;
+import com.example.demo.kit.RES.Response;
 
 @Component
 public class UserAuthorization implements HandlerInterceptor {

@@ -82,6 +82,7 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns("/decode")
                                 .addPathPatterns(employeePath + "/information")
                                 .addPathPatterns(employeePath + "/self-update")
+                                .addPathPatterns(employeePath + "/create-avatar")
                                 .addPathPatterns(workSchedulePath + "/store")
                                 .addPathPatterns(workSchedulePath + "/self-schedule")
                                 .addPathPatterns(workSchedulePath + "/{id}/delete")

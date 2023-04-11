@@ -333,6 +333,18 @@ Response:
 }
 ```
 
+### Cập nhật ảnh đại diện nhân viên (bản thân)
+
+Url: `https://be-intern.onrender.com/api/v2/employee/create-avatar`
+
+Method: `POST`
+
+Body:
+
+| Key  | Value                 |
+| ---- | --------------------- |
+| file | 1 file ảnh [png, jpg] |
+
 # Trụ sở
 
 ### Xem tất cả trụ sỏ

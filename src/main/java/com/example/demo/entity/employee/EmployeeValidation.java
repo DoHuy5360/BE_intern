@@ -1,8 +1,8 @@
 package com.example.demo.entity.employee;
 
-import com.example.demo.KIT.Interface.Validation;
-import com.example.demo.KIT.RES.Message;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
+import com.example.demo.kit.Interface.Validation;
+import com.example.demo.kit.RES.Message;
 
 public class EmployeeValidation extends Validation {
     private String employeeId;

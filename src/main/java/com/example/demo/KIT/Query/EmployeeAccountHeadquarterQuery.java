@@ -1,4 +1,4 @@
-package com.example.demo.KIT.Query;
+package com.example.demo.kit.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.KIT.TRAY.EmployeeAccountHeadquarterTray;
+import com.example.demo.kit.TRAY.EmployeeAccountHeadquarterTray;
 
 @Repository
 public interface EmployeeAccountHeadquarterQuery extends CrudRepository<EmployeeAccountHeadquarterTray, String> {

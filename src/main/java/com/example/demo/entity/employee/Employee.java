@@ -13,8 +13,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.example.demo.KIT.Util.Time;
 import com.example.demo.entity.account.Account;
+import com.example.demo.kit.Util.Time;
 
 import lombok.Data;
 

@@ -2,10 +2,10 @@ package com.example.demo.config.middleware.auth.KIT;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.demo.KIT.JWT.JwtHandler;
-import com.example.demo.KIT.JWT.JwtResponse;
-import com.example.demo.KIT.RES.Response;
-import com.example.demo.KIT.TRAY.EmployeeAccountTray;
+import com.example.demo.kit.JWT.JwtHandler;
+import com.example.demo.kit.JWT.JwtResponse;
+import com.example.demo.kit.RES.Response;
+import com.example.demo.kit.TRAY.EmployeeAccountTray;
 
 import lombok.Getter;
 import lombok.Setter;

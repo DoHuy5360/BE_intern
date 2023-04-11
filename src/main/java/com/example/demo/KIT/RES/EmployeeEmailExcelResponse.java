@@ -1,4 +1,4 @@
-package com.example.demo.KIT.RES;
+package com.example.demo.kit.RES;
 
 import java.util.ArrayList;
 
