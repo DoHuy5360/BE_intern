@@ -21,8 +21,12 @@ public class AuthorizationHandler {
 
     public AuthorizationHandler(HttpServletRequest request) {
         this.request = request;
-        this.header = this.request.getHeader("Authorization");
-        this.jwtToken = header.replace("Bearer ", "");
+        try {
+            this.header = this.request.getHeader("Authorization");
+            this.jwtToken = header.replace("Bearer ", "");
+        } catch (Exception e) {
+            this.verify = false;
+        }
         this.jwtResponse = JwtHandler.verifyToken(this.jwtToken);
         this.verify = this.jwtResponse.isVerify();
     }
