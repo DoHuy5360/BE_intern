@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.util.DiscordLoger;
 
 @RestController
 @RequestMapping("/api/v2/employee")
@@ -54,8 +55,20 @@ public class EmployeeController {
     }
 
     @PostMapping("/multiple-store")
-    public Response createEmployees(@RequestParam("file") MultipartFile file) {
-        return employeeService.storeEmployeeFromExcel(file);
+    public Response createEmployees(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        String email = (String) request.getAttribute("email");
+        long startTime = System.nanoTime();
+
+        Response result = employeeService.storeEmployeeFromExcel(file);
+
+        long endTime = System.nanoTime();
+
+        long durationInSeconds = (endTime - startTime) / 1000000000; // Thời gian xử lý tính bằng second
+        new DiscordLoger().prepareContent(
+                String.format("```⏳ %s has implemented multiple storing -> total cost %s sec.```", email,
+                        durationInSeconds))
+                .send();
+        return result;
     }
 
     @PutMapping("/{id}/update")

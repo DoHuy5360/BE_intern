@@ -26,7 +26,7 @@ public class Account {
     @Column(length = 50, nullable = true, unique = false)
     private String accountEmail;
 
-    @Column(length = 50, nullable = true)
+    @Column(length = 255, nullable = true)
     private String accountPassword;
 
     @Transient

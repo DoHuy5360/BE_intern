@@ -11,4 +11,5 @@ public class EmployeeAccountTray {
     @Id
     private String employeeId;
     private String accountRole;
+    private String accountPassword;
 }

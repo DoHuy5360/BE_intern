@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountService;
 import com.example.demo.entity.employee.Employee;
+import com.example.demo.kit.encode.EncodeHandler;
 import com.example.demo.kit.jwt.JwtHandler;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
@@ -36,14 +38,10 @@ public class Authentication implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Cho phép tất cả các nguồn gốc
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"); // Cho phép các phương thức POST,
-                                                                                      // GET, PUT, DELETE
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Cho phép các tiêu đề
-                                                                                           // Content-Type và
-                                                                                           // Authorization
-        response.setHeader("Access-Control-Allow-Credentials", "true"); // Cho phép sử dụng thông tin đăng nhập của
-                                                                        // người dùng
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         // Lấy đối tượng BufferedReader để đọc dữ liệu từ luồng đầu vào của request
         BufferedReader reader = request.getReader();
         StringBuilder body = new StringBuilder();
@@ -67,9 +65,11 @@ public class Authentication implements HandlerInterceptor {
         String password = jsonMap.get("password");
 
         // Do something với email và password, ví dụ: kiểm tra, xử lý dữ liệu,...
-        List<EmployeeAccountTray> account = accountService.checkLogin(email, password);
+        List<EmployeeAccountTray> account = accountService.checkLogin(email);
         // Trả về true để cho phép request đi tiếp, hoặc false để chặn request
-        if (account.isEmpty()) {
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+
+        if (account.isEmpty() || !bcrypt.matches(password, account.get(0).getAccountPassword())) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 

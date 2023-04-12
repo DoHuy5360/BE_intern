@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,7 @@ import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
 import com.example.demo.kit.Interface.Validation;
+import com.example.demo.kit.encode.EncodeHandler;
 import com.example.demo.kit.file.FileHandler;
 import com.example.demo.kit.query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.kit.res.EmployeeEmailExcelResponse;
@@ -69,7 +71,8 @@ public class EmployeeService {
             try {
                 Account _account = new Account();
                 _account.setAccountEmail(headquarterAccount.getAccountEmail());
-                _account.setAccountPassword(headquarterAccount.getAccountPassword());
+                _account.setAccountPassword(
+                        new BCryptPasswordEncoder().encode(headquarterAccount.getAccountPassword()));
                 _account.setAccountRole(headquarterAccount.getAccountRole());
 
                 Employee _employee = new Employee();
@@ -125,30 +128,23 @@ public class EmployeeService {
                             }
                             try {
                                 _account.setAccountRole(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.ROLE_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.ROLE_ERROR);
                             }
                             try {
-                                _account.setAccountPassword(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.PASSWORD_ERROR);
+                                String password = cellIterator.next().getStringCellValue();
+                                _account.setAccountPassword(new BCryptPasswordEncoder().encode(password));
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.PASSWORD_ERROR);
                             }
                             try {
                                 _employee.setHeadquarterId(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.HEADQUARTER_ID_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.HEADQUARTER_ID_ERROR);
                             }
                             try {
                                 _employee.setEmployeePosition(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.POSITION_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.POSITION_ERROR);
                             }
                             _employee.setAccountId(_account.getAccountId());
