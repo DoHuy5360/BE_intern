@@ -75,4 +75,8 @@ public class Message {
     public static String setFailMessage(String name) {
         return name + " " + FAIL;
     }
+
+    public static String setExisted(String name) {
+        return name + " " + EXIST + "ed";
+    }
 }

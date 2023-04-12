@@ -27,7 +27,6 @@ import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
 import com.example.demo.kit.Interface.Validation;
-import com.example.demo.kit.encode.EncodeHandler;
 import com.example.demo.kit.file.FileHandler;
 import com.example.demo.kit.query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.kit.res.EmployeeEmailExcelResponse;
@@ -62,8 +61,9 @@ public class EmployeeService {
 
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
         Validation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
-                headquarterRepository)
-                .trackEmail()
+                headquarterRepository, accountRepository)
+                .trackEmailFormat()
+                .trackEmailExist()
                 .trackPassword()
                 .trackHeadquarterId()
                 .trackRole();
@@ -102,7 +102,7 @@ public class EmployeeService {
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
                 // dụng HSSFWorkbook nếu file có định dạng .xls
-                Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
+                Sheet sheet = workbook.getSheetAt(0); // todo: Get first sheet
                 Iterator<Row> rowIterator = sheet.iterator();
                 Row row = rowIterator.next(); // todo: bypass first row ( title )
                 while (rowIterator.hasNext()) {
