@@ -38,3 +38,6 @@ public/image/avatar/*
 !public/image/avatar/
 
 auth.drawio
+Encode.java
+
+src/test/java/com/example/demo/
