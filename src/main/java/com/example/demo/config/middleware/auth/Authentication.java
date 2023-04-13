@@ -28,7 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Authentication implements HandlerInterceptor {
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
+    // @Autowired
+    // private JwtHandler jwtHandler;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

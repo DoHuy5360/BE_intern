@@ -5,11 +5,10 @@ import java.util.Optional;
 import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
-import com.example.demo.kit.Interface.Validation;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
 
-public class HeadquarterAccountValidation extends Validation {
+public class HeadquarterAccountValidation extends PrimitiveValidation {
     public HeadquarterAccountTray headquarterAccountTray;
     public HeadquarterRepository headquarterRepository;
     public AccountRepository accountRepository;

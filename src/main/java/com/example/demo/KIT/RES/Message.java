@@ -44,8 +44,8 @@ public class Message {
         return name + " not " + MATCH;
     }
 
-    public static String setEmptyMessage(String name) {
-        return name + " " + EMPTY;
+    public static String setEmptyMessage(String prefix) {
+        return prefix + " " + EMPTY;
     }
 
     public static String setNotExistMessage(String name) {
@@ -56,8 +56,8 @@ public class Message {
         return name + " Upload " + FAIL;
     }
 
-    public static String setInvalid(String name) {
-        return name + " " + INVALID;
+    public static String setInvalid(String prefix) {
+        return prefix + " " + INVALID;
     }
 
     public static String setLengthLimit(String name, int length) {

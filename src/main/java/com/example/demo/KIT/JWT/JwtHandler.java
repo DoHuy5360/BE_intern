@@ -1,10 +1,12 @@
 package com.example.demo.kit.jwt;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -12,6 +14,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.kit.dotenv.DotenvHandler;
+import com.example.demo.kit.query.EmployeeAccountQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
@@ -22,7 +25,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;;
 
+@Service
 public class JwtHandler {
+    @Autowired
+    // private EmployeeAccountQuery employeeAccountQuery;
 
     // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
     private static final String SECRET_KEY = "abcxyz123";
@@ -51,8 +57,10 @@ public class JwtHandler {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 EmployeeAccountTray subjectData = objectMapper.readValue(subjectObject, EmployeeAccountTray.class);
-
-                // todo: subjectData.setAccountEmail();
+                // EmployeeAccountTray oneAC =
+                // employeeAccountQuery.getAccountByEmployeeId(subjectData.getEmployeeId())
+                // .get(0);
+                // subjectData.setAccountEmail(oneAC.getAccountEmail());
                 return new JwtResponse(true, subjectData, new Response(HttpStatus.OK, Message.READ_SUCCESS));
             } catch (JsonProcessingException e) {
                 // Xử lý ngoại lệ JsonProcessingException ở đây
