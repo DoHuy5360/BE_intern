@@ -39,6 +39,10 @@ public class AuthorizationHandler {
         return this.jwtResponse.getEmployeeAccountTray().getEmployeeId();
     }
 
+    public String getAccountEmail() {
+        return this.jwtResponse.getEmployeeAccountTray().getAccountEmail();
+    }
+
     public Response getResponse() {
         return this.jwtResponse.getResponse();
     }

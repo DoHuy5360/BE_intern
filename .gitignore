@@ -36,3 +36,5 @@ build/
 
 public/image/avatar/*
 !public/image/avatar/
+
+auth.drawio

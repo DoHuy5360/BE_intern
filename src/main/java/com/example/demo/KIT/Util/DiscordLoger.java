@@ -46,4 +46,9 @@ public class DiscordLoger {
 
         restTemplate.postForEntity(url, entity, String.class);
     }
+
+    public static void send(String message) {
+        String finalMessage = "```" + message + " " + Time.getCurrentDate() + "```";
+        new DiscordLoger().prepareContent(finalMessage).send();
+    }
 }

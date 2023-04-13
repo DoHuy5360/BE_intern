@@ -1,22 +1,36 @@
-package com.example.demo.entity.employee;
+package com.example.demo.kit.validation;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.example.demo.entity.employee.Employee;
+import com.example.demo.entity.employee.EmployeeRepository;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
-import com.example.demo.kit.Interface.Validation;
 import com.example.demo.kit.res.Message;
 
-public class EmployeeValidation extends Validation {
-    private String employeeId;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class EmployeeValidation extends PrimitiveValidation {
+    // private String employeeId;
     private Employee employee;
     private EmployeeRepository employeeRepository;
     private HeadquarterRepository headquarterRepository;
+    public String employeeName;
+
+    public EmployeeValidation(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     public EmployeeValidation(String employeeId, Employee employee, EmployeeRepository employeeRepository,
             HeadquarterRepository headquarterRepository) {
-        this.employeeId = employeeId;
+        this.entityId = employeeId;
         this.employee = employee;
         this.employeeRepository = employeeRepository;
         this.headquarterRepository = headquarterRepository;
-        this.employeeFound = this.employeeRepository.findById(this.employeeId);
+        this.employeeName = this.employee.getEmployeeName();
     }
 
     /**
@@ -26,6 +40,7 @@ public class EmployeeValidation extends Validation {
      * @return this
      */
     public EmployeeValidation trackIdExist() {
+        this.employeeFound = this.employeeRepository.findById(this.entityId);
         if (employeeFound.isEmpty()) {
             this.errors.add(Message.setNotExistMessage("Employee ID"));
         }
@@ -60,6 +75,29 @@ public class EmployeeValidation extends Validation {
         String pattern = "\\d{1}";
         if (!this.employee.getEmployeeGender().matches(pattern)) {
             this.errors.add(Message.setInvalid("Gender value"));
+        }
+        return this;
+    }
+
+    public EmployeeValidation trackName() {
+        if (isBlank(this.employeeName)) {
+            this.errors.add(Message.setEmptyMessage("Name"));
+        }
+        if (isMatchMinMaxLength(this.employeeName, 1, 25)) {
+            this.errors.add(Message.setInvalid("Name length"));
+        }
+        return this;
+    }
+
+    public EmployeeValidation setId(String employeeId) {
+        this.entityId = employeeId;
+        return this;
+
+    }
+
+    public EmployeeValidation isValidEmployeeId() {
+        if (!isValidId("NV")) {
+            this.errors.add(Message.setInvalid("Employee ID"));
         }
         return this;
     }

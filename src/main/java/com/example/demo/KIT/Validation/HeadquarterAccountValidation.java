@@ -1,23 +1,36 @@
 package com.example.demo.kit.validation;
 
+import java.util.Optional;
+
+import com.example.demo.entity.account.Account;
+import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
-import com.example.demo.kit.Interface.Validation;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
 
-public class HeadquarterAccountValidation extends Validation {
+public class HeadquarterAccountValidation extends PrimitiveValidation {
     public HeadquarterAccountTray headquarterAccountTray;
     public HeadquarterRepository headquarterRepository;
+    public AccountRepository accountRepository;
 
     public HeadquarterAccountValidation(HeadquarterAccountTray headquarterAccountTray,
-            HeadquarterRepository headquarterRepository) {
+            HeadquarterRepository headquarterRepository, AccountRepository accountRepository) {
         this.headquarterAccountTray = headquarterAccountTray;
         this.headquarterRepository = headquarterRepository;
+        this.accountRepository = accountRepository;
     }
 
-    public HeadquarterAccountValidation trackEmail() {
+    public HeadquarterAccountValidation trackEmailFormat() {
         if (!EmailValidation.track(this.headquarterAccountTray.getAccountEmail())) {
             this.errors.add(Message.EMAIL_UNVALID);
+        }
+        return this;
+    }
+
+    public HeadquarterAccountValidation trackEmailExist() {
+        Optional<Account> oneA = accountRepository.findByEmail(this.headquarterAccountTray.getAccountEmail());
+        if (oneA.isPresent()) {
+            this.errors.add(Message.setExisted("Email"));
         }
         return this;
     }

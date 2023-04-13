@@ -27,7 +27,7 @@ public class testController {
         Object jwtToken = (Object) request.getAttribute("jwtToken");
         Object email = (String) request.getAttribute("email");
         new DiscordLoger()
-                .prepareContent(String.format("**```%s : has logged in from -> %s:%d ✅```**", email, userIp, userPort))
+                .prepareContent(String.format("**```%s : has logged in! ✅```**", email))
                 .send();
         return new Response(HttpStatus.OK, Message.LOGIN_SUCCESS, jwtToken);
 

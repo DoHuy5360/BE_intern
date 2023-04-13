@@ -21,8 +21,8 @@ public class AccountService {
     @Autowired
     private EmployeeAccountQuery employeeAccountQuery;
 
-    public List<EmployeeAccountTray> checkLogin(String email, String password) {
-        return employeeAccountQuery.getAccountByEmailPassword(email, password);
+    public List<EmployeeAccountTray> checkLogin(String email) {
+        return employeeAccountQuery.getAccountByEmailPassword(email);
     }
 
     public Response getAllAccount() {

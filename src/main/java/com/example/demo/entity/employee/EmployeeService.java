@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,6 @@ import com.example.demo.entity.account.Account;
 import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.headquarter.Headquarter;
 import com.example.demo.entity.headquarter.HeadquarterRepository;
-import com.example.demo.kit.Interface.Validation;
 import com.example.demo.kit.file.FileHandler;
 import com.example.demo.kit.query.EmployeeAccountHeadquarterQuery;
 import com.example.demo.kit.res.EmployeeEmailExcelResponse;
@@ -34,7 +34,9 @@ import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
 import com.example.demo.kit.validation.EmailValidation;
+import com.example.demo.kit.validation.EmployeeValidation;
 import com.example.demo.kit.validation.HeadquarterAccountValidation;
+import com.example.demo.kit.validation.PrimitiveValidation;
 
 @Service
 public class EmployeeService {
@@ -59,9 +61,10 @@ public class EmployeeService {
     }
 
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
-        Validation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
-                headquarterRepository)
-                .trackEmail()
+        PrimitiveValidation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
+                headquarterRepository, accountRepository)
+                .trackEmailFormat()
+                .trackEmailExist()
                 .trackPassword()
                 .trackHeadquarterId()
                 .trackRole();
@@ -69,7 +72,8 @@ public class EmployeeService {
             try {
                 Account _account = new Account();
                 _account.setAccountEmail(headquarterAccount.getAccountEmail());
-                _account.setAccountPassword(headquarterAccount.getAccountPassword());
+                _account.setAccountPassword(
+                        new BCryptPasswordEncoder().encode(headquarterAccount.getAccountPassword()));
                 _account.setAccountRole(headquarterAccount.getAccountRole());
 
                 Employee _employee = new Employee();
@@ -99,7 +103,7 @@ public class EmployeeService {
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
                 // dụng HSSFWorkbook nếu file có định dạng .xls
-                Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên trong file
+                Sheet sheet = workbook.getSheetAt(0); // todo: Get first sheet
                 Iterator<Row> rowIterator = sheet.iterator();
                 Row row = rowIterator.next(); // todo: bypass first row ( title )
                 while (rowIterator.hasNext()) {
@@ -125,30 +129,23 @@ public class EmployeeService {
                             }
                             try {
                                 _account.setAccountRole(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.ROLE_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.ROLE_ERROR);
                             }
                             try {
-                                _account.setAccountPassword(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.PASSWORD_ERROR);
+                                String password = cellIterator.next().getStringCellValue();
+                                _account.setAccountPassword(new BCryptPasswordEncoder().encode(password));
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.PASSWORD_ERROR);
                             }
                             try {
                                 _employee.setHeadquarterId(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.HEADQUARTER_ID_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.HEADQUARTER_ID_ERROR);
                             }
                             try {
                                 _employee.setEmployeePosition(cellIterator.next().getStringCellValue());
-                                // throw new Exception(Message.POSITION_ERROR);
                             } catch (Exception error) {
-                                // errors.add(error.getMessage());
                                 errors.add(Message.POSITION_ERROR);
                             }
                             _employee.setAccountId(_account.getAccountId());
@@ -190,96 +187,131 @@ public class EmployeeService {
 
     @Transactional
     public Response updateEmployee(String employeeId, Employee employee) {
-        Validation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
-                headquarterRepository)
-                .trackIdExist()
-                .trackHeadquarterId()
-                .trackPhoneLength()
-                .trackGenderLength();
-        if (employeeValidation.isValid()) {
-            Employee _Employee = employeeValidation.get();
-            _Employee.setHeadquarterId(employee.getHeadquarterId());
-            _Employee.setEmployeeName(employee.getEmployeeName());
-            _Employee.setEmployeePhone(employee.getEmployeePhone());
-            _Employee.setEmployeeAddress(employee.getEmployeeAddress());
-            _Employee.setEmployeeGender(employee.getEmployeeGender());
-            _Employee.setEmployeePosition(employee.getEmployeePosition());
-            _Employee.setEmployeeSalary(employee.getEmployeeSalary());
-            try {
+        try {
+            PrimitiveValidation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
+                    headquarterRepository)
+                    .trackIdExist()
+                    .trackHeadquarterId()
+                    .trackPhoneLength()
+                    .trackGenderLength();
+            if (employeeValidation.isValid()) {
+                Employee _Employee = employeeValidation.get();
+                _Employee.setHeadquarterId(employee.getHeadquarterId());
+                _Employee.setEmployeeName(employee.getEmployeeName());
+                _Employee.setEmployeePhone(employee.getEmployeePhone());
+                _Employee.setEmployeeAddress(employee.getEmployeeAddress());
+                _Employee.setEmployeeGender(employee.getEmployeeGender());
+                _Employee.setEmployeePosition(employee.getEmployeePosition());
+                _Employee.setEmployeeSalary(employee.getEmployeeSalary());
                 employeeRepository.save(_Employee);
-            } catch (Exception e) {
-                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getAmountErrors(),
+                        employeeValidation.getErrors());
             }
-            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
-        } else {
-            return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getAmountErrors(),
-                    employeeValidation.getErrors());
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         }
     }
 
     @Transactional
     public Response updateSelf(String employeeId, Employee employee) {
-        Optional<Employee> oneE = employeeRepository.findById(employeeId);
-        if (oneE.isPresent()) {
-            try {
-                Employee _Employee = oneE.get();
+        try {
+            PrimitiveValidation employeeValidation = new EmployeeValidation(employeeId, employee, employeeRepository,
+                    headquarterRepository)
+                    .trackIdExist()
+                    .trackName()
+                    .trackPhoneLength()
+                    .trackGenderLength();
+            if (employeeValidation.isValid()) {
+                Employee _Employee = employeeValidation.get();
                 _Employee.setEmployeeName(employee.getEmployeeName());
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());
                 _Employee.setEmployeeGender(employee.getEmployeeGender());
                 employeeRepository.save(_Employee);
-            } catch (Exception e) {
-                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL, employeeValidation.getAmountErrors(),
+                        employeeValidation.getErrors());
             }
-            return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, oneE);
-        } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         }
     }
 
     public Response deleteEmployee(String id) {
-        Optional<Employee> oneEm = employeeRepository.findById(id);
-        if (oneEm.isPresent()) {
-            try {
-                Employee _Employee = oneEm.get();
-                employeeRepository.deleteById(id);
-                accountRepository.deleteById(_Employee.getAccountId());
-            } catch (Exception e) {
-                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
+        try {
+            EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(id)
+                    .isValidEmployeeId().trackIdExist();
+            if (employeeValidation.isValid()) {
+                try {
+                    Employee _Employee = employeeValidation.get();
+                    employeeRepository.deleteById(id);
+                    accountRepository.deleteById(_Employee.getAccountId());
+                } catch (Exception e) {
+                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
+                }
+                return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
+
+            } else {
+
+                return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
             }
-            return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
-        } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
+
         }
     }
 
     public Response getEmployeeInfo(String id) {
-        Optional<EmployeeAccountHeadquarterTray> oneE = employeeAccountRepository.getInformation(id);
-        if (oneE.isPresent()) {
-            return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
-        } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        try {
+            EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(id)
+                    .isValidEmployeeId();
+            if (employeeValidation.isValid()) {
+                Optional<EmployeeAccountHeadquarterTray> oneE = employeeAccountRepository.getInformation(id);
+                if (oneE.isPresent()) {
+                    return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
+                } else {
+                    return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
 
+                }
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL, employeeValidation.getAmountErrors(),
+                        employeeValidation.getErrors());
+
+            }
+        } catch (Exception e) {
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
         }
     }
 
     public Response getAllEmployeeInfo() {
-        List<EmployeeAccountHeadquarterTray> oneE;
         try {
-            oneE = employeeAccountRepository.getAllInformation();
+            List<EmployeeAccountHeadquarterTray> oneE;
+            try {
+                oneE = employeeAccountRepository.getAllInformation();
+            } catch (Exception e) {
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
+
+            }
+            return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
         } catch (Exception e) {
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
-
         }
-        return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
     }
 
     public Response storeImage(String employeeId, MultipartFile file) {
         try {
-            return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                    : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
+            try {
+                return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
+                        : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
+            } catch (Exception e) {
+                return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+            }
         } catch (Exception e) {
-            return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("File"));
+            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
+
         }
     }
 }
