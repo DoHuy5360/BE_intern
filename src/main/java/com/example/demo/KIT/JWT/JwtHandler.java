@@ -2,12 +2,15 @@ package com.example.demo.kit.jwt;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.kit.dotenv.DotenvHandler;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
@@ -48,6 +51,8 @@ public class JwtHandler {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 EmployeeAccountTray subjectData = objectMapper.readValue(subjectObject, EmployeeAccountTray.class);
+
+                // todo: subjectData.setAccountEmail();
                 return new JwtResponse(true, subjectData, new Response(HttpStatus.OK, Message.READ_SUCCESS));
             } catch (JsonProcessingException e) {
                 // Xử lý ngoại lệ JsonProcessingException ở đây

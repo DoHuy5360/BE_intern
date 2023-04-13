@@ -27,6 +27,8 @@ public class UserAuthorization implements HandlerInterceptor {
             String role = authorizationHandler.getAccountRole();
             if (role.equals(Role.EMPLOYEE) || role.equals(Role.MANAGER)) {
                 request.setAttribute("EmployeeId", authorizationHandler.getEmployeeId());
+                request.setAttribute("AccountEmail", authorizationHandler.getAccountEmail());
+                System.out.println(authorizationHandler.getAccountEmail());
                 return true;
             } else {
                 responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Role"))).send();

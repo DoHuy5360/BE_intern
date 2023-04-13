@@ -12,4 +12,5 @@ public class EmployeeAccountTray {
     private String employeeId;
     private String accountRole;
     private String accountPassword;
+    private String accountEmail;
 }
