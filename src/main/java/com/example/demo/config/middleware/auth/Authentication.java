@@ -29,8 +29,8 @@ public class Authentication implements HandlerInterceptor {
 
     @Autowired
     private AccountService accountService;
-    // @Autowired
-    // private JwtHandler jwtHandler;
+    @Autowired
+    private JwtHandler jwtHandler;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -85,7 +85,7 @@ public class Authentication implements HandlerInterceptor {
             JwtFormat jwtFormat = new JwtFormat(oneEA.getEmployeeId(), oneEA.getAccountRole());
             ObjectMapper convertJson = new ObjectMapper();
             String employeeAccountJson = convertJson.writeValueAsString(jwtFormat);
-            String jwtToken = JwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
+            String jwtToken = jwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
             response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
             request.setAttribute("jwtToken", jwtToken);
             request.setAttribute("email", email);

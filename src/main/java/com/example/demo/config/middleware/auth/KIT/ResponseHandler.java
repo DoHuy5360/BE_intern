@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.kit.res.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Service
 public class ResponseHandler {
     private ObjectMapper jsonBodyResponse = new ObjectMapper();
     private HttpServletRequest request;
@@ -22,19 +25,15 @@ public class ResponseHandler {
     private Response responseBody;
     private String json;
 
-    public ResponseHandler(HttpServletRequest request, HttpServletResponse response) {
+    public void createResponse(HttpServletRequest request, HttpServletResponse response) {
         this.response = response;
         this.request = request;
         this.response.setContentType("application/json");
         this.response.setCharacterEncoding("UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Cho phép tất cả các nguồn gốc
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"); // Cho phép các phương thức POST,
-                                                                                      // GET, PUT, DELETE
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Cho phép các tiêu đề
-                                                                                           // Content-Type và
-                                                                                           // Authorization
-        response.setHeader("Access-Control-Allow-Credentials", "true"); // Cho phép sử dụng thông tin đăng nhập của
-                                                                        // người dùng
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
     }
 
     public ResponseHandler setContent(Response responseBody) {

@@ -32,7 +32,10 @@ public class WorkSchedule {
     private String workSchedulePlace;
 
     @Column(length = 100, nullable = false)
-    private String workScheduleTime = Time.getCurrentTimeThangFormat();
+    private String workScheduleTimeIn;
+
+    @Column(length = 100, nullable = false)
+    private String workScheduleTimeOut;
 
     @Column(length = 100, nullable = false)
     private String createAt = Time.getCurrentTimeThangFormat();

@@ -2,10 +2,8 @@ package com.example.demo.kit.file;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,13 +16,11 @@ public class FileHandler {
     public String name;
     public String fullName;
     public String extension;
-    public Long size;
     public String path;
     public String publicPath = "public";
 
     public FileHandler(MultipartFile file) {
         this.file = file;
-        this.size = file.getSize();
         this.name = file.getName();
         this.fullName = file.getOriginalFilename();
         this.extension = this.fullName.substring(this.fullName.lastIndexOf("."));

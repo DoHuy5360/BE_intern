@@ -3,6 +3,7 @@ package com.example.demo.config.middleware.auth;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,20 +16,23 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 
 @Component
-public class UserAuthorization implements HandlerInterceptor {
+public class ManagerAuthorization implements HandlerInterceptor {
+    @Autowired
     private ResponseHandler responseHandler;
+
+    @Autowired
+    private AuthorizationHandler authorizationHandler;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        this.responseHandler = new ResponseHandler(request, response);
-        AuthorizationHandler authorizationHandler = new AuthorizationHandler(request);
+        responseHandler.createResponse(request, response);
+        authorizationHandler.handleToken(request);
         if (authorizationHandler.isVerify()) {
             String role = authorizationHandler.getAccountRole();
-            if (role.equals(Role.EMPLOYEE) || role.equals(Role.MANAGER)) {
+            if (role.equals(Role.MANAGER)) {
                 request.setAttribute("EmployeeId", authorizationHandler.getEmployeeId());
                 request.setAttribute("AccountEmail", authorizationHandler.getAccountEmail());
-                System.out.println(authorizationHandler.getAccountEmail());
                 return true;
             } else {
                 responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Role"))).send();

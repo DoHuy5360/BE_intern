@@ -33,8 +33,10 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.util.Time;
 import com.example.demo.kit.validation.EmailValidation;
 import com.example.demo.kit.validation.EmployeeValidation;
+import com.example.demo.kit.validation.FileValidation;
 import com.example.demo.kit.validation.HeadquarterAccountValidation;
 import com.example.demo.kit.validation.PrimitiveValidation;
 
@@ -103,8 +105,8 @@ public class EmployeeService {
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
                 // dụng HSSFWorkbook nếu file có định dạng .xls
-                Sheet sheet = workbook.getSheetAt(0); // todo: Get first sheet
-                Iterator<Row> rowIterator = sheet.iterator();
+                Sheet firstSheet = workbook.getSheetAt(0);
+                Iterator<Row> rowIterator = firstSheet.iterator();
                 Row row = rowIterator.next(); // todo: bypass first row ( title )
                 while (rowIterator.hasNext()) {
                     row = rowIterator.next();
@@ -203,6 +205,7 @@ public class EmployeeService {
                 _Employee.setEmployeeGender(employee.getEmployeeGender());
                 _Employee.setEmployeePosition(employee.getEmployeePosition());
                 _Employee.setEmployeeSalary(employee.getEmployeeSalary());
+                _Employee.setUpdateAt(Time.getCurrentTimeThangFormat());
                 employeeRepository.save(_Employee);
                 return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
             } else {
@@ -229,6 +232,7 @@ public class EmployeeService {
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());
                 _Employee.setEmployeeGender(employee.getEmployeeGender());
+                _Employee.setUpdateAt(Time.getCurrentTimeThangFormat());
                 employeeRepository.save(_Employee);
                 return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
             } else {
@@ -303,13 +307,24 @@ public class EmployeeService {
 
     public Response storeImage(String employeeId, MultipartFile file) {
         try {
-            try {
-                return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                        : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
-            } catch (Exception e) {
-                return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+            PrimitiveValidation employeeFileValidation;
+            employeeFileValidation = new EmployeeValidation(employeeRepository).setId(employeeId)
+                    .trackIdExist();
+            employeeFileValidation = new FileValidation(file).trackSize().trackExtension();
+            if (employeeFileValidation.isValid()) {
+                try {
+                    return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
+                            : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
+                } catch (Exception e) {
+                    return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+                }
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.INVALID, employeeFileValidation.getAmountErrors(),
+                        employeeFileValidation.errors);
+
             }
         } catch (Exception e) {
+            System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
 
         }
