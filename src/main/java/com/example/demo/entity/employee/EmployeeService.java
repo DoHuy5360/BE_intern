@@ -104,8 +104,8 @@ public class EmployeeService {
                 Workbook workbook = new XSSFWorkbook(inputStream);
                 // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
                 // dụng HSSFWorkbook nếu file có định dạng .xls
-                Sheet sheet = workbook.getSheetAt(0); // todo: Get first sheet
-                Iterator<Row> rowIterator = sheet.iterator();
+                Sheet firstSheet = workbook.getSheetAt(0);
+                Iterator<Row> rowIterator = firstSheet.iterator();
                 Row row = rowIterator.next(); // todo: bypass first row ( title )
                 while (rowIterator.hasNext()) {
                     row = rowIterator.next();
@@ -306,11 +306,17 @@ public class EmployeeService {
 
     public Response storeImage(String employeeId, MultipartFile file) {
         try {
-            try {
-                return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                        : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
-            } catch (Exception e) {
-                return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+            EmployeeValidation employeeValidation = new EmployeeValidation(employeeId).trackIdExist();
+            if (employeeValidation.isValid()) {
+                try {
+                    return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
+                            : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
+                } catch (Exception e) {
+                    return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+                }
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
+
             }
         } catch (Exception e) {
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);

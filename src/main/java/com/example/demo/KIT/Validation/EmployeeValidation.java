@@ -9,10 +9,12 @@ import com.example.demo.entity.headquarter.HeadquarterRepository;
 import com.example.demo.kit.res.Message;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class EmployeeValidation extends PrimitiveValidation {
     // private String employeeId;
     private Employee employee;
@@ -22,6 +24,10 @@ public class EmployeeValidation extends PrimitiveValidation {
 
     public EmployeeValidation(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
+    }
+
+    public EmployeeValidation(String entityId) {
+        this.entityId = entityId;
     }
 
     public EmployeeValidation(String employeeId, Employee employee, EmployeeRepository employeeRepository,
