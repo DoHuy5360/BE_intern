@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.project_api.response.Response;
+
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -48,24 +50,9 @@ public class AccountController {
     }
 
     @PutMapping("/resetPassword/{email}")
-    public ResponseEntity<Account> resetPassword(@PathVariable String email, @RequestBody Account account) {
-        if(account.getPassword().equals(account.getRetypePassword())) {
-            accountService.resetPassword(email, account);
-            return new ResponseEntity<Account>(account, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/forgot/forgotPassword/{token}")
-    public ResponseEntity<Account> forgotPassword(@PathVariable String token, @RequestBody Account account) {
-        if(account.getPassword().equals(account.getRetypePassword())) {
-            accountService.forgotPassword(token, account);
-            return new ResponseEntity<Account>(account, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    public Response resetPassword(@PathVariable String email, @RequestBody Account account) {
+        return accountService.resetPassword(email, account);
+    }    
 
     @DeleteMapping("/{accountId}/deleteAcc")
     public ResponseEntity<Account> deleteAccount(@PathVariable String accountId, Account account) {

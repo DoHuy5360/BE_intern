@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.example.project_api.ulities.Time;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +42,10 @@ public class Account {
     private Role role;
 
     @Column(length = 100, nullable = false)
-    private String createAt = Time.getDeadCurrentDate();
+    private String createAt = Time.getCurrentTime();
 
     @Column(length = 100, nullable = false)
-    private String updateAt = Time.getDeadCurrentDate();
+    private String updateAt = Time.getCurrentTime();
 
     @Column
     private String resetToken; 
