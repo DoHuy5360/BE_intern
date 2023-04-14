@@ -26,10 +26,6 @@ public class EmployeeValidation extends PrimitiveValidation {
         this.employeeRepository = employeeRepository;
     }
 
-    public EmployeeValidation(String entityId) {
-        this.entityId = entityId;
-    }
-
     public EmployeeValidation(String employeeId, Employee employee, EmployeeRepository employeeRepository,
             HeadquarterRepository headquarterRepository) {
         this.entityId = employeeId;

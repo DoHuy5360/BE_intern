@@ -36,6 +36,7 @@ import com.example.demo.kit.tray.HeadquarterAccountTray;
 import com.example.demo.kit.util.Time;
 import com.example.demo.kit.validation.EmailValidation;
 import com.example.demo.kit.validation.EmployeeValidation;
+import com.example.demo.kit.validation.FileValidation;
 import com.example.demo.kit.validation.HeadquarterAccountValidation;
 import com.example.demo.kit.validation.PrimitiveValidation;
 
@@ -306,8 +307,11 @@ public class EmployeeService {
 
     public Response storeImage(String employeeId, MultipartFile file) {
         try {
-            EmployeeValidation employeeValidation = new EmployeeValidation(employeeId).trackIdExist();
-            if (employeeValidation.isValid()) {
+            PrimitiveValidation employeeFileValidation;
+            employeeFileValidation = new EmployeeValidation(employeeRepository).setId(employeeId)
+                    .trackIdExist();
+            employeeFileValidation = new FileValidation(file).trackSize().trackExtension();
+            if (employeeFileValidation.isValid()) {
                 try {
                     return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
                             : new FileHandler(file).setPath("/image/avatar/").setName(employeeId).save();
@@ -315,10 +319,12 @@ public class EmployeeService {
                     return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
                 }
             } else {
-                return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
+                return new Response(HttpStatus.BAD_REQUEST, Message.INVALID, employeeFileValidation.getAmountErrors(),
+                        employeeFileValidation.errors);
 
             }
         } catch (Exception e) {
+            System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
 
         }
