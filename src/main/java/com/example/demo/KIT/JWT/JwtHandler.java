@@ -28,61 +28,55 @@ import com.auth0.jwt.exceptions.TokenExpiredException;;
 @Service
 public class JwtHandler {
     @Autowired
-    // private EmployeeAccountQuery employeeAccountQuery;
+    private EmployeeAccountQuery employeeAccountQuery;
+    @Autowired
+    private JwtResponse jwtResponse;
 
     // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
     private static final String SECRET_KEY = "abcxyz123";
 
-    public static String generateToken(String subject, long expirationTimeMillis) {
+    public String generateToken(String subject, long expirationTimeMillis) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTimeMillis);
 
         JWTCreator.Builder builder = JWT.create()
                 .withSubject(subject)
                 .withExpiresAt(expirationDate);
-        String re = builder.sign(algorithm);
-        return re;
+        return builder.sign(algorithm);
     }
 
-    public static JwtResponse verifyToken(String token) {
+    public JwtResponse verifyToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             DecodedJWT decodedJWT = JWT.require(algorithm)
                     .build()
                     .verify(token);
             String subjectObject = decodedJWT.getSubject();
-            // Giải mã chuỗi subject từ Base64
-            System.out.println("jwtHandler.java:" + subjectObject);
+
+            System.out.println("jwtHandler.java: " + subjectObject);
 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 EmployeeAccountTray subjectData = objectMapper.readValue(subjectObject, EmployeeAccountTray.class);
-                // EmployeeAccountTray oneAC =
-                // employeeAccountQuery.getAccountByEmployeeId(subjectData.getEmployeeId())
-                // .get(0);
-                // subjectData.setAccountEmail(oneAC.getAccountEmail());
-                return new JwtResponse(true, subjectData, new Response(HttpStatus.OK, Message.READ_SUCCESS));
+                EmployeeAccountTray oneAC = employeeAccountQuery.getAccountByEmployeeId(subjectData.getEmployeeId())
+                        .get(0);
+                subjectData.setAccountEmail(oneAC.getAccountEmail());
+                return jwtResponse.createJwtResponse(true, subjectData,
+                        new Response(HttpStatus.OK, Message.READ_SUCCESS));
             } catch (JsonProcessingException e) {
-                // Xử lý ngoại lệ JsonProcessingException ở đây
                 e.printStackTrace();
 
-                return new JwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL));
-                // Hoặc ném ra ngoại lệ khác hoặc thông báo lỗi cho người dùng tương ứng
+                return jwtResponse.createJwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL));
             }
-            // EmployeeAccountTray subjectData = ((EmployeeAccountTray) de);
 
         } catch (TokenExpiredException e) {
-            // Xử lý token hết hạn
-            // ...
-            return new JwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.setExpiredMessage("Token")));
+            return jwtResponse.createJwtResponse(false,
+                    new Response(HttpStatus.BAD_REQUEST, Message.setExpiredMessage("Token")));
         } catch (SignatureVerificationException e) {
-            // Xử lý chữ ký không đúng
-            // ...
-            return new JwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.setWrongMessage("Signature")));
+            return jwtResponse.createJwtResponse(false,
+                    new Response(HttpStatus.BAD_REQUEST, Message.setWrongMessage("Signature")));
         } catch (JWTVerificationException e) {
-            // Xử lý các lỗi xác thực JWT khác
-            // ...
-            return new JwtResponse(false,
+            return jwtResponse.createJwtResponse(false,
                     new Response(HttpStatus.BAD_REQUEST, Message.setFailMessage("Verify Token is")));
         }
     }

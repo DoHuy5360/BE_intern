@@ -12,8 +12,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.demo.config.middleware.auth.Authentication;
-import com.example.demo.config.middleware.auth.UserAuthorization;
-import com.example.demo.config.middleware.auth.AdminAuthorization;
+import com.example.demo.config.middleware.auth.EmployeeAuthorization;
+import com.example.demo.config.middleware.auth.ManagerAuthorization;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -26,9 +26,9 @@ public class WebConfig implements WebMvcConfigurer {
         @Autowired
         private Authentication authentication;
         @Autowired
-        private AdminAuthorization adminAuthorization;
+        private ManagerAuthorization adminAuthorization;
         @Autowired
-        private UserAuthorization userAuthorization;
+        private EmployeeAuthorization userAuthorization;
 
         public String getPathOf(String api, String name) {
                 return api + name;
