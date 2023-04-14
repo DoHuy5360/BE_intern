@@ -33,6 +33,7 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.util.Time;
 import com.example.demo.kit.validation.EmailValidation;
 import com.example.demo.kit.validation.EmployeeValidation;
 import com.example.demo.kit.validation.HeadquarterAccountValidation;
@@ -203,6 +204,7 @@ public class EmployeeService {
                 _Employee.setEmployeeGender(employee.getEmployeeGender());
                 _Employee.setEmployeePosition(employee.getEmployeePosition());
                 _Employee.setEmployeeSalary(employee.getEmployeeSalary());
+                _Employee.setUpdateAt(Time.getCurrentTimeThangFormat());
                 employeeRepository.save(_Employee);
                 return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
             } else {
@@ -229,6 +231,7 @@ public class EmployeeService {
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());
                 _Employee.setEmployeeGender(employee.getEmployeeGender());
+                _Employee.setUpdateAt(Time.getCurrentTimeThangFormat());
                 employeeRepository.save(_Employee);
                 return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, _Employee);
             } else {
