@@ -43,8 +43,8 @@ public class EmployeeValidation extends PrimitiveValidation {
      * @return this
      */
     public EmployeeValidation trackIdExist() {
-        this.entityFound = this.employeeRepository.findById(this.entityId);
-        if (entityFound.equals(null)) {
+        this.employeeEntityFound = this.employeeRepository.findById(this.entityId);
+        if (!employeeEntityFound.isPresent()) {
             this.errors.add(Message.setNotExistMessage("Employee ID"));
         }
         return this;
@@ -86,7 +86,7 @@ public class EmployeeValidation extends PrimitiveValidation {
         if (isBlank(this.employeeName)) {
             this.errors.add(Message.setEmptyMessage("Name"));
         }
-        if (isMatchMinMaxLength(this.employeeName, 1, 25)) {
+        if (!isMatchMinMaxLength(this.employeeName, 1, 25)) {
             this.errors.add(Message.setInvalid("Name length"));
         }
         return this;

@@ -69,7 +69,8 @@ public class WorkScheduleService {
             WorkScheduleValidation workScheduleValidation = new WorkScheduleValidation(workScheduleRepository).setId(id)
                     .trackIdExist().trackWorkScheduleIdFormat();
             return (workScheduleValidation.isValid())
-                    ? new Response(HttpStatus.OK, Message.READ_SUCCESS, workScheduleValidation.getEntityFound())
+                    ? new Response(HttpStatus.OK, Message.READ_SUCCESS,
+                            workScheduleValidation.getWorkScheduleEntityFound())
                     : new Response(HttpStatus.NOT_FOUND, Message.setInvalid("Work Schedule ID"),
                             workScheduleValidation.getAmountErrors(), workScheduleValidation.getErrors());
 
@@ -140,11 +141,15 @@ public class WorkScheduleService {
     public Response updateRecord(String employeeId, String workScheduleId, WorkSchedule workSchedule) {
         try {
             WorkScheduleValidation wsValidation = new WorkScheduleValidation(workScheduleRepository, workSchedule)
-                    .trackPlan().trackDateValid()
-                    .trackDateInOut().setId(workScheduleId).trackIdExist().trackBelongTo(employeeId);
+                    .trackPlan()
+                    .trackDateValid()
+                    .trackDateInOut()
+                    .setId(workScheduleId)
+                    .trackIdExist()
+                    .trackBelongTo(employeeId);
 
             if (wsValidation.isValid()) {
-                WorkSchedule _WS = (WorkSchedule) wsValidation.getEntityFound();
+                WorkSchedule _WS = wsValidation.getWorkScheduleEntityFound().get();
                 try {
                     _WS.setWorkSchedulePlan(workSchedule.getWorkSchedulePlan());
                     _WS.setWorkScheduleTimeIn(workSchedule.getWorkScheduleTimeIn());
@@ -155,7 +160,7 @@ public class WorkScheduleService {
                     workScheduleRepository.save(_WS);
                     return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, 1, _WS);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    System.out.println("-1: " + e);
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
                 }
             } else {
