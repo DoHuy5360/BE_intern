@@ -57,9 +57,13 @@ public class EmployeeService {
     }
 
     public Response getEmployeeById(String EmployeeUserId) {
-        Optional<Employee> one_E = employeeRepository.findById(EmployeeUserId);
-        return (one_E.isPresent()) ? new Response(HttpStatus.OK, Message.READ_SUCCESS, one_E.get())
-                : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(EmployeeUserId)
+                .trackIdExist();
+        return (employeeValidation.isValid())
+                ? new Response(HttpStatus.OK, Message.READ_SUCCESS, employeeValidation.getEmployeeFound())
+                : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND, employeeValidation.getAmountErrors(),
+                        employeeValidation.getErrors());
+
     }
 
     public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
