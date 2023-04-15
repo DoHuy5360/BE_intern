@@ -60,7 +60,7 @@ public class EmployeeService {
         EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(EmployeeUserId)
                 .trackIdExist();
         return (employeeValidation.isValid())
-                ? new Response(HttpStatus.OK, Message.READ_SUCCESS, employeeValidation.getEmployeeFound())
+                ? new Response(HttpStatus.OK, Message.READ_SUCCESS, employeeValidation.getEntityFound())
                 : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND, employeeValidation.getAmountErrors(),
                         employeeValidation.getErrors());
 
@@ -201,7 +201,7 @@ public class EmployeeService {
                     .trackPhoneLength()
                     .trackGenderLength();
             if (employeeValidation.isValid()) {
-                Employee _Employee = employeeValidation.get();
+                Employee _Employee = (Employee) employeeValidation.getEntityFound();
                 _Employee.setHeadquarterId(employee.getHeadquarterId());
                 _Employee.setEmployeeName(employee.getEmployeeName());
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
@@ -231,7 +231,7 @@ public class EmployeeService {
                     .trackPhoneLength()
                     .trackGenderLength();
             if (employeeValidation.isValid()) {
-                Employee _Employee = employeeValidation.get();
+                Employee _Employee = (Employee) employeeValidation.getEntityFound();
                 _Employee.setEmployeeName(employee.getEmployeeName());
                 _Employee.setEmployeePhone(employee.getEmployeePhone());
                 _Employee.setEmployeeAddress(employee.getEmployeeAddress());
@@ -251,10 +251,10 @@ public class EmployeeService {
     public Response deleteEmployee(String id) {
         try {
             EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(id)
-                    .isValidEmployeeId().trackIdExist();
+                    .trackEmployeeIdFormat().trackIdExist();
             if (employeeValidation.isValid()) {
                 try {
-                    Employee _Employee = employeeValidation.get();
+                    Employee _Employee = (Employee) employeeValidation.getEntityFound();
                     employeeRepository.deleteById(id);
                     accountRepository.deleteById(_Employee.getAccountId());
                 } catch (Exception e) {
@@ -275,7 +275,7 @@ public class EmployeeService {
     public Response getEmployeeInfo(String id) {
         try {
             EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(id)
-                    .isValidEmployeeId();
+                    .trackEmployeeIdFormat();
             if (employeeValidation.isValid()) {
                 Optional<EmployeeAccountHeadquarterTray> oneE = employeeAccountRepository.getInformation(id);
                 if (oneE.isPresent()) {
