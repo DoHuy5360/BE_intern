@@ -1,5 +1,6 @@
 package com.example.demo.kit.validation;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +43,8 @@ public class EmployeeValidation extends PrimitiveValidation {
      * @return this
      */
     public EmployeeValidation trackIdExist() {
-        this.employeeFound = this.employeeRepository.findById(this.entityId);
-        if (employeeFound.isEmpty()) {
+        this.entityFound = this.employeeRepository.findById(this.entityId);
+        if (entityFound.equals(null)) {
             this.errors.add(Message.setNotExistMessage("Employee ID"));
         }
         return this;
@@ -97,8 +98,8 @@ public class EmployeeValidation extends PrimitiveValidation {
 
     }
 
-    public EmployeeValidation isValidEmployeeId() {
-        if (!isValidId("NV")) {
+    public EmployeeValidation trackEmployeeIdFormat() {
+        if (!isIdValid("NV")) {
             this.errors.add(Message.setInvalid("Employee ID"));
         }
         return this;

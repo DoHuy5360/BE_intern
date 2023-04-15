@@ -14,15 +14,11 @@ import lombok.Setter;
 @Setter
 public abstract class PrimitiveValidation {
     public ArrayList<String> errors = new ArrayList<String>();
-    public Optional<Employee> employeeFound;
+    public Object entityFound;
     public String entityId;
 
     public boolean isValid() {
         return (this.errors.isEmpty()) ? true : false;
-    }
-
-    public Employee get() {
-        return employeeFound.get();
     }
 
     public ArrayList<String> getErrors() {
@@ -57,11 +53,20 @@ public abstract class PrimitiveValidation {
         return (isMatch) ? true : false;
     }
 
-    public boolean isValidId(String name) {
+    public boolean isIdValid(String name) {
         String regex = String.format("^%s[A-Za-z0-9]*(\\-[A-Za-z0-9]+)*$", name);
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(this.entityId);
         boolean isMatch = matcher.matches();
         return (isMatch) ? true : false;
     }
+
+    public boolean isDateValid(String string) {
+        String regex = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+Z$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(string);
+        boolean isMatch = matcher.matches();
+        return (isMatch) ? true : false;
+    }
+
 }
