@@ -50,16 +50,17 @@ public class WorkScheduleValidation extends PrimitiveValidation {
     }
 
     public WorkScheduleValidation trackBelongTo(String ownerId) {
-        this.entity = (WorkSchedule) this.getEntityFound();
-        if (!this.entity.getEmployeeId().equals(ownerId)) {
-            this.errors.add(Message.setNotMatch("Owner ID"));
+        if (workScheduleEntityFound.isPresent()) {
+            if (!this.workScheduleEntityFound.get().getEmployeeId().equals(ownerId)) {
+                this.errors.add(Message.setNotMatch("Owner ID"));
+            }
         }
         return this;
     }
 
     public WorkScheduleValidation trackIdExist() {
-        this.entityFound = workScheduleRepository.findById(entityId).orElse(null);
-        if (this.entityFound == null) {
+        this.workScheduleEntityFound = workScheduleRepository.findById(entityId);
+        if (!workScheduleEntityFound.isPresent()) {
             this.errors.add(Message.setNotExistMessage("Work Schedule ID"));
         }
         return this;

@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.demo.entity.employee.Employee;
+import com.example.demo.entity.workschedule.WorkSchedule;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @Setter
 public abstract class PrimitiveValidation {
     public ArrayList<String> errors = new ArrayList<String>();
-    public Object entityFound;
+    public Optional<Employee> employeeEntityFound;
+    public Optional<WorkSchedule> workScheduleEntityFound;
     public String entityId;
 
     public boolean isValid() {
