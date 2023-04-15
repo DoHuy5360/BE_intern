@@ -3,6 +3,7 @@ package com.example.demo.entity.workschedule;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.jandex.PrimitiveType.Primitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeWorkscheduleTray;
 import com.example.demo.kit.util.Time;
+import com.example.demo.kit.validation.EmployeeValidation;
+import com.example.demo.kit.validation.PrimitiveValidation;
 
 @Service
 public class WorkScheduleService {
@@ -55,6 +58,8 @@ public class WorkScheduleService {
     }
 
     public Response storeRecord(String employeeId, WorkSchedule workSchedule) {
+        PrimitiveValidation employeeWorkscheduleValidation;
+        employeeWorkscheduleValidation = new EmployeeValidation().setId(employeeId).trackIdExist();
         workSchedule.setEmployeeId(employeeId);
         workScheduleRepository.save(workSchedule);
         Optional<WorkSchedule> oneWS = workScheduleRepository.findById(workSchedule.getWorkScheduleId());
