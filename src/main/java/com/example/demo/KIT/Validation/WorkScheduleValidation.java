@@ -59,7 +59,6 @@ public class WorkScheduleValidation extends PrimitiveValidation {
 
     public WorkScheduleValidation trackIdExist() {
         this.entityFound = workScheduleRepository.findById(entityId).orElse(null);
-        System.out.println(this.entityFound);
         if (this.entityFound == null) {
             this.errors.add(Message.setNotExistMessage("Work Schedule ID"));
         }

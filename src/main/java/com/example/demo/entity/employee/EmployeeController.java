@@ -21,26 +21,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
-import com.example.demo.kit.util.DiscordLoger;
+import com.example.demo.kit.util.DiscordLogger;
 
 @RestController
 @RequestMapping("/api/v2/employee")
 public class EmployeeController {
-
+    @Autowired
+    private DiscordLogger discordLogger;
     @Autowired
     private EmployeeService employeeService;
 
     @GetMapping("/")
     public Response getAllEmployee(HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Get all employee.", email));
+        discordLogger.no1Send(email, "Get all employee.");
         return employeeService.getAllEmployee();
     }
 
     @GetMapping("/{id}/show")
     public Response getEmployeeById(@PathVariable String id, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : View 1 someone's information.", email));
+        discordLogger.no1Send(email, "View 1 someone's information.");
         return employeeService.getEmployeeById(id);
     }
 
@@ -48,14 +49,14 @@ public class EmployeeController {
     public Response getInfo(HttpServletRequest request) {
         String employeeId = (String) request.getAttribute("EmployeeId");
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : View they's information.", email));
+        discordLogger.no1Send(email, "View they's information.");
         return employeeService.getEmployeeInfo(employeeId);
     }
 
     @GetMapping("/all-information")
     public Response getAllInfo(HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : View all employee's information.", email));
+        discordLogger.no1Send(email, "View all employee's information.");
         return employeeService.getAllEmployeeInfo();
     }
 
@@ -63,7 +64,7 @@ public class EmployeeController {
     public Response createEmployee(
             @RequestBody HeadquarterAccountTray headquarterAccount, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Store one employee.", email));
+        discordLogger.no1Send(email, "Store one employee.");
         return employeeService.storeEmployee(headquarterAccount);
     }
 
@@ -77,10 +78,9 @@ public class EmployeeController {
         long endTime = System.nanoTime();
 
         long durationInSeconds = (endTime - startTime) / 1000000000;
-        new DiscordLoger().prepareContent(
-                String.format("⏳ %s : Has implemented multiple storing -> total cost %s sec.", email,
-                        durationInSeconds))
-                .send();
+        discordLogger.no1Send(email,
+                String.format("Has implemented multiple storing -> total cost %s sec.",
+                        durationInSeconds));
         return result;
     }
 
@@ -88,7 +88,7 @@ public class EmployeeController {
     public Response updateEmployee(@PathVariable("id") String id,
             @RequestBody Employee employee, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Update one eployee.", email));
+        discordLogger.no1Send(email, "Update one eployee.");
         return employeeService.updateEmployee(id, employee);
     }
 
@@ -97,14 +97,14 @@ public class EmployeeController {
             @RequestBody Employee employee) {
         String employeeId = (String) request.getAttribute("EmployeeId");
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Update myself.", email));
+        discordLogger.no1Send(email, "Update myself.");
         return employeeService.updateSelf(employeeId, employee);
     }
 
     @DeleteMapping("/{id}/delete")
     public Response deleteEmployee(@PathVariable("id") String id, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Delete one employee.", email));
+        discordLogger.no1Send(email, "Delete one employee.");
         return employeeService.deleteEmployee(id);
     }
 
@@ -112,7 +112,7 @@ public class EmployeeController {
     public Response storeAvatar(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         String employeeId = (String) request.getAttribute("EmployeeId");
         String email = (String) request.getAttribute("AccountEmail");
-        DiscordLoger.send(String.format("⏳ %s : Set avatar.", email));
+        discordLogger.no1Send(email, "Set avatar.");
         return employeeService.storeImage(employeeId, file);
     }
 

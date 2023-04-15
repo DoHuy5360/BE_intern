@@ -88,7 +88,7 @@ public class Authentication implements HandlerInterceptor {
             String jwtToken = jwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
             response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
             request.setAttribute("jwtToken", jwtToken);
-            request.setAttribute("email", email);
+            request.setAttribute("AccountEmail", email);
             return true;
         }
 
