@@ -1,6 +1,8 @@
 package com.example.demo.kit.file;
 
+import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -58,11 +60,23 @@ public class FileHandler {
                     Employee _Employee = oneE.get();
                     _Employee.setEmployeeAvatar(fileUrl);
                     employeeRepository.save(_Employee);
-                    Files.write(Paths.get(finalPath), this.file.getBytes(), StandardOpenOption.CREATE_NEW);
+
+                    // Tạo một đối tượng File từ đường dẫn thư mục gốc
+                    String rootPath = System.getProperty("user.dir");
+                    File rootDirectory = new File(rootPath);
+                    String rootDir = rootDirectory.getAbsolutePath();
+
+                    // Tạo tệp tin mới
+                    String fullPath = rootDir + "/" + finalPath;
+                    Path path = Paths.get(fullPath);
+                    Files.createFile(path);
+
+                    Files.write(Paths.get(fullPath), this.file.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                 } else {
                     return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
                 }
             } catch (Exception e) {
+                System.out.println(e);
                 Files.copy(this.file.getInputStream(), Paths.get(finalPath), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
