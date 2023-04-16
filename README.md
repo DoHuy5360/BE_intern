@@ -649,7 +649,7 @@ Response:
 }
 ```
 
-### Cập nhật lịch làm việc (bản thân)
+### Cập nhật 1 lịch làm việc (bản thân)
 
 Url: `https://be-intern.onrender.com/api/v2/workschedule/{work_schedule_id}/update`
 
@@ -660,8 +660,10 @@ Body:
 ```json
 {
 	"workScheduleColor": "black",
-	"workSchedulePlan": "Quét nhà XYZ",
-	"workSchedulePlace": "Công Tác"
+	"workSchedulePlan": "Giặt đồ",
+	"workSchedulePlace": "Công Tác",
+	"workScheduleTimeIn": "2023-04-12T01:22:54.2192146Z",
+	"workScheduleTimeOut": "2023-04-12T01:22:54.2192147Z"
 }
 ```
 
