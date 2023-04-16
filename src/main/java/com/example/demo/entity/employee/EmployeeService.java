@@ -319,7 +319,8 @@ public class EmployeeService {
             if (employeeFileValidation.isValid()) {
                 try {
                     return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                            : new FileHandler(file).setPath("/assets/image/avatar/").setName(employeeId).save();
+                            : new FileHandler(file).setPath("/assets/image/avatar/")
+                                    .setName(employeeId).save();
                 } catch (Exception e) {
                     return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
                 }
