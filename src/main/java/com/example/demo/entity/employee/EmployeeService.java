@@ -50,6 +50,8 @@ public class EmployeeService {
     private HeadquarterRepository headquarterRepository;
     @Autowired
     private EmployeeAccountHeadquarterQuery employeeAccountRepository;
+    @Autowired
+    private FileHandler fileHandler;
 
     public Response getAllEmployee() {
         List<Employee> employees = (List<Employee>) employeeRepository.findAll();
@@ -319,7 +321,7 @@ public class EmployeeService {
             if (employeeFileValidation.isValid()) {
                 try {
                     return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                            : new FileHandler(file).setPath("/assets/image/avatar/")
+                            : fileHandler.setUp(file).setPath("/assets/image/avatar/")
                                     .setName(employeeId).save();
                 } catch (Exception e) {
                     return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
