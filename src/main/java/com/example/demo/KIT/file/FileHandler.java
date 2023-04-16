@@ -17,7 +17,7 @@ public class FileHandler {
     public String fullName;
     public String extension;
     public String path;
-    public String publicPath = "public";
+    public String publicPath = "src/main/resources/static";
 
     public FileHandler(MultipartFile file) {
         this.file = file;
@@ -47,6 +47,7 @@ public class FileHandler {
                 Files.write(Paths.get(finalPath), this.file.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
             }
         } catch (Exception e) {
+            System.out.println(e);
             return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL);
         }
         return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, fileUrl);
