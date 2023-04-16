@@ -1,4 +1,4 @@
-package com.example.demo.config.middleware.auth;
+package com.example.demo.config.middleware.password;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,16 +12,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.config.middleware.auth.KIT.AuthorizationHandler;
 import com.example.demo.config.middleware.auth.KIT.ResponseHandler;
 import com.example.demo.config.middleware.auth.KIT.Role;
+import com.example.demo.kit.jwt.JwtEmailCertificateFormat;
 import com.example.demo.kit.jwt.JwtResponse;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
-import com.example.demo.kit.tray.EmployeeAccountTray;
 
 @Component
-public class EmployeeAuthorization implements HandlerInterceptor {
+public class ResetPasswordAuthentication implements HandlerInterceptor {
     @Autowired
     private ResponseHandler responseHandler;
-
     @Autowired
     private AuthorizationHandler authorizationHandler;
 
@@ -29,16 +28,17 @@ public class EmployeeAuthorization implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         responseHandler.createResponse(request, response);
-        JwtResponse jwtResponse = authorizationHandler.handleToken(request).authorizeLogin();
+        JwtResponse jwtResponse = authorizationHandler.handleToken(request).resetPassword();
         if (jwtResponse.isVerify()) {
-            EmployeeAccountTray _EAT = jwtResponse.getEmployeeAccountTray();
-            String role = _EAT.getAccountRole();
-            if (role.equals(Role.EMPLOYEE) || role.equals(Role.MANAGER)) {
-                request.setAttribute("EmployeeId", _EAT.getEmployeeId());
-                request.setAttribute("AccountEmail", _EAT.getAccountEmail());
+            JwtEmailCertificateFormat _JECF = jwtResponse.getJwtBoolFormat();
+            if (_JECF.isCertificate()) {
+                request.setAttribute("AccountEmail", _JECF.getAccountEmail());
+                // request.setAttribute("EmployeeId", authorizationHandler.getEmployeeId());
+                // request.setAttribute("jwt-token", authorizationHandler.getAccountEmail());
                 return true;
             } else {
-                responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Role"))).send();
+                responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Certificate")))
+                        .send();
                 return false;
             }
 
@@ -61,5 +61,4 @@ public class EmployeeAuthorization implements HandlerInterceptor {
             throws Exception {
         // Xử lý sau khi response đã được gửi về client
     }
-
 }

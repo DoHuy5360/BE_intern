@@ -12,8 +12,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.config.middleware.auth.KIT.AuthorizationHandler;
 import com.example.demo.config.middleware.auth.KIT.ResponseHandler;
 import com.example.demo.config.middleware.auth.KIT.Role;
+import com.example.demo.kit.jwt.JwtResponse;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.EmployeeAccountTray;
 
 @Component
 public class ManagerAuthorization implements HandlerInterceptor {
@@ -27,12 +29,13 @@ public class ManagerAuthorization implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         responseHandler.createResponse(request, response);
-        authorizationHandler.handleToken(request);
-        if (authorizationHandler.isVerify()) {
-            String role = authorizationHandler.getAccountRole();
+        JwtResponse jwtResponse = authorizationHandler.handleToken(request).authorizeLogin();
+        if (jwtResponse.isVerify()) {
+            EmployeeAccountTray _EAT = jwtResponse.getEmployeeAccountTray();
+            String role = _EAT.getAccountRole();
             if (role.equals(Role.MANAGER)) {
-                request.setAttribute("EmployeeId", authorizationHandler.getEmployeeId());
-                request.setAttribute("AccountEmail", authorizationHandler.getAccountEmail());
+                request.setAttribute("EmployeeId", _EAT.getEmployeeId());
+                request.setAttribute("AccountEmail", _EAT.getAccountEmail());
                 return true;
             } else {
                 responseHandler.setContent(new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Role"))).send();
@@ -40,7 +43,7 @@ public class ManagerAuthorization implements HandlerInterceptor {
             }
 
         } else {
-            responseHandler.setContent(authorizationHandler.getResponse()).send();
+            responseHandler.setContent(jwtResponse.getResponse()).send();
             return false;
         }
 

@@ -1,5 +1,7 @@
 package com.example.demo.entity.account;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,12 +46,26 @@ public class AccountController {
     }
 
     @PutMapping("/reset-password")
-    public Response reset(@RequestBody Account account) {
-        return accountService.resetPassword(account);
+    public Response reset(@RequestBody Account account, HttpServletRequest request) {
+        String accountEmail = (String) request.getAttribute("AccountEmail");
+        return accountService.resetPassword(accountEmail, account);
+    }
+
+    @PutMapping("/change-password")
+    public Response change(@RequestBody Account account, HttpServletRequest request) {
+        String accountEmail = (String) request.getAttribute("AccountEmail");
+        return accountService.changePassword(accountEmail, account);
     }
 
     @DeleteMapping("/{id}/delete")
     public Response deleteAccount(@PathVariable String id) {
         return accountService.deleteAccount(id);
     }
+
+    @PostMapping("/forgot-password")
+    public Response forgetPasswork(HttpServletRequest request, @RequestBody Account account) {
+        return accountService.forgotPassword(account);
+
+    }
+
 }

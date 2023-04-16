@@ -15,11 +15,19 @@ public class JwtResponse {
     private boolean verify;
     private Response response;
     private EmployeeAccountTray employeeAccountTray;
+    private JwtEmailCertificateFormat jwtBoolFormat;
 
     public JwtResponse createJwtResponse(boolean verify, EmployeeAccountTray employeeAccountTray, Response response) {
         this.verify = verify;
         this.response = response;
         this.employeeAccountTray = employeeAccountTray;
+        return this;
+    }
+
+    public JwtResponse createJwtResponse(boolean verify, JwtEmailCertificateFormat jwtBoolFormat, Response response) {
+        this.verify = verify;
+        this.response = response;
+        this.jwtBoolFormat = jwtBoolFormat;
         return this;
     }
 

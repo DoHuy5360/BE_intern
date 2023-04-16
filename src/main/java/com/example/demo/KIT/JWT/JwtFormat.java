@@ -8,4 +8,5 @@ public class JwtFormat {
         this.employeeId = employeeId;
         this.accountRole = accountRole;
     }
+
 }
