@@ -34,9 +34,6 @@ build/
 
 .env
 
-public/image/avatar/*
-!public/image/avatar/
-
 auth.drawio
 Encode.java
 
