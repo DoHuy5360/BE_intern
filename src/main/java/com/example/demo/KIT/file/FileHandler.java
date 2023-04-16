@@ -2,14 +2,21 @@ package com.example.demo.kit.file;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.entity.employee.Employee;
+import com.example.demo.entity.employee.EmployeeRepository;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 
+@Service
 public class FileHandler {
     private String domainUrl = "https://be-intern.onrender.com";
     public MultipartFile file;
@@ -19,11 +26,15 @@ public class FileHandler {
     public String path;
     public String publicPath = "src/main/resources/static";
 
-    public FileHandler(MultipartFile file) {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public FileHandler setUp(MultipartFile file) {
         this.file = file;
         this.name = file.getName();
         this.fullName = file.getOriginalFilename();
         this.extension = this.fullName.substring(this.fullName.lastIndexOf("."));
+        return this;
     }
 
     public FileHandler setPath(String path) {
@@ -42,9 +53,17 @@ public class FileHandler {
         String fileUrl = domainUrl + this.path + finalFileName; // ? http://.../public/image.png
         try {
             try {
-                Files.copy(this.file.getInputStream(), Paths.get(finalPath));
+                Optional<Employee> oneE = employeeRepository.findById(this.name);
+                if (oneE.isPresent()) {
+                    Employee _Employee = oneE.get();
+                    _Employee.setEmployeeAvatar(fileUrl);
+                    employeeRepository.save(_Employee);
+                    Files.write(Paths.get(finalPath), this.file.getBytes(), StandardOpenOption.CREATE_NEW);
+                } else {
+                    return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
+                }
             } catch (Exception e) {
-                Files.write(Paths.get(finalPath), this.file.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+                Files.copy(this.file.getInputStream(), Paths.get(finalPath), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
             System.out.println(e);
