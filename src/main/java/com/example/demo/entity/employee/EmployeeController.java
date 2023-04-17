@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -114,6 +115,12 @@ public class EmployeeController {
         String email = (String) request.getAttribute("AccountEmail");
         discordLogger.no1Send(email, "Set avatar.");
         return employeeService.storeImage(employeeId, file);
+    }
+
+    @GetMapping("/avatar/{employeeId}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String employeeId, HttpServletRequest request) {
+        // String employeeId = (String) request.getAttribute("EmployeeId");
+        return employeeService.getAvatar(employeeId);
     }
 
 }

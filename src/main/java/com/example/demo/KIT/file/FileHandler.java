@@ -49,42 +49,47 @@ public class FileHandler {
         return this;
     }
 
-    public Response save() {
-        String finalFileName = this.name + this.extension; // ? image.png
-        String finalPath = this.publicPath + this.path + finalFileName; // ? public/image.png
-        String fileUrl = domainUrl + this.path + finalFileName; // ? http://.../public/image.png
-        try {
-            try {
-                Optional<Employee> oneE = employeeRepository.findById(this.name);
-                if (oneE.isPresent()) {
-                    Employee _Employee = oneE.get();
-                    _Employee.setEmployeeAvatar(fileUrl);
-                    employeeRepository.save(_Employee);
+    // public Response save() {
+    // String finalFileName = this.name + this.extension; // ? image.png
+    // String finalPath = this.publicPath + this.path + finalFileName; // ?
+    // public/image.png
+    // String fileUrl = domainUrl + this.path + finalFileName; // ?
+    // http://.../public/image.png
+    // try {
+    // try {
+    // Optional<Employee> oneE = employeeRepository.findById(this.name);
+    // if (oneE.isPresent()) {
+    // Employee _Employee = oneE.get();
+    // _Employee.setEmployeeAvatar(fileUrl);
+    // employeeRepository.save(_Employee);
 
-                    // Tạo một đối tượng File từ đường dẫn thư mục gốc
-                    String rootPath = System.getProperty("user.dir");
-                    File rootDirectory = new File(rootPath);
-                    String rootDir = rootDirectory.getAbsolutePath();
+    // // Tạo một đối tượng File từ đường dẫn thư mục gốc
+    // String rootPath = System.getProperty("user.dir");
+    // File rootDirectory = new File(rootPath);
+    // String rootDir = rootDirectory.getAbsolutePath();
 
-                    // Tạo tệp tin mới
-                    String fullPath = rootDir + "/" + finalPath;
-                    Path path = Paths.get(fullPath);
-                    Files.createFile(path);
-                    System.out.println(path);
+    // // Tạo tệp tin mới
+    // String fullPath = rootDir + "/" + finalPath;
+    // Path path = Paths.get(fullPath);
+    // Files.createFile(path);
+    // System.out.println(path);
 
-                    Files.write(Paths.get(fullPath), this.file.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
-                } else {
-                    return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-                Files.copy(this.file.getInputStream(), Paths.get(finalPath), StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-            return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL);
-        }
-        return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, fileUrl);
+    // Files.write(Paths.get(fullPath), this.file.getBytes(),
+    // StandardOpenOption.TRUNCATE_EXISTING);
+    // } else {
+    // return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee
+    // ID"));
+    // }
+    // } catch (Exception e) {
+    // System.out.println(e);
+    // Files.copy(this.file.getInputStream(), Paths.get(finalPath),
+    // StandardCopyOption.REPLACE_EXISTING);
+    // }
+    // } catch (Exception e) {
+    // System.out.println(e);
+    // return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL);
+    // }
+    // return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, fileUrl);
 
-    }
+    // }
 }

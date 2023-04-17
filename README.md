@@ -345,6 +345,14 @@ Body:
 | ---- | --------------------- |
 | file | 1 file ảnh [png, jpg] |
 
+### Hiển thị 1 ảnh đại diện nhân viên
+
+Url: `https://be-intern.onrender.com/api/v2/employee/avatar/{employeeId}`
+
+Method: `GET`
+
+Response: 1 bức hình.
+
 # Trụ sở
 
 ### Xem tất cả trụ sỏ
@@ -572,8 +580,10 @@ Body:
 ```json
 {
 	"workScheduleColor": "green",
-	"workSchedulePlan": "Quet Nha 3",
-	"workSchedulePlace": "Đi gặp đối tác"
+	"workSchedulePlan": "Đi gặp đối tác",
+	"workSchedulePlace": "TP.HCm",
+	"workScheduleTimeIn": "2023-04-12T01:22:54.2192146Z",
+	"workScheduleTimeOut": "2023-04-12T01:22:54.2192147Z"
 }
 ```
 
