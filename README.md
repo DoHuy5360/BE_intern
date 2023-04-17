@@ -868,3 +868,28 @@ Response:
 	"data": null
 }
 ```
+
+### Quên mật khẩu
+
+Url: `https://be-intern.onrender.com/api/v2/account/fogot-password`
+
+Method: `POST`
+
+Body:
+
+```json
+{
+	"accountEmail": "huy@gmail.com"
+}
+```
+
+Response:
+
+```json
+{
+	"status": "OK",
+	"message": "Please Check Your Mail Box",
+	"amount": 0,
+	"data": null
+}
+```
