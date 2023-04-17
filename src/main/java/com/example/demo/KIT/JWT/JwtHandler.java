@@ -35,6 +35,7 @@ public class JwtHandler {
     public ObjectMapper objectMapper;
     public String subjectObject;
     private JwtResponse jwtResponseOut;
+    public JWTCreator.Builder builder;
 
     // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
     private static final String SECRET_KEY = "abcxyz123";
@@ -43,7 +44,7 @@ public class JwtHandler {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTimeMillis);
 
-        JWTCreator.Builder builder = JWT.create()
+        this.builder = JWT.create()
                 .withSubject(subject)
                 .withExpiresAt(expirationDate);
         return builder.sign(algorithm);
@@ -110,7 +111,6 @@ public class JwtHandler {
                 return jwtResponse.createJwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL));
             }
         } else {
-            System.out.println("jwtHan: 113");
             return this.jwtResponse;
         }
     }

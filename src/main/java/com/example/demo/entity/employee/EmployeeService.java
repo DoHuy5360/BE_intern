@@ -277,7 +277,8 @@ public class EmployeeService {
 
     public Response getEmployeeInfo(String id) {
         try {
-            EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository).setId(id)
+            EmployeeValidation employeeValidation = new EmployeeValidation(employeeRepository)
+                    .setId(id)
                     .trackEmployeeIdFormat();
             if (employeeValidation.isValid()) {
                 Optional<EmployeeAccountHeadquarterTray> oneE = employeeAccountRepository.getInformation(id);

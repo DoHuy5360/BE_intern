@@ -113,7 +113,7 @@ public class AccountService {
     }
 
     public Response changePassword(String accountEmail, Account account) {
-        System.out.println(account);
+
         if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
             Optional<Account> one_AC = accountRepository.findByEmail(accountEmail);
             if (one_AC.isPresent()) {
@@ -135,39 +135,47 @@ public class AccountService {
 
     public Response forgotPassword(Account account) {
 
-        final int MINUTE = 5;
-        final int SECOND = 60;
-        final int MILLISECOND = 1000;
-        JwtEmailCertificateFormat jwtBoolFormat = new JwtEmailCertificateFormat(true, account.getAccountEmail());
-        ObjectMapper convertJson = new ObjectMapper();
-        String token;
-        try {
-            token = convertJson.writeValueAsString(jwtBoolFormat);
-        } catch (Exception e) {
-            token = null;
+        Optional<Account> oneA = accountRepository.findByEmail(account.getAccountEmail());
+        if (oneA.isPresent()) {
+
+            final int MINUTE = 5;
+            final int SECOND = 60;
+            final int MILLISECOND = 1000;
+            JwtEmailCertificateFormat jwtBoolFormat = new JwtEmailCertificateFormat(true, account.getAccountEmail());
+            ObjectMapper convertJson = new ObjectMapper();
+            String token;
+            try {
+                token = convertJson.writeValueAsString(jwtBoolFormat);
+            } catch (Exception e) {
+                token = null;
+            }
+            String jwtToken = jwtHandler.generateToken(token, MINUTE * SECOND * MILLISECOND);
+
+            Context thymleafTemplate = new Context();
+            thymleafTemplate.setVariable("jwtToken", jwtToken);
+            thymleafTemplate.setVariable("url", "https://be-intern.onrender.com/assets/html/changePassword.html");
+
+            String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
+
+            MimeMessage message = mailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+                String NewSubject = "Reset Password";
+                helper.setTo(account.getAccountEmail());
+                helper.setSubject(NewSubject);
+                helper.setText(textHTMLContext, true);
+                mailSender.send(message);
+            } catch (MessagingException e) {
+                System.out.println(e);
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.setFailMessage("Mail delivery"));
+            }
+
+            return new Response(HttpStatus.OK, "Please Check Mail Box.");
+        } else {
+            return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Email"));
+
         }
-        String jwtToken = jwtHandler.generateToken(token, MINUTE * SECOND * MILLISECOND);
 
-        Context thymleafTemplate = new Context();
-        thymleafTemplate.setVariable("jwtToken", jwtToken);
-        thymleafTemplate.setVariable("url", "http://192.168.1.53:8080/assets/html/changePassword.html");
-
-        String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
-
-        MimeMessage message = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-            String NewSubject = "Reset Password";
-            helper.setTo(account.getAccountEmail());
-            helper.setSubject(NewSubject);
-            helper.setText(textHTMLContext, true);
-            mailSender.send(message);
-        } catch (MessagingException e) {
-            System.out.println(e);
-            return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.setFailMessage("Mail delivery"));
-        }
-
-        return new Response(HttpStatus.OK, "Please Check Mail Box.");
     }
 
     public Response deleteAccount(String id) {

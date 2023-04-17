@@ -11,15 +11,17 @@ document.addEventListener("DOMContentLoaded", (e) => {
 			retypeAccountPassword: retypePws.value,
 		};
 		const token = url.searchParams.get("certificate");
-		fetch("http://192.168.1.53:8080/api/v2/account/change-password", {
+		fetch("https://be-intern.onrender.com/api/v2/account/change-password", {
 			method: "PUT",
 			headers: {
 				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(body),
-		}).then((res) => {
-			console.log(res);
-		});
+		})
+			.then((res) => res.json())
+			.then((body) => {
+				body.status === "OK" ? alert("Success") : alert("Fail");
+			});
 	});
 });
