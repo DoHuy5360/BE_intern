@@ -51,7 +51,6 @@ public class JwtHandler {
     }
 
     public JwtHandler verifyToken(String token) {
-        System.out.println(token);
         this.jwtResponseOut = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);

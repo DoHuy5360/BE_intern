@@ -30,7 +30,6 @@ public class ManagerAuthorization implements HandlerInterceptor {
             throws Exception {
         responseHandler.createResponse(request, response);
         JwtResponse jwtResponse = authorizationHandler.handleToken(request).authorizeLogin();
-        System.out.println(jwtResponse.isVerify());
         if (jwtResponse.isVerify()) {
             EmployeeAccountTray _EAT = jwtResponse.getEmployeeAccountTray();
             String role = _EAT.getAccountRole();
