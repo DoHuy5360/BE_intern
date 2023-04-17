@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.demo.config.middleware.auth.Authentication;
 import com.example.demo.config.middleware.auth.EmployeeAuthorization;
 import com.example.demo.config.middleware.auth.ManagerAuthorization;
+import com.example.demo.config.middleware.password.ResetPasswordAuthentication;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -29,6 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
         private ManagerAuthorization adminAuthorization;
         @Autowired
         private EmployeeAuthorization userAuthorization;
+        @Autowired
+        private ResetPasswordAuthentication resetPasswordAuthentication;
 
         public String getPathOf(String api, String name) {
                 return api + name;
@@ -89,5 +92,7 @@ public class WebConfig implements WebMvcConfigurer {
                                 .addPathPatterns(workSchedulePath + "/{id}/update")
                                 .addPathPatterns(accountPath + "/reset-password")
                                 .excludePathPatterns("/public/**");
+                interceptorRegistry.addInterceptor(resetPasswordAuthentication)
+                                .addPathPatterns(accountPath + "/change-password");
         }
 }

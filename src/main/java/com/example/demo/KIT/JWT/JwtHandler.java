@@ -32,6 +32,11 @@ public class JwtHandler {
     @Autowired
     private JwtResponse jwtResponse;
 
+    public ObjectMapper objectMapper;
+    public String subjectObject;
+    private JwtResponse jwtResponseOut;
+    public JWTCreator.Builder builder;
+
     // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
     private static final String SECRET_KEY = "abcxyz123";
 
@@ -39,25 +44,45 @@ public class JwtHandler {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTimeMillis);
 
-        JWTCreator.Builder builder = JWT.create()
+        this.builder = JWT.create()
                 .withSubject(subject)
                 .withExpiresAt(expirationDate);
         return builder.sign(algorithm);
     }
 
-    public JwtResponse verifyToken(String token) {
+    public JwtHandler verifyToken(String token) {
+        this.jwtResponseOut = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             DecodedJWT decodedJWT = JWT.require(algorithm)
                     .build()
                     .verify(token);
-            String subjectObject = decodedJWT.getSubject();
+            this.subjectObject = decodedJWT.getSubject();
 
             System.out.println("jwtHandler.java: " + subjectObject);
 
-            ObjectMapper objectMapper = new ObjectMapper();
+            this.objectMapper = new ObjectMapper();
+
+            return this;
+        } catch (TokenExpiredException e) {
+            this.jwtResponseOut = jwtResponse.createJwtResponse(false,
+                    new Response(HttpStatus.BAD_REQUEST, Message.setExpiredMessage("Token")));
+            return this;
+        } catch (SignatureVerificationException e) {
+            this.jwtResponseOut = jwtResponse.createJwtResponse(false,
+                    new Response(HttpStatus.BAD_REQUEST, Message.setWrongMessage("Signature")));
+            return this;
+        } catch (JWTVerificationException e) {
+            this.jwtResponseOut = jwtResponse.createJwtResponse(false,
+                    new Response(HttpStatus.BAD_REQUEST, Message.setFailMessage("Verify Token is")));
+            return this;
+        }
+    }
+
+    public JwtResponse authorizeLogin() {
+        if (jwtResponseOut == null) {
             try {
-                EmployeeAccountTray subjectData = objectMapper.readValue(subjectObject, EmployeeAccountTray.class);
+                EmployeeAccountTray subjectData = objectMapper.readValue(this.subjectObject, EmployeeAccountTray.class);
                 EmployeeAccountTray oneAC = employeeAccountQuery.getAccountByEmployeeId(subjectData.getEmployeeId())
                         .get(0);
                 subjectData.setAccountEmail(oneAC.getAccountEmail());
@@ -68,16 +93,25 @@ public class JwtHandler {
 
                 return jwtResponse.createJwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL));
             }
+        } else {
+            return this.jwtResponseOut;
+        }
+    }
 
-        } catch (TokenExpiredException e) {
-            return jwtResponse.createJwtResponse(false,
-                    new Response(HttpStatus.BAD_REQUEST, Message.setExpiredMessage("Token")));
-        } catch (SignatureVerificationException e) {
-            return jwtResponse.createJwtResponse(false,
-                    new Response(HttpStatus.BAD_REQUEST, Message.setWrongMessage("Signature")));
-        } catch (JWTVerificationException e) {
-            return jwtResponse.createJwtResponse(false,
-                    new Response(HttpStatus.BAD_REQUEST, Message.setFailMessage("Verify Token is")));
+    public JwtResponse resetPassword() {
+        if (jwtResponseOut == null) {
+            try {
+                JwtEmailCertificateFormat subjectData = objectMapper.readValue(subjectObject,
+                        JwtEmailCertificateFormat.class);
+                return jwtResponse.createJwtResponse(true, subjectData,
+                        new Response(HttpStatus.OK, Message.READ_SUCCESS));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+
+                return jwtResponse.createJwtResponse(false, new Response(HttpStatus.BAD_REQUEST, Message.READ_FAIL));
+            }
+        } else {
+            return this.jwtResponse;
         }
     }
 

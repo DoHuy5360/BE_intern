@@ -70,6 +70,7 @@ public class FileHandler {
                     String fullPath = rootDir + "/" + finalPath;
                     Path path = Paths.get(fullPath);
                     Files.createFile(path);
+                    System.out.println(path);
 
                     Files.write(Paths.get(fullPath), this.file.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                 } else {

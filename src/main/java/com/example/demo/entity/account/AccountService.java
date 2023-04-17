@@ -3,15 +3,27 @@ package com.example.demo.entity.account;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.kit.jwt.JwtEmailCertificateFormat;
+import com.example.demo.kit.jwt.JwtHandler;
 import com.example.demo.kit.query.EmployeeAccountQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 public class AccountService {
@@ -20,6 +32,15 @@ public class AccountService {
 
     @Autowired
     private EmployeeAccountQuery employeeAccountQuery;
+
+    @Autowired
+    private JwtHandler jwtHandler;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     public List<EmployeeAccountTray> checkLogin(String email) {
         return employeeAccountQuery.getAccountByEmailPassword(email);
@@ -71,13 +92,13 @@ public class AccountService {
     }
 
     @Transactional
-    public Response resetPassword(Account account) {
+    public Response resetPassword(String accountEmail, Account account) {
         if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
-            Optional<Account> one_AC = accountRepository.findByEmail(account.getAccountEmail());
+            Optional<Account> one_AC = accountRepository.findByEmail(accountEmail);
             if (one_AC.isPresent()) {
                 try {
                     Account _Account = one_AC.get();
-                    _Account.setAccountPassword(account.getAccountPassword());
+                    _Account.setAccountPassword(new BCryptPasswordEncoder().encode(account.getAccountPassword()));
                     accountRepository.save(_Account);
                 } catch (Exception e) {
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
@@ -89,6 +110,72 @@ public class AccountService {
         } else {
             return new Response(HttpStatus.NOT_FOUND, Message.setNotMatch("Retype Password"));
         }
+    }
+
+    public Response changePassword(String accountEmail, Account account) {
+
+        if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
+            Optional<Account> one_AC = accountRepository.findByEmail(accountEmail);
+            if (one_AC.isPresent()) {
+                try {
+                    Account _Account = one_AC.get();
+                    _Account.setAccountPassword(new BCryptPasswordEncoder().encode(account.getAccountPassword()));
+                    accountRepository.save(_Account);
+                } catch (Exception e) {
+                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
+                }
+                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
+            } else {
+                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_FOUND);
+            }
+        } else {
+            return new Response(HttpStatus.NOT_FOUND, Message.setNotMatch("Retype Password"));
+        }
+    }
+
+    public Response forgotPassword(Account account) {
+
+        Optional<Account> oneA = accountRepository.findByEmail(account.getAccountEmail());
+        if (oneA.isPresent()) {
+
+            final int MINUTE = 5;
+            final int SECOND = 60;
+            final int MILLISECOND = 1000;
+            JwtEmailCertificateFormat jwtBoolFormat = new JwtEmailCertificateFormat(true, account.getAccountEmail());
+            ObjectMapper convertJson = new ObjectMapper();
+            String token;
+            try {
+                token = convertJson.writeValueAsString(jwtBoolFormat);
+            } catch (Exception e) {
+                token = null;
+            }
+            String jwtToken = jwtHandler.generateToken(token, MINUTE * SECOND * MILLISECOND);
+
+            Context thymleafTemplate = new Context();
+            thymleafTemplate.setVariable("jwtToken", jwtToken);
+            thymleafTemplate.setVariable("url", "https://be-intern.onrender.com/assets/html/changePassword.html");
+
+            String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
+
+            MimeMessage message = mailSender.createMimeMessage();
+            try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+                String NewSubject = "Reset Password";
+                helper.setTo(account.getAccountEmail());
+                helper.setSubject(NewSubject);
+                helper.setText(textHTMLContext, true);
+                mailSender.send(message);
+            } catch (MessagingException e) {
+                System.out.println(e);
+                return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.setFailMessage("Mail delivery"));
+            }
+
+            return new Response(HttpStatus.OK, "Please Check Mail Box.");
+        } else {
+            return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Email"));
+
+        }
+
     }
 
     public Response deleteAccount(String id) {
