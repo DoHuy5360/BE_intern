@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -38,8 +39,9 @@ public class Employee {
     @Column(length = 11, nullable = true)
     private String employeePhone;
 
-    @Column(length = 300, nullable = true)
-    private String employeeAvatar;
+    @Lob
+    @Column(nullable = true)
+    private byte[] employeeAvatar;
 
     @Column(length = 300, nullable = true)
     private String employeeAddress;

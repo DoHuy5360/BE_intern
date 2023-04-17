@@ -16,7 +16,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,8 +91,8 @@ public class EmployeeService {
                 _employee.setAccountId(_account.getAccountId());
                 _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
                 _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
-                _employee.setEmployeeAvatar(
-                        "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                // _employee.setEmployeeAvatar(
+                // "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
 
                 accountRepository.save(_account);
                 employeeRepository.save(_employee);
@@ -157,8 +160,8 @@ public class EmployeeService {
                                 errors.add(Message.POSITION_ERROR);
                             }
                             _employee.setAccountId(_account.getAccountId());
-                            _employee.setEmployeeAvatar(
-                                    "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                            // _employee.setEmployeeAvatar(
+                            // "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
                             if (errors.isEmpty()) {
                                 try {
                                     accountRepository.save(_account);
@@ -313,29 +316,66 @@ public class EmployeeService {
         }
     }
 
+    // public Response storeImage(String employeeId, MultipartFile file) {
+    // try {
+    // PrimitiveValidation employeeFileValidation;
+    // employeeFileValidation = new
+    // EmployeeValidation(employeeRepository).setId(employeeId)
+    // .trackIdExist();
+    // employeeFileValidation = new
+    // FileValidation(file).trackSize().trackExtension();
+    // if (employeeFileValidation.isValid()) {
+    // try {
+    // return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST,
+    // Message.setEmptyMessage("File"))
+    // : fileHandler.setUp(file).setPath("/assets/image/avatar/")
+    // .setName(employeeId).save();
+    // } catch (Exception e) {
+    // return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+    // }
+    // } else {
+    // return new Response(HttpStatus.BAD_REQUEST, Message.INVALID,
+    // employeeFileValidation.getAmountErrors(),
+    // employeeFileValidation.errors);
+
+    // }
+    // } catch (Exception e) {
+    // System.out.println(e);
+    // return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
+
+    // }
+    // }
+
     public Response storeImage(String employeeId, MultipartFile file) {
         try {
-            PrimitiveValidation employeeFileValidation;
-            employeeFileValidation = new EmployeeValidation(employeeRepository).setId(employeeId)
-                    .trackIdExist();
-            employeeFileValidation = new FileValidation(file).trackSize().trackExtension();
-            if (employeeFileValidation.isValid()) {
+            Optional<Employee> employee = employeeRepository.findById(employeeId);
+            if (employee.isPresent()) {
                 try {
-                    return (file.isEmpty()) ? new Response(HttpStatus.BAD_REQUEST, Message.setEmptyMessage("File"))
-                            : fileHandler.setUp(file).setPath("/assets/image/avatar/")
-                                    .setName(employeeId).save();
+                    Employee _Employee = employee.get();
+                    _Employee.setEmployeeAvatar(file.getBytes());
+                    employeeRepository.save(_Employee);
+                    return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
                 } catch (Exception e) {
-                    return new Response(HttpStatus.BAD_REQUEST, Message.setUploadFail("Image"));
+                    System.out.println(e);
+                    return new Response(HttpStatus.OK, Message.CREATE_FAIL);
                 }
             } else {
-                return new Response(HttpStatus.BAD_REQUEST, Message.INVALID, employeeFileValidation.getAmountErrors(),
-                        employeeFileValidation.errors);
-
+                return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
             }
         } catch (Exception e) {
-            System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
+        }
+    }
 
+    public ResponseEntity<byte[]> getAvatar(String employeeId) {
+        Optional<Employee> fileEntity = employeeRepository.findById(employeeId);
+        if (fileEntity.isPresent()) {
+            Employee file = fileEntity.get();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(file.getEmployeeAvatar(), headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
