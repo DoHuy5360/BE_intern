@@ -30,7 +30,7 @@ public class AuthorizationHandler {
             this.jwtToken = header.replace("Bearer ", "");
         } catch (Exception e) {
             System.out.println(e);
-            this.verify = false;
+            this.jwtToken = null;
         }
         this.jwtHandlerOut = jwtHandler.verifyToken(this.jwtToken);
         return this.jwtHandlerOut;
