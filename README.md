@@ -862,7 +862,6 @@ Body:
 
 ```json
 {
-	"accountEmail": "huy@gmail.com",
 	"accountPassword": "a",
 	"retypeAccountPassword": "a"
 }
