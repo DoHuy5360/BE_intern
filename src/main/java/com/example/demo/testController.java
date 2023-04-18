@@ -30,12 +30,6 @@ public class testController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @GetMapping("/")
-    public String index() {
-        return "Truy cập " + "<a href='https://github.com/DoHuy5360/BE_intern' target='_blank'>REST description</a>"
-                + "để xem";
-    }
-
     @PostMapping("/login")
     public Response home(HttpServletRequest request) {
         String userIp = request.getRemoteAddr();
