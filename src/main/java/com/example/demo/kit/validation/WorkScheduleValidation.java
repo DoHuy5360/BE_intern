@@ -1,5 +1,8 @@
 package com.example.demo.kit.validation;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.entity.workschedule.WorkSchedule;
 import com.example.demo.entity.workschedule.WorkScheduleRepository;
 import com.example.demo.kit.res.Message;
+import com.example.demo.kit.util.Time;
 
 public class WorkScheduleValidation extends PrimitiveValidation {
     public WorkSchedule workSchedule;
@@ -73,12 +77,23 @@ public class WorkScheduleValidation extends PrimitiveValidation {
         return this;
     }
 
-    public WorkScheduleValidation trackDateValid() {
+    public WorkScheduleValidation trackDateFormatValid() {
         if (!isDateValid(this.workScheduleTimeIn)) {
             this.errors.add(Message.setInvalid("Time In"));
         }
         if (!isDateValid(this.workScheduleTimeOut)) {
             this.errors.add(Message.setInvalid("Time Out"));
+        }
+        return this;
+    }
+
+    public WorkScheduleValidation trackDateInFuture() {
+        LocalDateTime givenTimeIn = Time.parseFormat(this.workScheduleTimeIn);
+        LocalDateTime givenTimeOut = Time.parseFormat(this.workScheduleTimeOut);
+        LocalDateTime currentTime = LocalDateTime.now(ZoneOffset.UTC);
+
+        if (givenTimeIn.isBefore(currentTime) || givenTimeOut.isBefore(currentTime)) {
+            this.errors.add(Message.setInvalid("Time"));
         }
         return this;
     }

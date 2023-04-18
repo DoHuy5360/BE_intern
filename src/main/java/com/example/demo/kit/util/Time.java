@@ -33,4 +33,14 @@ public class Time {
         String currentTime = now.format(TimeFormat);
         return currentTime;
     }
+
+    public static LocalDateTime parseFormat(String rawDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'");
+        return LocalDateTime.parse(rawDate, formatter);
+    }
+
+    public static void main(String[] args) {
+        String example = "2023-04-12T01:22:54.2192146Z";
+        System.out.println(parseFormat(example));
+    }
 }

@@ -66,8 +66,10 @@ public class WorkScheduleService {
 
     public Response getOneRecord(String id) {
         try {
-            WorkScheduleValidation workScheduleValidation = new WorkScheduleValidation(workScheduleRepository).setId(id)
-                    .trackIdExist().trackWorkScheduleIdFormat();
+            WorkScheduleValidation workScheduleValidation = new WorkScheduleValidation(workScheduleRepository)
+                    .setId(id)
+                    .trackIdExist()
+                    .trackWorkScheduleIdFormat();
             return (workScheduleValidation.isValid())
                     ? new Response(HttpStatus.OK, Message.READ_SUCCESS,
                             workScheduleValidation.getWorkScheduleEntityFound())
@@ -88,8 +90,10 @@ public class WorkScheduleService {
                     .setId(employeeId)
                     .trackIdExist();
             _EWValidation = new WorkScheduleValidation(workSchedule)
-                    .trackPlan().trackDateValid()
-                    .trackDateInOut();
+                    .trackPlan()
+                    .trackDateFormatValid()
+                    .trackDateInOut()
+                    .trackDateInFuture();
             if (_EWValidation.isValid()) {
                 try {
                     workSchedule.setEmployeeId(employeeId);
@@ -115,7 +119,8 @@ public class WorkScheduleService {
 
             WorkScheduleValidation workScheduleValidation = new WorkScheduleValidation(workScheduleRepository)
                     .setId(workScheduleId)
-                    .trackIdExist().trackWorkScheduleIdFormat();
+                    .trackIdExist()
+                    .trackWorkScheduleIdFormat();
             if (workScheduleValidation.isValid()) {
                 try {
                     workScheduleRepository.deleteByEmployeeIdAndWorkScheduleId(employeeId, workScheduleId);
@@ -142,11 +147,12 @@ public class WorkScheduleService {
         try {
             WorkScheduleValidation wsValidation = new WorkScheduleValidation(workScheduleRepository, workSchedule)
                     .trackPlan()
-                    .trackDateValid()
+                    .trackDateFormatValid()
                     .trackDateInOut()
                     .setId(workScheduleId)
                     .trackIdExist()
-                    .trackBelongTo(employeeId);
+                    .trackBelongTo(employeeId)
+                    .trackDateInFuture();
 
             if (wsValidation.isValid()) {
                 WorkSchedule _WS = wsValidation.getWorkScheduleEntityFound().get();
@@ -160,7 +166,6 @@ public class WorkScheduleService {
                     workScheduleRepository.save(_WS);
                     return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, 1, _WS);
                 } catch (Exception e) {
-                    System.out.println("-1: " + e);
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
                 }
             } else {
