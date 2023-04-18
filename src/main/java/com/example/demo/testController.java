@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.employee.Employee;
 import com.example.demo.entity.employee.EmployeeRepository;
+import com.example.demo.kit.dotenv.DotenvHandler;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.util.DiscordLogger;
@@ -48,6 +49,13 @@ public class testController {
 
     @PostMapping("/decode")
     public String decode() {
-        return "Token still alive";
+        String SECRET_KEY;
+        try {
+            SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
+        } catch (Exception e) {
+            return e.toString();
+
+        }
+        return SECRET_KEY;
     }
 }
