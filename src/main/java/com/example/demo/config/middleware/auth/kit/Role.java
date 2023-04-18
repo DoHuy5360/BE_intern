@@ -1,4 +1,4 @@
-package com.example.demo.config.middleware.auth.KIT;
+package com.example.demo.config.middleware.auth.kit;
 
 public class Role {
     public static final String ADMIN = "Admin";

@@ -37,8 +37,8 @@ public class JwtHandler {
     private JwtResponse jwtResponseOut;
     public JWTCreator.Builder builder;
 
-    // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
     private static final String SECRET_KEY = "abcxyz123";
+    // private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
 
     public String generateToken(String subject, long expirationTimeMillis) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);

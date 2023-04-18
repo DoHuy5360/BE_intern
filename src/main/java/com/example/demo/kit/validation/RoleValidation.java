@@ -3,7 +3,7 @@ package com.example.demo.kit.validation;
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.demo.config.middleware.auth.KIT.Role;
+import com.example.demo.config.middleware.auth.kit.Role;
 
 public class RoleValidation {
     public static List<String> roles = Arrays.asList(Role.MANAGER, Role.EMPLOYEE);

@@ -862,7 +862,6 @@ Body:
 
 ```json
 {
-	"accountEmail": "huy@gmail.com",
 	"accountPassword": "a",
 	"retypeAccountPassword": "a"
 }
@@ -881,9 +880,9 @@ Response:
 
 ### Quên mật khẩu
 
-Url: `https://be-intern.onrender.com/api/v2/account/fogot-password`
+Url: `https://be-intern.onrender.com/api/v2/account/forgot-password`
 
-Method: `POST`
+`Method:`POST`
 
 Body:
 

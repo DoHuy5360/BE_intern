@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Home</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			#content {
+				position: absolute;
+				bottom: 20px;
+				left: 50%;
+				transform: translateX(-50%);
+				backdrop-filter: blur(10px);
+				font-size: 1.5rem;
+				z-index: 3;
+                white-space: nowrap;
+			}
+			.flex-align-center {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+			}
+			#wrap {
+				display: flex;
+				gap: 10px;
+				flex-direction: column;
+				height: 100vh;
+				position: relative;
+				overflow: hidden;
+			}
+			.wave-bg {
+				position: absolute;
+				width: 100%;
+				height: calc(100% / 2 + 400px);
+				filter: drop-shadow(0 0 15px #0000004d);
+			}
+			#wave-bg-1 {
+				background-image: url(assets/svg/wavesNegativeTop.svg);
+				background-position: center;
+				top: 0;
+				z-index: 2;
+				animation: move-up 5000ms ease-in-out infinite;
+			}
+			#wave-bg-2 {
+				background-image: url(assets/svg/wavesNegative.svg);
+				background-position: center;
+				bottom: 0;
+				animation: move-down 5000ms ease-in-out infinite;
+				animation-delay: 5000ms;
+			}
+			#line-3 {
+				position: absolute;
+				height: 100%;
+				width: 100vw;
+				background-color: #009d00;
+			}
+			@keyframes move-up {
+				0% {
+					transform: translateY(0);
+				}
+				50% {
+                    transform: translateY(-200px);
+				}
+				100% {
+					transform: translateY(0);
+				}
+			}
+			@keyframes move-down {
+				0% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(200px);
+				}
+				100% {
+					transform: translateY(0);
+				}
+			}
+			@keyframes move {
+				to {
+					transform: translateX(100%);
+				}
+			}
+            a{
+                color: #0c7d79;
+            }
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="line-3"></div>
+
+			<div class="wave-bg" id="wave-bg-1"></div>
+			<div class="wave-bg" id="wave-bg-2"></div>
+			<div id="content">
+				<div class="flex-align-center" id="github-link">
+					<div>Truy cập</div>
+					<a href="https://github.com/DoHuy5360/BE_intern" target="_blank"> Rest description </a>
+					<div>để xem thông tin API</div>
+				</div>
+				<ul class="flex-align-center">
+					<div>Nhấp để tải xuống 👉</div>
+					<a href="/auth.drawio">Auth workflow</a>
+					<div>🔐</div>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	const colors = ["#9d009a", "#00769d", "#009d00", "#9d8800", "#9d0800", "#313338", "#FAA61A","#5865F2", "#CCCEF2", "#2B55A9","#90E7C7"];
+	const bg = document.querySelector("#line-3");
+	setInterval(() => {
+		const random = Math.floor(Math.random() * colors.length);
+		bg.style.backgroundColor = colors[random];
+	}, 5000);
+</script>
