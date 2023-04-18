@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.config.middleware.auth.KIT.AuthorizationHandler;
-import com.example.demo.config.middleware.auth.KIT.ResponseHandler;
-import com.example.demo.config.middleware.auth.KIT.Role;
+import com.example.demo.config.middleware.auth.kit.AuthorizationHandler;
+import com.example.demo.config.middleware.auth.kit.ResponseHandler;
+import com.example.demo.config.middleware.auth.kit.Role;
 import com.example.demo.kit.jwt.JwtResponse;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
