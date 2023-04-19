@@ -98,7 +98,7 @@
 			<div id="amount_table" th:text="${amountTable} + ' Tables'"></div>
 			<div id="structure">
 				<div class="wrap_table">
-					<div th:each="tables : ${totArray}" th:with="tables=${tables}" th:insert="/fragments/databaseFragment.html :: table"></div>
+					<div th:each="tables : ${totArray}" th:with="tables=${tables}" th:insert="/assets/html/fragments/databaseFragment.html :: table"></div>
 				</div>
 				<div id="description">
 					<div id="explain">
