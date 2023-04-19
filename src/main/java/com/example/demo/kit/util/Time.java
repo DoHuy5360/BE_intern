@@ -35,7 +35,7 @@ public class Time {
     }
 
     public static LocalDateTime parseFormat(String rawDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");
         return LocalDateTime.parse(rawDate, formatter);
     }
 
