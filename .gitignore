@@ -35,6 +35,7 @@ build/
 .env
 
 auth.drawio
+changepassword.drawio
 Encode.java
 
 src/test/java/com/example/demo/

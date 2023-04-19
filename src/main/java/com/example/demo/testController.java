@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.entity.employee.Employee;
 import com.example.demo.entity.employee.EmployeeRepository;
 import com.example.demo.kit.dotenv.DotenvHandler;
+import com.example.demo.kit.query.HeadquarterEmployeeGenderQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
+import com.example.demo.kit.tray.HeadquarterEmployeeGenderTray;
 import com.example.demo.kit.util.DiscordLogger;
 
 @RestController
@@ -28,7 +31,7 @@ public class testController {
     private DiscordLogger discordLogger;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private HeadquarterEmployeeGenderQuery headquarterEmployeeGenderQuery;
 
     @PostMapping("/login")
     public Response home(HttpServletRequest request) {
@@ -43,13 +46,19 @@ public class testController {
 
     @PostMapping("/decode")
     public String decode() {
-        String SECRET_KEY;
-        try {
-            SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
-        } catch (Exception e) {
-            return e.toString();
+        // String SECRET_KEY;
+        // try {
+        // SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
+        // } catch (Exception e) {
+        // return e.toString();
 
-        }
-        return SECRET_KEY;
+        // }
+        // return SECRET_KEY;
+        return "Hello";
+    }
+
+    @GetMapping("/gender-data")
+    public List<HeadquarterEmployeeGenderTray> getGender() {
+        return headquarterEmployeeGenderQuery.getGenderByHeadquarter();
     }
 }

@@ -37,10 +37,10 @@ import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
 import com.example.demo.kit.util.Time;
-import com.example.demo.kit.validation.EmailValidation;
+import com.example.demo.kit.validation.AccountValidation;
 import com.example.demo.kit.validation.EmployeeValidation;
 import com.example.demo.kit.validation.FileValidation;
-import com.example.demo.kit.validation.HeadquarterAccountValidation;
+import com.example.demo.kit.validation.HeadquarterValidation;
 import com.example.demo.kit.validation.PrimitiveValidation;
 
 @Service
@@ -71,28 +71,31 @@ public class EmployeeService {
 
     }
 
-    public Response storeEmployee(HeadquarterAccountTray headquarterAccount) {
-        PrimitiveValidation headquarterAccountValidation = new HeadquarterAccountValidation(headquarterAccount,
-                headquarterRepository, accountRepository)
-                .trackEmailFormat()
-                .trackEmailExist()
-                .trackPassword()
-                .trackHeadquarterId()
+    public Response storeEmployee(HeadquarterAccountTray args) {
+        PrimitiveValidation headquarterAccountValidation;
+        headquarterAccountValidation = new HeadquarterValidation(args, headquarterRepository)
+                .setId(args.getHeadquarterId())
+                .trackIdExist();
+        headquarterAccountValidation = new AccountValidation(accountRepository)
+                .setEmail(args.getAccountEmail())
+                .trackEmailNotExist()
+                .setPassword(args.getAccountPassword())
+                .trackPasswordFormat()
+                .setRole(args.getAccountRole())
                 .trackRole();
         if (headquarterAccountValidation.isValid()) {
             try {
                 Account _account = new Account();
-                _account.setAccountEmail(headquarterAccount.getAccountEmail());
+                _account.setAccountEmail(args.getAccountEmail());
                 _account.setAccountPassword(
-                        new BCryptPasswordEncoder().encode(headquarterAccount.getAccountPassword()));
-                _account.setAccountRole(headquarterAccount.getAccountRole());
+                        new BCryptPasswordEncoder()
+                                .encode(args.getAccountPassword()));
+                _account.setAccountRole(args.getAccountRole());
 
                 Employee _employee = new Employee();
                 _employee.setAccountId(_account.getAccountId());
-                _employee.setHeadquarterId(headquarterAccount.getHeadquarterId());
-                _employee.setEmployeePosition(headquarterAccount.getEmployeePosition());
-                // _employee.setEmployeeAvatar(
-                // "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
+                _employee.setHeadquarterId(args.getHeadquarterId());
+                _employee.setEmployeePosition(args.getEmployeePosition());
 
                 accountRepository.save(_account);
                 employeeRepository.save(_employee);
@@ -129,8 +132,11 @@ public class EmployeeService {
                             Employee _employee = new Employee();
                             try {
                                 String emailValue = emailCell.getStringCellValue();
+                                AccountValidation accountValidation = new AccountValidation(accountRepository)
+                                        .setEmail(emailValue)
+                                        .trackEmailFormat();
                                 if (accountRepository.getAccountByEmail(emailValue).isEmpty()
-                                        && EmailValidation.track(emailValue)) {
+                                        && accountValidation.isValid()) {
                                     _account.setAccountEmail(emailValue);
                                 } else {
                                     throw new Exception(Message.EMAIL_UNVALID);
@@ -160,8 +166,6 @@ public class EmployeeService {
                                 errors.add(Message.POSITION_ERROR);
                             }
                             _employee.setAccountId(_account.getAccountId());
-                            // _employee.setEmployeeAvatar(
-                            // "https://charmouthtennisclub.org/wp-content/uploads/2021/01/placeholder-400x400.jpg");
                             if (errors.isEmpty()) {
                                 try {
                                     accountRepository.save(_account);

@@ -20,6 +20,7 @@ import com.example.demo.kit.query.EmployeeAccountQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
+import com.example.demo.kit.validation.AccountValidation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.thymeleaf.TemplateEngine;
@@ -93,43 +94,43 @@ public class AccountService {
 
     @Transactional
     public Response resetPassword(String accountEmail, Account account) {
-        if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
-            Optional<Account> one_AC = accountRepository.findByEmail(accountEmail);
-            if (one_AC.isPresent()) {
-                try {
-                    Account _Account = one_AC.get();
-                    _Account.setAccountPassword(new BCryptPasswordEncoder().encode(account.getAccountPassword()));
-                    accountRepository.save(_Account);
-                } catch (Exception e) {
-                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
-                }
-                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
-            } else {
-                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_FOUND);
-            }
+        AccountValidation accountValidation = new AccountValidation(account, accountRepository)
+                .setEmail(accountEmail)
+                .trackEmailExist()
+                .trackEmailFormat()
+                .trackPasswordFormat()
+                .trackPasswordRetype();
+        if (accountValidation.isValid()) {
+            return (accountValidation.getEntityBy(accountEmail).updatePassword().save())
+                    ? new Response(HttpStatus.OK, Message.UPDATE_SUCCESS)
+                    : new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.setNotMatch("Retype Password"));
+            return new Response(
+                    HttpStatus.BAD_REQUEST,
+                    Message.INVALID,
+                    accountValidation.getAmountErrors(),
+                    accountValidation.getErrors());
         }
     }
 
     public Response changePassword(String accountEmail, Account account) {
 
-        if (account.getAccountPassword().equals(account.getRetypeAccountPassword())) {
-            Optional<Account> one_AC = accountRepository.findByEmail(accountEmail);
-            if (one_AC.isPresent()) {
-                try {
-                    Account _Account = one_AC.get();
-                    _Account.setAccountPassword(new BCryptPasswordEncoder().encode(account.getAccountPassword()));
-                    accountRepository.save(_Account);
-                } catch (Exception e) {
-                    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
-                }
-                return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS);
-            } else {
-                return new Response(HttpStatus.BAD_REQUEST, Message.NOT_FOUND);
-            }
+        AccountValidation accountValidation = new AccountValidation(account, accountRepository)
+                .setEmail(accountEmail)
+                .trackEmailExist()
+                .trackEmailFormat()
+                .trackPasswordFormat()
+                .trackPasswordRetype();
+        if (accountValidation.isValid()) {
+            return (accountValidation.getEntityBy(accountEmail).updatePassword().save())
+                    ? new Response(HttpStatus.OK, Message.UPDATE_SUCCESS)
+                    : new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         } else {
-            return new Response(HttpStatus.NOT_FOUND, Message.setNotMatch("Retype Password"));
+            return new Response(
+                    HttpStatus.BAD_REQUEST,
+                    Message.INVALID,
+                    accountValidation.getAmountErrors(),
+                    accountValidation.getErrors());
         }
     }
 
