@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Database</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			*::selection {
+				background-color: black;
+				color: yellow;
+			}
+			table {
+				background-color: #eaeaea;
+			}
+			th {
+				padding: 5px;
+			}
+			td {
+				padding: 5px;
+				border-collapse: collapse;
+			}
+			tr:hover {
+				outline: 1px solid black;
+				background-color: #f5f5f5;
+			}
+			.table_title > th {
+				background-color: #ffc107;
+			}
+			.table_column th {
+				background-color: lightgray;
+				font-size: 0.8rem;
+				padding: 5px 10px;
+			}
+			.table_content_row td:not(:first-child) {
+				text-align: center;
+			}
+			.table_content_row td:nth-child(n + 2) {
+				width: 150px;
+			}
+			.wrap_table {
+				display: flex;
+				flex-direction: column;
+			}
+			.table {
+				width: 100%;
+			}
+			#structure {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+			}
+			#amount_table {
+				font-size: 2rem;
+				text-align: center;
+				background-color: #2196f3;
+				padding: 5px 0;
+				color: #f5f5f5;
+				position: sticky;
+				top: 0;
+			}
+			#description {
+				padding: 10px 50px;
+			}
+			#explain {
+				position: sticky;
+				top: 60px;
+			}
+			#content {
+				display: flex;
+				flex-direction: column;
+			}
+			#loading-cover {
+				position: fixed;
+				height: 100vh;
+				width: 100%;
+				background-color: white;
+				display: grid;
+				place-items: center;
+				z-index: 999;
+			}
+			#loading-icon {
+				width: 100px;
+				aspect-ratio: 1;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="loading-cover">
+			<img id="loading-icon" src="/assets/image/loading/R.gif" />
+		</div>
+		<div id="content">
+			<div id="amount_table" th:text="${amountTable} + ' Tables'"></div>
+			<div id="structure">
+				<div class="wrap_table">
+					<div th:each="tables : ${totArray}" th:with="tables=${tables}" th:insert="/fragments/databaseFragment.html :: table"></div>
+				</div>
+				<div id="description">
+					<div id="explain">
+						<h2>Explain</h2>
+						<ul>
+							<li><span>Primary Key:</span><span>_______</span></li>
+							<li><span>Foregn Key:</span><span>_ _ _ _ _</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	document.addEventListener("DOMContentLoaded", (e) => {
+		const nullableCells = document.querySelectorAll(".cell_nullable");
+		nullableCells.forEach((cell) => {
+			if (cell.textContent === "YES") {
+				cell.style.backgroundColor = "#8BC34A";
+			} else {
+				cell.style.backgroundColor = "#F44336";
+			}
+		});
+		const tables = document.querySelectorAll(".table");
+		tables.forEach((tbl) => {
+			const name = tbl.querySelector(".table_title").innerText;
+			const nameCells = tbl.querySelectorAll(".cell_name");
+			nameCells.forEach((nameC) => {
+				const text = nameC.textContent;
+				if (text.endsWith("id")) {
+					nameC.style.fontWeight = "bold";
+					if (text.startsWith(name)) {
+						nameC.style.textDecoration = "underline";
+					} else {
+						nameC.style.textDecoration = "underline dashed";
+					}
+				}
+			});
+		});
+		const loading = document.querySelector("#loading-cover");
+		setTimeout(() => {
+			loading.remove();
+		}, 500);
+	});
+</script>
