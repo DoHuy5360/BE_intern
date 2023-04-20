@@ -98,7 +98,25 @@
 			<div id="amount_table" th:text="${amountTable} + ' Tables'"></div>
 			<div id="structure">
 				<div class="wrap_table">
-					<div th:each="tables : ${totArray}" th:with="tables=${tables}" th:insert="/assets/html/fragments/databaseFragment.html :: table"></div>
+					<!-- <div th:each="tables : ${totArray}" th:with="tables=${tables}" th:insert="/assets/html/fragments/databaseFragment.html :: table"></div> -->
+					<!-- <table class="table" th:fragment="table" border="0" cellspacing="0" cellspadding="0"> -->
+					<table class="table" th:each="tables : ${totArray}" border="0" cellspacing="0" cellspadding="0">
+						<tr class="table_title">
+							<th colspan="4" th:text="${tables.name}"></th>
+						</tr>
+						<tr class="table_column">
+							<th>Name</th>
+							<th>Type</th>
+							<th>Length</th>
+							<th>Nullable</th>
+						</tr>
+						<tr th:each="i : ${tables.columns}" class="table_content_row">
+							<td th:text="${i.name}" class="cell_name"></td>
+							<td th:text="${i.type}"></td>
+							<td th:text="${i.length}"></td>
+							<td th:text="${i.nullable}" class="cell_nullable"></td>
+						</tr>
+					</table>
 				</div>
 				<div id="description">
 					<div id="explain">

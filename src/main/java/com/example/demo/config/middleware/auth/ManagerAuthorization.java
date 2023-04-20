@@ -16,14 +16,17 @@ import com.example.demo.kit.jwt.JwtResponse;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
+import com.example.demo.kit.util.DiscordLogger;
 
 @Component
 public class ManagerAuthorization implements HandlerInterceptor {
     @Autowired
     private ResponseHandler responseHandler;
-
     @Autowired
     private AuthorizationHandler authorizationHandler;
+
+    @Autowired
+    private DiscordLogger discordLogger;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -54,12 +57,14 @@ public class ManagerAuthorization implements HandlerInterceptor {
             ModelAndView modelAndView) throws Exception {
         // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về`
         // client
+
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
         // Xử lý sau khi response đã được gửi về client
+
     }
 
 }

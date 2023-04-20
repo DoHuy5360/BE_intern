@@ -44,4 +44,12 @@ public class DiscordLogger {
         send(finalContent);
     }
 
+    public void no3Send(String content) {
+        this.webhookId = "1098460400653181008";
+        this.webhookToken = "TsCbeP99sjSDDOlMRauSR_jV71eqgNrySTWRgCn2CgIL-EADRv5qpBBeQbzpJ285u-ve";
+
+        String finalContent = String.format("%s | %s", Time.getCurrentTime(), content);
+        send(finalContent);
+    }
+
 }

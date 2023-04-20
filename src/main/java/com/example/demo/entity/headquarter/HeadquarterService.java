@@ -10,11 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
+import com.example.demo.kit.util.DiscordLogger;
 
 @Service
 public class HeadquarterService {
     @Autowired
     private HeadquarterRepository headquarterRepository;
+
+    @Autowired
+    private DiscordLogger discordLogger;
 
     public Response getAllRecord() {
         List<Headquarter> headquarters = (List<Headquarter>) headquarterRepository.findAll();
@@ -25,6 +29,7 @@ public class HeadquarterService {
         try {
             headquarterRepository.save(headquarter);
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
 
         }
@@ -41,6 +46,7 @@ public class HeadquarterService {
                 _Headquarter.setHeadquarterAddress(headquarter.getHeadquarterAddress());
                 headquarterRepository.save(_Headquarter);
             } catch (Exception e) {
+
                 return new Response(HttpStatus.BAD_REQUEST, Message.UPDATE_FAIL);
             }
             return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, headquarter);
@@ -55,6 +61,7 @@ public class HeadquarterService {
             try {
                 headquarterRepository.deleteById(id);
             } catch (Exception e) {
+
                 return new Response(HttpStatus.BAD_REQUEST, Message.DELETE_FAIL);
             }
             return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
