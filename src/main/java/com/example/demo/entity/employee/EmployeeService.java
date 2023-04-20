@@ -36,6 +36,7 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountHeadquarterTray;
 import com.example.demo.kit.tray.HeadquarterAccountTray;
+import com.example.demo.kit.util.DiscordLogger;
 import com.example.demo.kit.util.Time;
 import com.example.demo.kit.validation.AccountValidation;
 import com.example.demo.kit.validation.EmployeeValidation;
@@ -55,6 +56,8 @@ public class EmployeeService {
     private EmployeeAccountHeadquarterQuery employeeAccountRepository;
     @Autowired
     private FileHandler fileHandler;
+    @Autowired
+    private DiscordLogger discordLogger;
 
     public Response getAllEmployee() {
         List<Employee> employees = (List<Employee>) employeeRepository.findAll();
@@ -100,6 +103,7 @@ public class EmployeeService {
                 accountRepository.save(_account);
                 employeeRepository.save(_employee);
             } catch (Exception e) {
+
                 return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
             }
             return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
@@ -170,12 +174,14 @@ public class EmployeeService {
                                 try {
                                     accountRepository.save(_account);
                                 } catch (Exception e) {
+
                                     emails.add(new EmployeeEmailExcelResponse(errors, emailCell.getRowIndex()));
                                     break;
                                 }
                                 try {
                                     employeeRepository.save(_employee);
                                 } catch (Exception e) {
+
                                     accountRepository.deleteById(_account.getAccountId());
                                 }
                             } else {
@@ -226,7 +232,8 @@ public class EmployeeService {
                         employeeValidation.getErrors());
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.toString());
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         }
     }
@@ -254,6 +261,7 @@ public class EmployeeService {
                         employeeValidation.getErrors());
             }
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         }
     }
@@ -268,6 +276,7 @@ public class EmployeeService {
                     employeeRepository.deleteById(id);
                     accountRepository.deleteById(_Employee.getAccountId());
                 } catch (Exception e) {
+
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
                 }
                 return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
@@ -277,6 +286,7 @@ public class EmployeeService {
                 return new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Employee ID"));
             }
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
 
         }
@@ -301,6 +311,7 @@ public class EmployeeService {
 
             }
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
         }
     }
@@ -311,11 +322,13 @@ public class EmployeeService {
             try {
                 oneE = employeeAccountRepository.getAllInformation();
             } catch (Exception e) {
+
                 return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
 
             }
             return new Response(HttpStatus.OK, Message.READ_SUCCESS, oneE);
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
         }
     }
@@ -360,6 +373,7 @@ public class EmployeeService {
                     employeeRepository.save(_Employee);
                     return new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
                 } catch (Exception e) {
+
                     System.out.println(e);
                     return new Response(HttpStatus.OK, Message.CREATE_FAIL);
                 }
@@ -367,6 +381,7 @@ public class EmployeeService {
                 return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
             }
         } catch (Exception e) {
+
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPLOAD_FAIL);
         }
     }

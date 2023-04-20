@@ -20,6 +20,7 @@ import com.example.demo.kit.query.EmployeeAccountQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
+import com.example.demo.kit.util.DiscordLogger;
 import com.example.demo.kit.validation.AccountValidation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,6 +40,9 @@ public class AccountService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private DiscordLogger discordLogger;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -148,6 +152,7 @@ public class AccountService {
             try {
                 token = convertJson.writeValueAsString(jwtBoolFormat);
             } catch (Exception e) {
+
                 token = null;
             }
             String jwtToken = jwtHandler.generateToken(token, MINUTE * SECOND * MILLISECOND);
@@ -186,6 +191,7 @@ public class AccountService {
                 accountRepository.deleteById(id);
 
             } catch (Exception e) {
+
                 return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
             }
             return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);

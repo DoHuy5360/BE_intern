@@ -14,6 +14,7 @@ import com.example.demo.kit.query.EmployeeWorkscheduleQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeWorkscheduleTray;
+import com.example.demo.kit.util.DiscordLogger;
 import com.example.demo.kit.util.Time;
 import com.example.demo.kit.validation.EmployeeValidation;
 import com.example.demo.kit.validation.PrimitiveValidation;
@@ -27,6 +28,8 @@ public class WorkScheduleService {
     private EmployeeWorkscheduleQuery employeeWorkscheduleQuery;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private DiscordLogger discordLogger;
 
     public Response getRecord() {
         List<WorkSchedule> workSchedules = (List<WorkSchedule>) workScheduleRepository.findAll();
@@ -47,6 +50,7 @@ public class WorkScheduleService {
                         employeeValidation.getErrors());
             }
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
         }
@@ -58,6 +62,7 @@ public class WorkScheduleService {
             List<EmployeeWorkscheduleTray> manyWS = employeeWorkscheduleQuery.getWorkSchedule();
             return new Response(HttpStatus.OK, Message.READ_SUCCESS, manyWS.size(), manyWS);
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
 
@@ -77,6 +82,7 @@ public class WorkScheduleService {
                             workScheduleValidation.getAmountErrors(), workScheduleValidation.getErrors());
 
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.READ_FAIL);
         }
@@ -100,6 +106,7 @@ public class WorkScheduleService {
                     WorkSchedule oneWs = workScheduleRepository.save(workSchedule);
                     return new Response(HttpStatus.OK, Message.CREATE_SUCCESS, 1, oneWs);
                 } catch (Exception e) {
+
                     return new Response(HttpStatus.BAD_REQUEST, Message.CREATE_FAIL);
                 }
             } else {
@@ -108,6 +115,7 @@ public class WorkScheduleService {
 
             }
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
         }
@@ -127,6 +135,7 @@ public class WorkScheduleService {
                     return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
 
                 } catch (Exception e) {
+
                     System.out.println(e);
                     return new Response(HttpStatus.NOT_FOUND, Message.DELETE_FAIL);
                 }
@@ -137,6 +146,7 @@ public class WorkScheduleService {
             }
 
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.DELETE_FAIL);
         }
@@ -166,6 +176,7 @@ public class WorkScheduleService {
                     workScheduleRepository.save(_WS);
                     return new Response(HttpStatus.OK, Message.UPDATE_SUCCESS, 1, _WS);
                 } catch (Exception e) {
+
                     return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
                 }
             } else {
@@ -174,6 +185,7 @@ public class WorkScheduleService {
                         wsValidation.getErrors());
             }
         } catch (Exception e) {
+
             System.out.println(e);
             return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
         }

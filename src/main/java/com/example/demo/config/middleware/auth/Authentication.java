@@ -21,6 +21,7 @@ import com.example.demo.kit.jwt.JwtHandler;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
+import com.example.demo.kit.util.DiscordLogger;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,6 +32,8 @@ public class Authentication implements HandlerInterceptor {
     private AccountService accountService;
     @Autowired
     private JwtHandler jwtHandler;
+    @Autowired
+    private DiscordLogger discordLogger;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -104,7 +107,6 @@ public class Authentication implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        // Xử lý sau khi response đã được gửi về client
     }
 
 }
