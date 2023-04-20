@@ -45,7 +45,7 @@ public class AccountController {
     @PutMapping("/{id}/update")
     public Response updateAccount(@PathVariable String id, @RequestBody Account account, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        discordLogger.no1Send(email, "Delete one employee.");
+        discordLogger.no1Send(email, "Update account.");
         return accountService.updateAccount(id, account);
 
     }
@@ -53,7 +53,7 @@ public class AccountController {
     @PutMapping("/reset-password")
     public Response reset(@RequestBody Account account, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        discordLogger.no1Send(email, "Delete one employee.");
+        discordLogger.no1Send(email, "Reset password.");
         String accountEmail = (String) request.getAttribute("AccountEmail");
         return accountService.resetPassword(accountEmail, account);
     }
@@ -61,7 +61,7 @@ public class AccountController {
     @PutMapping("/change-password")
     public Response change(@RequestBody Account account, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        discordLogger.no1Send(email, "Delete one employee.");
+        discordLogger.no1Send(email, "Change password.");
         String accountEmail = (String) request.getAttribute("AccountEmail");
         return accountService.changePassword(accountEmail, account);
     }
@@ -69,14 +69,14 @@ public class AccountController {
     @DeleteMapping("/{id}/delete")
     public Response deleteAccount(@PathVariable String id, HttpServletRequest request) {
         String email = (String) request.getAttribute("AccountEmail");
-        discordLogger.no1Send(email, "Delete one employee.");
+        discordLogger.no1Send(email, "Delete account.");
         return accountService.deleteAccount(id);
     }
 
     @PostMapping("/forgot-password")
     public Response forgetPasswork(HttpServletRequest request, @RequestBody Account account) {
         String email = (String) request.getAttribute("AccountEmail");
-        discordLogger.no1Send(email, "Delete one employee.");
+        discordLogger.no1Send(email, "Forgot password.");
         return accountService.forgotPassword(account);
 
     }
