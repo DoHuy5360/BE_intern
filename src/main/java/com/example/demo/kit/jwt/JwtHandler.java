@@ -85,6 +85,7 @@ public class JwtHandler {
                 EmployeeAccountTray subjectData = objectMapper.readValue(this.subjectObject, EmployeeAccountTray.class);
                 EmployeeAccountTray oneAC = employeeAccountQuery.getAccountByEmployeeId(subjectData.getEmployeeId())
                         .get(0);
+                // todo: fix outbound index 0
                 subjectData.setAccountEmail(oneAC.getAccountEmail());
                 return jwtResponse.createJwtResponse(true, subjectData,
                         new Response(HttpStatus.OK, Message.READ_SUCCESS));

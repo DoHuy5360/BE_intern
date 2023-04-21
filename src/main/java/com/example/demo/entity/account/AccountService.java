@@ -1,11 +1,19 @@
 package com.example.demo.entity.account;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +21,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.entity.employee.EmployeeRepository;
+import com.example.demo.kit.excel.ExcelAccountHandler;
 import com.example.demo.kit.jwt.JwtEmailCertificateFormat;
 import com.example.demo.kit.jwt.JwtHandler;
 import com.example.demo.kit.query.EmployeeAccountQuery;
@@ -31,6 +42,9 @@ import org.thymeleaf.context.Context;
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private EmployeeAccountQuery employeeAccountQuery;
@@ -197,6 +211,51 @@ public class AccountService {
             return new Response(HttpStatus.OK, Message.DELETE_SUCCESS);
         } else {
             return new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
+        }
+    }
+
+    public void multipleStoreAccount(MultipartFile file) {
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            // Sử dụng XSSFWorkbook nếu file có định dạng .xlsx, sử
+            // dụng HSSFWorkbook nếu file có định dạng .xls
+            Sheet firstSheet = workbook.getSheetAt(0);
+            Sheet secondSheet = workbook.getSheetAt(1);
+            Row row = firstSheet.getRow(1);
+            Cell cell = row.getCell(0);
+            int numberOfRecords;
+            if (cell != null) {
+                numberOfRecords = (int) cell.getNumericCellValue();
+                // System.out.println("numberOfRecords: " + numberOfRecords);
+
+                int numberOfthreads = (numberOfRecords / 5);
+                // System.out.println("numberOfthreads: " + numberOfthreads);
+
+                int steps = numberOfRecords / numberOfthreads;
+                // System.out.println("steps: " + steps);
+                ExecutorService executor = Executors.newFixedThreadPool(numberOfthreads);
+                ExcelAccountHandler excelHandle = new ExcelAccountHandler(secondSheet, accountRepository,
+                        employeeRepository);
+                for (int i = 1; i < numberOfRecords; i += steps) {
+                    int startRow = i;
+                    // System.out.println("start row: " + startRow);
+                    executor = Executors.newSingleThreadExecutor();
+                    executor.execute(new Runnable() {
+                        public void run() {
+
+                            excelHandle.store(startRow, startRow + steps);
+                        }
+                    });
+                }
+            } else {
+                System.out.println("Cell is null");
+            }
+            workbook.close();
+            inputStream.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
