@@ -3,8 +3,10 @@ package com.example.demo.entity.account;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -173,7 +175,7 @@ public class AccountService {
 
             Context thymleafTemplate = new Context();
             thymleafTemplate.setVariable("jwtToken", jwtToken);
-            thymleafTemplate.setVariable("url", "https://be-intern.onrender.com/assets/html/changePassword.html");
+            thymleafTemplate.setVariable("url", "https://be-intern-g6fh.onrender.com/assets/html/changePassword.html");
 
             String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
 
@@ -214,7 +216,8 @@ public class AccountService {
         }
     }
 
-    public void multipleStoreAccount(MultipartFile file) {
+    public Response multipleStoreAccount(MultipartFile file) {
+        Response response;
         try {
             InputStream inputStream = file.getInputStream();
             Workbook workbook = new XSSFWorkbook(inputStream);
@@ -227,36 +230,42 @@ public class AccountService {
             int numberOfRecords;
             if (cell != null) {
                 numberOfRecords = (int) cell.getNumericCellValue();
-                // System.out.println("numberOfRecords: " + numberOfRecords);
-
-                int numberOfthreads = (numberOfRecords / 5);
-                // System.out.println("numberOfthreads: " + numberOfthreads);
-
-                int steps = numberOfRecords / numberOfthreads;
-                // System.out.println("steps: " + steps);
-                ExecutorService executor = Executors.newFixedThreadPool(numberOfthreads);
-                ExcelAccountHandler excelHandle = new ExcelAccountHandler(secondSheet, accountRepository,
-                        employeeRepository);
-                for (int i = 1; i < numberOfRecords; i += steps) {
-                    int startRow = i;
-                    // System.out.println("start row: " + startRow);
-                    executor = Executors.newSingleThreadExecutor();
-                    executor.execute(new Runnable() {
-                        public void run() {
-
-                            excelHandle.store(startRow, startRow + steps);
+                if (numberOfRecords > 2) {
+                    int numberOfthreads = (numberOfRecords / 2);
+                    int steps = numberOfRecords / numberOfthreads;
+                    ExecutorService executor = Executors.newFixedThreadPool(numberOfthreads);
+                    ExcelAccountHandler excelHandle = new ExcelAccountHandler(
+                            secondSheet,
+                            accountRepository,
+                            employeeRepository);
+                    for (int i = 1; i < numberOfRecords; i += steps) {
+                        int startRow = i;
+                        executor = Executors.newSingleThreadExecutor();
+                        Future<?> future = executor.submit(new Callable<Void>() {
+                            public Void call() {
+                                excelHandle.store(startRow, startRow + steps);
+                                return null;
+                            }
+                        });
+                        while (!future.isDone()) {
                         }
-                    });
+                    }
+                    response = new Response(HttpStatus.OK, Message.CREATE_SUCCESS);
+                } else {
+                    response = new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Number of Record"));
+
                 }
             } else {
-                System.out.println("Cell is null");
+                response = new Response(HttpStatus.BAD_REQUEST, Message.setInvalid("Content File"));
             }
             workbook.close();
             inputStream.close();
 
         } catch (Exception e) {
             System.out.println(e);
+            response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.CREATE_FAIL);
         }
+        return response;
     }
 
 }

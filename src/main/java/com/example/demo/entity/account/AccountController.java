@@ -84,8 +84,17 @@ public class AccountController {
     }
 
     @PostMapping("/multiple-account")
-    public void multipleStore(@RequestParam("file") MultipartFile file) {
-        accountService.multipleStoreAccount(file);
+    public Response multipleStore(@RequestParam("file") MultipartFile file) {
+        long startTime = System.nanoTime();
+
+        Response result = accountService.multipleStoreAccount(file);
+
+        long endTime = System.nanoTime();
+        long durationInSeconds = (endTime - startTime) / 1000000000;
+        discordLogger.no1Send("Tester",
+                String.format("Has implemented multiple storing -> total cost %s sec.",
+                        durationInSeconds));
+        return result;
     }
 
 }

@@ -14,5 +14,4 @@ public interface AccountRepository extends CrudRepository<Account, String> {
 
     @Query(value = "select * from account where account_email = ?1", nativeQuery = true)
     List<Account> getAccountByEmail(String email);
-
 }

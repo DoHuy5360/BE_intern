@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.entity.account.Account;
+import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.employee.Employee;
 import com.example.demo.entity.employee.EmployeeRepository;
 import com.example.demo.kit.dotenv.DotenvHandler;
@@ -33,6 +36,9 @@ public class testController {
     @Autowired
     private HeadquarterEmployeeGenderQuery headquarterEmployeeGenderQuery;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @PostMapping("/login")
     public Response home(HttpServletRequest request) {
         String userIp = request.getRemoteAddr();
@@ -45,7 +51,7 @@ public class testController {
     }
 
     @PostMapping("/decode")
-    public String decode() {
+    public boolean decode() {
         // String SECRET_KEY;
         // try {
         // SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
@@ -54,7 +60,22 @@ public class testController {
 
         // }
         // return SECRET_KEY;
-        return "Hello";
+        return true;
+    }
+
+    @GetMapping("/test")
+    public void test() {
+        List<Account> accounts = (List<Account>) accountRepository.findAll();
+        try {
+            List<String> emails = accounts.stream().map(Account::getAccountEmail).collect(Collectors.toList());
+
+            System.out.println(emails);
+            if (emails.contains("employee2@gmail.com")) {
+                System.out.println(1);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     @GetMapping("/gender-data")
