@@ -1,6 +1,8 @@
 package com.example.demo.config;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,16 +43,19 @@ public class WebConfig implements WebMvcConfigurer {
         public CorsFilter corsFilter() {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowCredentials(true);
-                // corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
-                corsConfiguration.addAllowedOrigin("http://localhost:3000");
-                corsConfiguration.addAllowedOrigin("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
                 corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
-                corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
-                corsConfiguration.addAllowedOriginPattern("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
-                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                corsConfiguration.setAllowedOriginPatterns(
+                                Arrays.asList(
+                                                "http://127.0.0.1:5501",
+                                                "http://localhost:3000",
+                                                "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
                 corsConfiguration.setAllowedOrigins(
-                                Arrays.asList("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
+                                Arrays.asList(
+                                                "http://127.0.0.1:5501",
+                                                "http://localhost:3000",
+                                                "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
+
                 UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
                 return new CorsFilter(urlBasedCorsConfigurationSource);

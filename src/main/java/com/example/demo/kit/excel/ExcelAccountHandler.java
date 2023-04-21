@@ -1,5 +1,9 @@
 package com.example.demo.kit.excel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.mail.Multipart;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,13 +20,20 @@ import com.example.demo.kit.res.Message;
 import com.example.demo.kit.validation.AccountValidation;
 
 public class ExcelAccountHandler {
+    public List<Account> dbAccounts;
+    public List<String> dbEmails;
+    public ArrayList<String> errors = new ArrayList<String>();
     public int limitCell = 5;
     public AccountRepository accountRepository;
     public EmployeeRepository employeeRepository;
     public Sheet sheet;
 
-    public ExcelAccountHandler(Sheet sheet, AccountRepository accountRepository,
+    public ExcelAccountHandler(
+            Sheet sheet,
+            AccountRepository accountRepository,
             EmployeeRepository employeeRepository) {
+        this.dbAccounts = (List<Account>) accountRepository.findAll();
+        this.dbEmails = dbAccounts.stream().map(Account::getAccountEmail).collect(Collectors.toList());
         this.sheet = sheet;
         this.accountRepository = accountRepository;
         this.employeeRepository = employeeRepository;
@@ -30,28 +41,32 @@ public class ExcelAccountHandler {
 
     public void store(int startRow, int endRow) {
         for (int i = startRow; i < endRow; i++) {
-            Row row = this.sheet.getRow(i);
-            Account _account = new Account();
-            Employee _employee = new Employee();
-            Cell cell0 = row.getCell(0);
-            handleEmail(cell0, _account);
-            Cell cell1 = row.getCell(1);
-            handleRole(cell1, _account);
-            Cell cell2 = row.getCell(2);
-            handlePassword(cell2, _account);
-            Cell cell3 = row.getCell(3);
-            handleHeadquarterId(cell3, _employee);
-            Cell cell4 = row.getCell(4);
-            handleEmployeePosition(cell4, _employee);
-            _employee.setAccountId(_account.getAccountId());
+            String email = "";
+            try {
+                Row row = this.sheet.getRow(i);
+                Account _account = new Account();
+                Employee _employee = new Employee();
+                Cell emailCell = row.getCell(0);
+                handleEmail(emailCell, _account);
+                Cell cell1 = row.getCell(1);
+                handleRole(cell1, _account);
+                Cell cell2 = row.getCell(2);
+                handlePassword(cell2, _account);
+                Cell cell3 = row.getCell(3);
+                handleHeadquarterId(cell3, _employee);
+                Cell cell4 = row.getCell(4);
+                handleEmployeePosition(cell4, _employee);
+                _employee.setAccountId(_account.getAccountId());
 
-            this.accountRepository.save(_account);
-            this.employeeRepository.save(_employee);
-
-            // for (int j = 0; j < limitCell; j++) {
-            // Cell cell = row.getCell(j);
-            // System.out.println(startRow + "|" + cell.getNumericCellValue());
-            // }
+                this.accountRepository.save(_account);
+                this.employeeRepository.save(_employee);
+                email = emailCell.getStringCellValue();
+                this.dbEmails.add(email);
+            } catch (Exception e) {
+                System.out.println(e);
+                this.dbEmails.remove(email);
+                this.errors.add(Message.setInvalid("Row " + i));
+            }
         }
 
     }
@@ -62,22 +77,22 @@ public class ExcelAccountHandler {
             AccountValidation accountValidation = new AccountValidation(accountRepository)
                     .setEmail(emailValue)
                     .trackEmailFormat();
-            if (accountRepository.getAccountByEmail(emailValue).isEmpty()
+            if (!this.dbEmails.contains(emailValue)
                     && accountValidation.isValid()) {
                 _account.setAccountEmail(emailValue);
             } else {
                 throw new Exception(Message.EMAIL_UNVALID);
             }
-        } catch (Exception error) {
-            // errors.add(error.getMessage());
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
     public void handleRole(Cell roleCell, Account _account) {
         try {
             _account.setAccountRole(roleCell.getStringCellValue());
-        } catch (Exception error) {
-            // errors.add(Message.ROLE_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
     }
@@ -86,8 +101,8 @@ public class ExcelAccountHandler {
         try {
             String password = passwordCell.getStringCellValue();
             _account.setAccountPassword(new BCryptPasswordEncoder().encode(password));
-        } catch (Exception error) {
-            // errors.add(Message.PASSWORD_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
     }
@@ -95,8 +110,8 @@ public class ExcelAccountHandler {
     public void handleHeadquarterId(Cell headquarterIdCell, Employee _employee) {
         try {
             _employee.setHeadquarterId(headquarterIdCell.getStringCellValue());
-        } catch (Exception error) {
-            // errors.add(Message.HEADQUARTER_ID_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
     }
@@ -104,34 +119,9 @@ public class ExcelAccountHandler {
     public void handleEmployeePosition(Cell employeePositionCell, Employee _employee) {
         try {
             _employee.setEmployeePosition(employeePositionCell.getStringCellValue());
-        } catch (Exception error) {
-            // errors.add(Message.POSITION_ERROR);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
     }
-
-    // public void handle() {
-    // if (emailCell.getCellType() != CellType.BLANK) {
-
-    // if (errors.isEmpty()) {
-    // try {
-    // accountRepository.save(_account);
-    // } catch (Exception e) {
-
-    // emails.add(new EmployeeEmailExcelResponse(errors, emailCell.getRowIndex()));
-    // break;
-    // }
-    // try {
-    // employeeRepository.save(_employee);
-    // } catch (Exception e) {
-
-    // accountRepository.deleteById(_account.getAccountId());
-    // }
-    // } else {
-    // emails.add(new EmployeeEmailExcelResponse(errors, emailCell.getRowIndex()));
-    // }
-    // } else {
-    // // errors.add(new Exception(Message.EMAIL_ERROR).getMessage());
-    // }
-    // }
 }
