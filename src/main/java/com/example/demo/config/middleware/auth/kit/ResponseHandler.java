@@ -30,7 +30,8 @@ public class ResponseHandler {
         this.request = request;
         this.response.setContentType("application/json");
         this.response.setCharacterEncoding("UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Origin",
+                "http://localhost:3000, https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");

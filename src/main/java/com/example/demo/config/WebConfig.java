@@ -43,10 +43,14 @@ public class WebConfig implements WebMvcConfigurer {
                 corsConfiguration.setAllowCredentials(true);
                 // corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedOrigin("http://localhost:3000");
+                corsConfiguration.addAllowedOrigin("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
                 corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
+                corsConfiguration.addAllowedOriginPattern("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
                 corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                corsConfiguration.setAllowedOrigins(
+                                Arrays.asList("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
                 UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
                 return new CorsFilter(urlBasedCorsConfigurationSource);
