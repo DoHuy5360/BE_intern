@@ -18,14 +18,19 @@ public class DiscordLogger {
     public String channelId = "1095224215076077650";
 
     public void send(String finalContent) {
-        requestBody = "{\"content\": \"" + "```" + finalContent + "```" + "\" }";
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        entity = new HttpEntity<>(requestBody, headers);
-        url = String.format("https://discord.com/api/v10/webhooks/%s/%s?channel_id=%s&wait=true", webhookId,
-                webhookToken,
-                channelId);
 
-        restTemplate.postForEntity(url, entity, String.class);
+        try {
+            requestBody = "{\"content\": \"" + "```" + finalContent + "```" + "\" }";
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            entity = new HttpEntity<>(requestBody, headers);
+            url = String.format("https://discord.com/api/v10/webhooks/%s/%s?channel_id=%s&wait=true", webhookId,
+                    webhookToken,
+                    channelId);
+
+            restTemplate.postForEntity(url, entity, String.class);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void no0Send(String who, String content) {
