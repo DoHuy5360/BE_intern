@@ -36,6 +36,8 @@ build/
 
 auth.drawio
 changepassword.drawio
+forgotpassword.drawio
+excelAlgorithm.drawio
 Encode.java
 
 src/test/java/com/example/demo/
