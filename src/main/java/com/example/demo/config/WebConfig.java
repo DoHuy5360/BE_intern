@@ -45,16 +45,24 @@ public class WebConfig implements WebMvcConfigurer {
                 corsConfiguration.setAllowCredentials(true);
                 corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
-                corsConfiguration.setAllowedOriginPatterns(
-                                Arrays.asList(
-                                                "http://127.0.0.1:5501",
-                                                "http://localhost:3000",
-                                                "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
-                corsConfiguration.setAllowedOrigins(
-                                Arrays.asList(
-                                                "http://127.0.0.1:5501",
-                                                "http://localhost:3000",
-                                                "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
+                corsConfiguration.addAllowedOrigin("http://127.0.0.1:5501");
+                corsConfiguration.addAllowedOrigin("http://localhost:3000");
+                corsConfiguration.addAllowedOrigin("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
+                corsConfiguration.addAllowedOriginPattern("http://127.0.0.1:5501");
+                corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
+                corsConfiguration.addAllowedOriginPattern("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
+                // corsConfiguration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5501",
+                // "http://localhost:3000"));
+                // corsConfiguration.setAllowedOriginPatterns(
+                // Arrays.asList(
+                // "http://127.0.0.1:5501",
+                // "http://localhost:3000",
+                // "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
+                // corsConfiguration.setAllowedOrigins(
+                // Arrays.asList(
+                // "http://127.0.0.1:5501",
+                // "http://localhost:3000",
+                // "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
 
                 UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
