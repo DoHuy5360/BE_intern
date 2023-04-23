@@ -17,6 +17,7 @@ import com.example.demo.config.middleware.auth.Authentication;
 import com.example.demo.config.middleware.auth.EmployeeAuthorization;
 import com.example.demo.config.middleware.auth.ManagerAuthorization;
 import com.example.demo.config.middleware.password.ResetPasswordAuthentication;
+import com.example.demo.kit.dotenv.DotenvHandler;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -26,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
         private String headquarterPath = getPathOf(apiPathV2, "/headquarter");
         private String workSchedulePath = getPathOf(apiPathV2, "/workschedule");
         private String accountPath = getPathOf(apiPathV2, "/account");
+        private String clientUrl = DotenvHandler.get("CLIENT_URL");
         @Autowired
         private Authentication authentication;
         @Autowired
@@ -47,22 +49,10 @@ public class WebConfig implements WebMvcConfigurer {
                 corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
                 corsConfiguration.addAllowedOrigin("http://127.0.0.1:5501");
                 corsConfiguration.addAllowedOrigin("http://localhost:3000");
-                corsConfiguration.addAllowedOrigin("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
+                corsConfiguration.addAllowedOrigin(clientUrl);
                 corsConfiguration.addAllowedOriginPattern("http://127.0.0.1:5501");
                 corsConfiguration.addAllowedOriginPattern("http://localhost:3000");
-                corsConfiguration.addAllowedOriginPattern("https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app");
-                // corsConfiguration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5501",
-                // "http://localhost:3000"));
-                // corsConfiguration.setAllowedOriginPatterns(
-                // Arrays.asList(
-                // "http://127.0.0.1:5501",
-                // "http://localhost:3000",
-                // "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
-                // corsConfiguration.setAllowedOrigins(
-                // Arrays.asList(
-                // "http://127.0.0.1:5501",
-                // "http://localhost:3000",
-                // "https://urbanscheduler-k6mvt1ny9-huynhthang1910.vercel.app"));
+                corsConfiguration.addAllowedOriginPattern(clientUrl);
 
                 UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
                 urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
