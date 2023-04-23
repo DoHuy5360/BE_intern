@@ -115,27 +115,6 @@ public class AccountService {
         }
     }
 
-    @Transactional
-    public Response resetPassword(String accountEmail, Account account) {
-        AccountValidation accountValidation = new AccountValidation(account, accountRepository)
-                .setEmail(accountEmail)
-                .trackEmailExist()
-                .trackEmailFormat()
-                .trackPasswordFormat()
-                .trackPasswordRetype();
-        if (accountValidation.isValid()) {
-            return (accountValidation.getEntityBy(accountEmail).updatePassword().save())
-                    ? new Response(HttpStatus.OK, Message.UPDATE_SUCCESS)
-                    : new Response(HttpStatus.INTERNAL_SERVER_ERROR, Message.UPDATE_FAIL);
-        } else {
-            return new Response(
-                    HttpStatus.BAD_REQUEST,
-                    Message.INVALID,
-                    accountValidation.getAmountErrors(),
-                    accountValidation.getErrors());
-        }
-    }
-
     public Response changePassword(String accountEmail, Account account) {
 
         AccountValidation accountValidation = new AccountValidation(account, accountRepository)

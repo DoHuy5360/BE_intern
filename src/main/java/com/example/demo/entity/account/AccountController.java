@@ -57,7 +57,7 @@ public class AccountController {
         String email = (String) request.getAttribute("AccountEmail");
         discordLogger.no1Send(email, "Reset password.");
         String accountEmail = (String) request.getAttribute("AccountEmail");
-        return accountService.resetPassword(accountEmail, account);
+        return accountService.changePassword(accountEmail, account);
     }
 
     @PutMapping("/change-password")
