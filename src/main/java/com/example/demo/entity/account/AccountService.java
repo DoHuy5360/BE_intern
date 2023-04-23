@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.employee.EmployeeRepository;
+import com.example.demo.kit.dotenv.DotenvHandler;
 import com.example.demo.kit.excel.ExcelAccountHandler;
 import com.example.demo.kit.jwt.JwtEmailCertificateFormat;
 import com.example.demo.kit.jwt.JwtHandler;
@@ -62,6 +63,8 @@ public class AccountService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    private String serverUrl = DotenvHandler.get("SERVER_URL");
 
     public List<EmployeeAccountTray> checkLogin(String email) {
         return employeeAccountQuery.getAccountByEmailPassword(email);
@@ -175,16 +178,17 @@ public class AccountService {
 
             Context thymleafTemplate = new Context();
             thymleafTemplate.setVariable("jwtToken", jwtToken);
-            thymleafTemplate.setVariable("url", "https://be-intern-g6fh.onrender.com/assets/html/changePassword.html");
+            thymleafTemplate.setVariable("expiresTime", MINUTE);
+
+            thymleafTemplate.setVariable("url", serverUrl + "/assets/html/changePassword.html");
 
             String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
 
             MimeMessage message = mailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-                String NewSubject = "Reset Password";
                 helper.setTo(account.getAccountEmail());
-                helper.setSubject(NewSubject);
+                helper.setSubject("Reset Password");
                 helper.setText(textHTMLContext, true);
                 mailSender.send(message);
             } catch (MessagingException e) {
