@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,8 @@ public class JwtHandler {
     public JWTCreator.Builder builder;
 
     // private static final String SECRET_KEY = "abcxyz123";
-    private static final String SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
+    @Value("${JWT_SECRET_KEY}")
+    private String SECRET_KEY;
 
     public String generateToken(String subject, long expirationTimeMillis) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);

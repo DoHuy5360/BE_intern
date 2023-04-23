@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,7 +28,6 @@ public class WebConfig implements WebMvcConfigurer {
         private String headquarterPath = getPathOf(apiPathV2, "/headquarter");
         private String workSchedulePath = getPathOf(apiPathV2, "/workschedule");
         private String accountPath = getPathOf(apiPathV2, "/account");
-        private String clientUrl = DotenvHandler.get("CLIENT_URL");
         @Autowired
         private Authentication authentication;
         @Autowired
@@ -36,6 +36,9 @@ public class WebConfig implements WebMvcConfigurer {
         private EmployeeAuthorization userAuthorization;
         @Autowired
         private ResetPasswordAuthentication resetPasswordAuthentication;
+
+        @Value("${CLIENT_URL}")
+        private String clientUrl;
 
         public String getPathOf(String api, String name) {
                 return api + name;
