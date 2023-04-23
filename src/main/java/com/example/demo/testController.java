@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -65,17 +66,18 @@ public class testController {
 
     @GetMapping("/test")
     public void test() {
-        List<Account> accounts = (List<Account>) accountRepository.findAll();
-        try {
-            List<String> emails = accounts.stream().map(Account::getAccountEmail).collect(Collectors.toList());
+        // List<Account> accounts = (List<Account>) accountRepository.findAll();
+        // try {
+        // List<String> emails =
+        // accounts.stream().map(Account::getAccountEmail).collect(Collectors.toList());
 
-            System.out.println(emails);
-            if (emails.contains("employee2@gmail.com")) {
-                System.out.println(1);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        // System.out.println(emails);
+        // if (emails.contains("employee2@gmail.com")) {
+        // System.out.println(1);
+        // }
+        // } catch (Exception e) {
+        // System.out.println(e);
+        // }
     }
 
     @GetMapping("/gender-data")

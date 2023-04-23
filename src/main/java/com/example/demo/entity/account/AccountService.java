@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -64,7 +65,8 @@ public class AccountService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    private String serverUrl = DotenvHandler.get("SERVER_URL");
+    @Value("${SERVER_URL}")
+    private String serverUrl;
 
     public List<EmployeeAccountTray> checkLogin(String email) {
         return employeeAccountQuery.getAccountByEmailPassword(email);
