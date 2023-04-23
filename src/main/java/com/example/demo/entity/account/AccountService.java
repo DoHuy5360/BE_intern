@@ -175,16 +175,16 @@ public class AccountService {
 
             Context thymleafTemplate = new Context();
             thymleafTemplate.setVariable("jwtToken", jwtToken);
-            thymleafTemplate.setVariable("url", "https://be-intern-g6fh.onrender.com/assets/html/changePassword.html");
+            thymleafTemplate.setVariable("expiresTime", MINUTE);
+            thymleafTemplate.setVariable("url", "http://192.168.1.53:8080/assets/html/changePassword.html");
 
             String textHTMLContext = templateEngine.process("changePasswordForm", thymleafTemplate);
 
             MimeMessage message = mailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-                String NewSubject = "Reset Password";
                 helper.setTo(account.getAccountEmail());
-                helper.setSubject(NewSubject);
+                helper.setSubject("Reset Password");
                 helper.setText(textHTMLContext, true);
                 mailSender.send(message);
             } catch (MessagingException e) {
