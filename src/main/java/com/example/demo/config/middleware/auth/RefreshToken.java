@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,34 +16,31 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.config.middleware.auth.kit.ResponseHandler;
+import com.example.demo.entity.account.Account;
+import com.example.demo.entity.account.AccountRepository;
 import com.example.demo.entity.account.AccountService;
+import com.example.demo.entity.employee.Employee;
 import com.example.demo.kit.jwt.JwtFormat;
 import com.example.demo.kit.jwt.JwtHandler;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
-import com.example.demo.kit.util.DiscordLogger;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class Authentication implements HandlerInterceptor {
+public class RefreshToken implements HandlerInterceptor {
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
+
     @Autowired
     private JwtHandler jwtHandler;
-    @Autowired
-    private DiscordLogger discordLogger;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        // Lấy đối tượng BufferedReader để đọc dữ liệu từ luồng đầu vào của request
         BufferedReader reader = request.getReader();
         StringBuilder body = new StringBuilder();
         String line;
@@ -61,15 +59,15 @@ public class Authentication implements HandlerInterceptor {
         });
 
         // Lấy email và password từ đối tượng Map chứa dữ liệu JSON
-        String email = jsonMap.get("email");
+        String employeeId = jsonMap.get("employeeId");
         String password = jsonMap.get("password");
 
         // Do something với email và password, ví dụ: kiểm tra, xử lý dữ liệu,...
-        List<EmployeeAccountTray> account = accountService.checkLogin(email);
+        Optional<Account> account = accountRepository.findById(employeeId);
         // Trả về true để cho phép request đi tiếp, hoặc false để chặn request
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-        if (account.isEmpty() || !bcrypt.matches(password, account.get(0).getAccountPassword())) {
+        if (account.isEmpty() || !bcrypt.matches(password, account.get().getAccountPassword())) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
@@ -84,14 +82,13 @@ public class Authentication implements HandlerInterceptor {
             final int MINUTE = 30;
             final int SECOND = 60;
             final int MILLISECOND = 1000;
-            EmployeeAccountTray oneEA = account.get(0);
-            JwtFormat jwtFormat = new JwtFormat(oneEA.getEmployeeId(), oneEA.getAccountRole());
+            Account oneEA = account.get();
+            JwtFormat jwtFormat = new JwtFormat(employeeId, oneEA.getAccountRole());
             ObjectMapper convertJson = new ObjectMapper();
             String employeeAccountJson = convertJson.writeValueAsString(jwtFormat);
             String jwtToken = jwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
             response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
             request.setAttribute("jwtToken", jwtToken);
-            request.setAttribute("AccountEmail", email);
             return true;
         }
 
@@ -100,13 +97,16 @@ public class Authentication implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
-        // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về
+        // Xử lý sau khi controller đã xử lý request và trước khi response được gửi về`
         // client
+
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
+        // Xử lý sau khi response đã được gửi về client
+
     }
 
 }

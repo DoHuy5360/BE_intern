@@ -51,17 +51,10 @@ public class testController {
 
     }
 
-    @PostMapping("/decode")
-    public boolean decode() {
-        // String SECRET_KEY;
-        // try {
-        // SECRET_KEY = DotenvHandler.get("JWT_SECRET_KEY");
-        // } catch (Exception e) {
-        // return e.toString();
-
-        // }
-        // return SECRET_KEY;
-        return true;
+    @PostMapping("/refresh")
+    public Response decode(HttpServletRequest request) {
+        Object jwtToken = (Object) request.getAttribute("jwtToken");
+        return new Response(HttpStatus.OK, Message.LOGIN_SUCCESS, jwtToken);
     }
 
     @GetMapping("/test")
