@@ -81,7 +81,6 @@ public class AccountService {
         Optional<Account> one_AC = accountRepository.findById(AccountUserId);
         return (one_AC.isPresent()) ? new Response(HttpStatus.OK, Message.READ_SUCCESS, one_AC.get())
                 : new Response(HttpStatus.NOT_FOUND, Message.NOT_FOUND);
-
     }
 
     public Response getAccountByEmail(String emailAcc) {

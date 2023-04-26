@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.demo.config.middleware.auth.Authentication;
 import com.example.demo.config.middleware.auth.EmployeeAuthorization;
 import com.example.demo.config.middleware.auth.ManagerAuthorization;
+import com.example.demo.config.middleware.auth.RefreshToken;
 import com.example.demo.config.middleware.password.ResetPasswordAuthentication;
 import com.example.demo.kit.dotenv.DotenvHandler;
 
@@ -36,6 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
         private EmployeeAuthorization userAuthorization;
         @Autowired
         private ResetPasswordAuthentication resetPasswordAuthentication;
+        @Autowired
+        private RefreshToken refreshToken;
 
         @Value("${CLIENT_URL}")
         private String clientUrl;
@@ -105,5 +108,7 @@ public class WebConfig implements WebMvcConfigurer {
                                 .excludePathPatterns("/public/**");
                 interceptorRegistry.addInterceptor(resetPasswordAuthentication)
                                 .addPathPatterns(accountPath + "/change-password");
+                interceptorRegistry.addInterceptor(refreshToken)
+                                .addPathPatterns("/refresh");
         }
 }
