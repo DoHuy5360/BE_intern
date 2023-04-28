@@ -528,6 +528,8 @@ Response:
 			"workScheduleTime": "2023-04-03T11:31:40.238996200",
 			"workScheduleColor": null,
 			"workSchedulePlace": null,
+			"workScheduleDeparture": null,
+			"workScheduleDestination": null,
 			"headquarterName": "Tru so 1",
 			"headquarterAddress": "Ha Noi"
 		}
@@ -560,6 +562,8 @@ Response:
 		"workScheduleColor": null,
 		"workSchedulePlan": "Quet Nha 2",
 		"workSchedulePlace": null,
+		"workScheduleDeparture": null,
+		"workScheduleDestination": null,
 		"workScheduleTime": "2023-04-03T11:31:40.238996200+07:00[Asia/Bangkok]",
 		"createAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]",
 		"updateAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]"
@@ -582,6 +586,8 @@ Body:
 	"workScheduleColor": "green",
 	"workSchedulePlan": "Đi gặp đối tác",
 	"workSchedulePlace": "TP.HCm",
+	"workScheduleDeparture": null,
+	"workScheduleDestination": null,
 	"workScheduleTimeIn": "2023-04-12T01:22:54.2192146Z",
 	"workScheduleTimeOut": "2023-04-12T01:22:54.2192147Z"
 }
@@ -600,6 +606,8 @@ Response:
 		"workScheduleColor": "green",
 		"workSchedulePlan": "Quet Nha 3",
 		"workSchedulePlace": "Đi gặp đối tác",
+		"workScheduleDeparture": null,
+		"workScheduleDestination": null,
 		"workScheduleTime": "2023-04-08T21:11:33.231872600+07:00[Asia/Bangkok]",
 		"createAt": "2023-04-08T21:11:33.231872600+07:00[Asia/Bangkok]",
 		"updateAt": "2023-04-08T21:11:33.231872600+07:00[Asia/Bangkok]"
@@ -651,6 +659,8 @@ Response:
 			"workScheduleColor": null,
 			"workSchedulePlan": "Quet Nha 2",
 			"workSchedulePlace": null,
+			"workScheduleDeparture": null,
+			"workScheduleDestination": null,
 			"workScheduleTime": "2023-04-03T11:31:40.238996200+07:00[Asia/Bangkok]",
 			"createAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]",
 			"updateAt": "2023-04-03T11:31:40.241388100+07:00[Asia/Bangkok]"
@@ -672,6 +682,8 @@ Body:
 	"workScheduleColor": "black",
 	"workSchedulePlan": "Giặt đồ",
 	"workSchedulePlace": "Công Tác",
+	"workScheduleDeparture": null,
+	"workScheduleDestination": null,
 	"workScheduleTimeIn": "2023-04-12T01:22:54.2192146Z",
 	"workScheduleTimeOut": "2023-04-12T01:22:54.2192147Z"
 }

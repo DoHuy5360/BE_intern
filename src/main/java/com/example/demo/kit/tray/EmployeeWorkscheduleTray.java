@@ -14,13 +14,15 @@ public class EmployeeWorkscheduleTray {
     private String employeeName;
     private String employeePhone;
     private String employeeAvatar;
-    private String employeePosition;
-    private String workSchedulePlan;
-    private String workScheduleTimeIn;
-    private String workScheduleTimeOut;
-    private String workScheduleColor;
-    private String workSchedulePlace;
     private String headquarterName;
+    private String workSchedulePlan;
+    private String employeePosition;
+    private String workSchedulePlace;
+    private String workScheduleColor;
+    private String workScheduleTimeIn;
     private String headquarterAddress;
+    private String workScheduleTimeOut;
+    private String workScheduleDeparture;
+    private String workScheduleDestination;
 
 }
