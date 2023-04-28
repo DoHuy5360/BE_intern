@@ -31,6 +31,12 @@ public class WorkSchedule {
     @Column(length = 500, nullable = true, columnDefinition = "Varchar(500) default ''")
     private String workSchedulePlace;
 
+    @Column(length = 500, nullable = true)
+    private String workScheduleDeparture;
+
+    @Column(length = 500, nullable = true)
+    private String workScheduleDestination;
+
     @Column(length = 100, nullable = false)
     private String workScheduleTimeIn;
 
