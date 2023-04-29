@@ -40,7 +40,7 @@ public class Time {
     }
 
     public static void main(String[] args) {
-        String example = "2023-04-12T01:22:54.2192146Z";
+        String example = "2023-04-12T01:22:54.21";
         System.out.println(parseFormat(example));
     }
 }
