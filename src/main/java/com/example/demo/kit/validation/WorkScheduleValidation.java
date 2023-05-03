@@ -88,13 +88,17 @@ public class WorkScheduleValidation extends PrimitiveValidation {
     }
 
     public WorkScheduleValidation trackDateInFuture() {
-        LocalDateTime givenTimeIn = Time.parseFormat(this.workScheduleTimeIn);
-        LocalDateTime givenTimeOut = Time.parseFormat(this.workScheduleTimeOut);
-        LocalDateTime currentTime = LocalDateTime.now(ZoneOffset.UTC);
-
-        if (givenTimeIn.isBefore(currentTime) || givenTimeOut.isBefore(currentTime)) {
+        try {
+            LocalDateTime givenTimeIn = Time.parseFormat(this.workScheduleTimeIn);
+            LocalDateTime givenTimeOut = Time.parseFormat(this.workScheduleTimeOut);
+            LocalDateTime currentTime = LocalDateTime.now(ZoneOffset.UTC);
+            if (givenTimeIn.isBefore(currentTime) || givenTimeOut.isBefore(currentTime)) {
+                this.errors.add(Message.setInvalid("Time"));
+            }
+        } catch (Exception e) {
             this.errors.add(Message.setInvalid("Time"));
         }
+
         return this;
     }
 

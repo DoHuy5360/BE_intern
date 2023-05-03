@@ -16,4 +16,6 @@ public interface EmployeeAccountQuery extends CrudRepository<EmployeeAccountTray
     @Query(value = "select e.employee_id, a.account_role, a.account_password, a.account_email from account a, employee e where a.account_id = e.account_id and account_email = ?1 limit 1", nativeQuery = true)
     List<EmployeeAccountTray> getAccountByEmailPassword(String email);
 
+    @Query(value = "select employee_id, a.account_role, a.account_password, a.account_email from employee e, account a  where e.account_id = a.account_id and e.employee_id = ?1", nativeQuery = true)
+    List<EmployeeAccountTray> findPasswordEmployee(String employeeId);
 }
