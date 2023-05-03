@@ -23,6 +23,7 @@ import com.example.demo.entity.account.AccountService;
 import com.example.demo.entity.employee.Employee;
 import com.example.demo.kit.jwt.JwtFormat;
 import com.example.demo.kit.jwt.JwtHandler;
+import com.example.demo.kit.query.EmployeeAccountQuery;
 import com.example.demo.kit.res.Message;
 import com.example.demo.kit.res.Response;
 import com.example.demo.kit.tray.EmployeeAccountTray;
@@ -33,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class RefreshToken implements HandlerInterceptor {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private EmployeeAccountQuery employeeAccountQuery;
 
     @Autowired
     private JwtHandler jwtHandler;
@@ -63,33 +64,39 @@ public class RefreshToken implements HandlerInterceptor {
         String password = jsonMap.get("password");
 
         // Do something với email và password, ví dụ: kiểm tra, xử lý dữ liệu,...
-        Optional<Account> account = accountRepository.findById(employeeId);
+        List<EmployeeAccountTray> account = employeeAccountQuery.findPasswordEmployee(employeeId);
         // Trả về true để cho phép request đi tiếp, hoặc false để chặn request
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-        if (account.isEmpty() || !bcrypt.matches(password, account.get().getAccountPassword())) {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+        if (!account.isEmpty()) {
+            EmployeeAccountTray oneAC = account.get(0);
+            if (!bcrypt.matches(password, oneAC.getAccountPassword())) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
 
-            // Chuyển đối tượng phản hồi thành JSON
-            ObjectMapper jsonBodyResponse = new ObjectMapper();
-            String json = jsonBodyResponse.writeValueAsString(new Response(HttpStatus.BAD_REQUEST, Message.LOGIN_FAIL));
-            PrintWriter printWriter = response.getWriter();
-            printWriter.write(json);
-            printWriter.flush();
-            return false;
+                // Chuyển đối tượng phản hồi thành JSON
+                ObjectMapper jsonBodyResponse = new ObjectMapper();
+                String json = jsonBodyResponse
+                        .writeValueAsString(new Response(HttpStatus.BAD_REQUEST, Message.LOGIN_FAIL));
+                PrintWriter printWriter = response.getWriter();
+                printWriter.write(json);
+                printWriter.flush();
+                return false;
+            } else {
+                final int MINUTE = 30;
+                final int SECOND = 60;
+                final int MILLISECOND = 1000;
+                JwtFormat jwtFormat = new JwtFormat(employeeId, oneAC.getAccountRole());
+                ObjectMapper convertJson = new ObjectMapper();
+                String employeeAccountJson = convertJson.writeValueAsString(jwtFormat);
+                String jwtToken = jwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
+                response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
+                request.setAttribute("jwtToken", jwtToken);
+                return true;
+            }
+
         } else {
-            final int MINUTE = 30;
-            final int SECOND = 60;
-            final int MILLISECOND = 1000;
-            Account oneEA = account.get();
-            JwtFormat jwtFormat = new JwtFormat(employeeId, oneEA.getAccountRole());
-            ObjectMapper convertJson = new ObjectMapper();
-            String employeeAccountJson = convertJson.writeValueAsString(jwtFormat);
-            String jwtToken = jwtHandler.generateToken(employeeAccountJson, MINUTE * SECOND * MILLISECOND);
-            response.setHeader("Set-Cookie", "jwt-token=" + jwtToken + "; HttpOnly; Secure; SameSite=None");
-            request.setAttribute("jwtToken", jwtToken);
-            return true;
+            return false;
         }
 
     }
